@@ -11,6 +11,7 @@ TERMUX_PKG_PYTHON_COMMON_DEPS="maturin"
 
 termux_step_pre_configure() {
 	termux_setup_rust
+        termux_setup_cmake
         cargo --version
 }
 
