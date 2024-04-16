@@ -9,5 +9,6 @@ TERMUX_PKG_SRCURL="https://files.pythonhosted.org/packages/57/94/97d0f47c8dbc1c0
 TERMUX_PKG_PYTHON_COMMON_DEPS="maturin"
 
 termux_step_make_install() {
+        cargo --version
 	pip3 -v install --no-build-isolation --no-deps --prefix "$TERMUX_PREFIX" "$TERMUX_PKG_SRCDIR"
 }
