@@ -17,6 +17,6 @@ termux_step_pre_configure() {
 }
 
 termux_step_make_install() {
-        maturin build --release --target $TERMUX_HOST_PLATFORM --manifest-path "$TERMUX_PKG_SRCDIR/Cargo.toml"
+        maturin build --release --target $TERMUX_HOST_PLATFORM --manifest-path "$TERMUX_PKG_SRCDIR/Cargo.toml" -vv
 	pip3 -v install --no-build-isolation --no-deps --prefix "$TERMUX_PREFIX" "$TERMUX_PKG_SRCDIR"
 }
