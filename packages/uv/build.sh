@@ -17,5 +17,6 @@ termux_step_pre_configure() {
 }
 
 termux_step_make_install() {
+        maturin develop --target aarch64-apple-darwin
 	pip3 -v install --no-build-isolation --no-deps --prefix "$TERMUX_PREFIX" "$TERMUX_PKG_SRCDIR"
 }
