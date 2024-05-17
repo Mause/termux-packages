@@ -1,7 +1,7 @@
 TERMUX_PKG_DESCRIPTION="An extremely fast Python package installer and resolver, written in Rust."
 TERMUX_PKG_LICENSE="MIT"
 TERMUX_PKG_MAINTAINER="@termux"
-TERMUX_PKG_VERSION="0.1.32"
+TERMUX_PKG_VERSION="0.1.44"
 TERMUX_PKG_DEPENDS="python"
 TERMUX_PKG_BUILD_DEPENDS="python-pip, rust"
 TERMUX_PKG_HOMEPAGE="https://pypi.org/project/uv/"
