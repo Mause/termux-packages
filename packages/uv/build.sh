@@ -17,7 +17,7 @@ termux_step_pre_configure() {
 }
 
 termux_step_make() {
-	maturin build --release --target $TERMUX_HOST_PLATFORM --manifest-path "$TERMUX_PKG_SRCDIR/Cargo.toml" -vv
+	maturin build --release --target $TERMUX_HOST_PLATFORM --manifest-path "$TERMUX_PKG_SRCDIR/crates/uv/Cargo.toml" -vv
 }
 
 termux_step_make_install() {
