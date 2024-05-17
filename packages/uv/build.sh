@@ -14,6 +14,7 @@ TERMUX_PKG_AUTO_UPDATE=true
 termux_step_pre_configure() {
 	termux_setup_rust
 	termux_setup_cmake
+	rustup target add aarch64-linux-android
 }
 
 termux_step_make() {
