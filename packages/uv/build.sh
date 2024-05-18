@@ -12,6 +12,8 @@ TERMUX_PKG_PYTHON_COMMON_DEPS="maturin"
 TERMUX_PKG_SETUP_PYTHON=true
 TERMUX_PKG_AUTO_UPDATE=true
 
+LDFLAGS+=" -latomic"
+
 termux_step_pre_configure() {
 	termux_setup_rust
 	termux_setup_cmake
