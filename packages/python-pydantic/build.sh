@@ -10,13 +10,12 @@ TERMUX_PKG_AUTO_UPDATE=true
 TERMUX_PKG_DEPENDS="python, python-pip"
 TERMUX_PKG_BUILD_IN_SRC=true
 TERMUX_PKG_UPDATE_TAG_TYPE="newest-tag"
-TERMUX_PKG_PYTHON_COMMON_DEPS="wheel, cffi, setuptools-rust"
+TERMUX_PKG_PYTHON_COMMON_DEPS="wheel, pdm, setuptools-rust"
 
 termux_step_configure() {
 	termux_setup_rust
 	export CARGO_BUILD_TARGET=${CARGO_TARGET_NAME}
 	export PYO3_CROSS_LIB_DIR=$TERMUX_PREFIX/lib
-	curl -sSL https://pdm-project.org/install-pdm.py | python3 -
 }
 
 termux_step_create_debscripts() {
