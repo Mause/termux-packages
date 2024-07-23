@@ -16,6 +16,7 @@ termux_step_configure() {
 	termux_setup_rust
 	export CARGO_BUILD_TARGET=${CARGO_TARGET_NAME}
 	export PYO3_CROSS_LIB_DIR=$TERMUX_PREFIX/lib
+	curl -sSL https://pdm-project.org/install-pdm.py | python3 -
 }
 
 termux_step_create_debscripts() {
