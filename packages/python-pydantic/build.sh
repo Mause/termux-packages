@@ -10,7 +10,7 @@ TERMUX_PKG_AUTO_UPDATE=true
 TERMUX_PKG_DEPENDS="python, python-pip"
 TERMUX_PKG_BUILD_IN_SRC=true
 TERMUX_PKG_UPDATE_TAG_TYPE="newest-tag"
-TERMUX_PKG_PYTHON_COMMON_DEPS="wheel, pdm, setuptools-rust"
+TERMUX_PKG_PYTHON_COMMON_DEPS="wheel, pdm, pre-commit, setuptools-rust"
 
 termux_step_configure() {
 	termux_setup_rust
