@@ -18,6 +18,10 @@ termux_step_configure() {
 	export PYO3_CROSS_LIB_DIR=$TERMUX_PREFIX/lib
 }
 
+termux_step_make() {
+	pip3 install .
+}
+
 termux_step_create_debscripts() {
 	cat <<- EOF > ./postinst
 	#!$TERMUX_PREFIX/bin/sh
