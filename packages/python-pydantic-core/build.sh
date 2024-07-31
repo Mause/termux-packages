@@ -21,6 +21,8 @@ termux_step_configure() {
 	ls -a $(which python3)
 	file $TERMUX_PREFIX/bin/python
 	file $(ls -a $(which python3.11))
+	/home/builder/.termux-build/python-crossenv-prefix-aarch64/build/bin/python3.11 --version || echo 'build failed'
+	/home/builder/.termux-build/python-crossenv-prefix-aarch64/cross/bin/python3.11 --version || echo 'cross failed'
 	$TERMUX_PREFIX/bin/python --version
 }
 
