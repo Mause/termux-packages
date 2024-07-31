@@ -20,7 +20,7 @@ termux_step_configure() {
 	which python3
 	ls -a $(which python3)
 	file $TERMUX_PREFIX/bin/python
-	file $(ln -a $(which python3.11))
+	file $(ls -a $(which python3.11))
 	$TERMUX_PREFIX/bin/python --version
 }
 
