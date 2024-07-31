@@ -31,7 +31,8 @@ termux_step_configure() {
 }
 
 termux_step_make() {
-	export LD_LIBRARY_PATH="${TERMUX_PREFIX}/lib/libpython${TERMUX_PYTHON_VERSION}.so"
+	export LD_LIBRARY_PATH="${TERMUX_PREFIX}/lib/"
+	echo "Building with CARGO_TARGET_NAME=${CARGO_TARGET_NAME} LD_LIBRARY_PATH=$LD_LIBRARY_PATH"
 	maturin build --release --target ${CARGO_TARGET_NAME} --interpreter /home/builder/.termux-build/python-crossenv-prefix-aarch64/cross/bin/python3.11 -vv
 	# pip3 install .
 }
