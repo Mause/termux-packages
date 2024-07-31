@@ -1,3 +1,4 @@
+TERMUX_DEBUG_BUILD=true
 TERMUX_PKG_HOMEPAGE=https://github.com/pydantic/pydantic-core
 TERMUX_PKG_DESCRIPTION="Provides cryptographic recipes and primitives to Python developers"
 TERMUX_PKG_LICENSE="Apache-2.0, BSD 3-Clause"
