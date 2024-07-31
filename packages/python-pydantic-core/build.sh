@@ -10,7 +10,7 @@ TERMUX_PKG_AUTO_UPDATE=true
 TERMUX_PKG_DEPENDS="python, python-pip"
 TERMUX_PKG_BUILD_IN_SRC=true
 TERMUX_PKG_UPDATE_TAG_TYPE="newest-tag"
-TERMUX_PKG_PYTHON_COMMON_DEPS="setuptools>=60, setuptools_rust, wheel, maturin"
+TERMUX_PKG_PYTHON_COMMON_DEPS="setuptools>=60, setuptools_rust, wheel, typing_extensions, maturin"
 
 termux_step_configure() {
 	termux_setup_rust
@@ -19,7 +19,7 @@ termux_step_configure() {
 }
 
 termux_step_make() {
-	maturin build --release --target ${CARGO_TARGET_NAME} --interpreter python3.11
+	maturin build --release --target ${CARGO_TARGET_NAME} --interpreter python3
 	# pip3 install .
 }
 
