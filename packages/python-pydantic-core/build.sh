@@ -16,6 +16,10 @@ termux_step_configure() {
 	termux_setup_rust
 	export CARGO_BUILD_TARGET=${CARGO_TARGET_NAME}
 	export PYO3_CROSS_LIB_DIR=$TERMUX_PREFIX/lib
+        python3 --version
+	which python3
+        ls -a $(which python3)
+	$TERMUX_PREFIX/bin/python --version
 }
 
 termux_step_make() {
