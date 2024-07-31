@@ -19,7 +19,8 @@ termux_step_configure() {
 }
 
 termux_step_make() {
-	maturin build --release --target ${CARGO_TARGET_NAME}
+	export LD_LIBRARY_PATH="${TERMUX_PREFIX}/lib/libpython${TERMUX_PYTHON_VERSION}.so"
+	maturin build --release --target ${CARGO_TARGET_NAME} --interpreter $TERMUX_PREFIX/bin/python
 	# pip3 install .
 }
 
