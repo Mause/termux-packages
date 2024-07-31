@@ -19,7 +19,8 @@ termux_step_configure() {
 }
 
 termux_step_make() {
-	pip3 install .
+	maturin build --release --target ${CARGO_TARGET_NAME} --interpreter python3.11
+	# pip3 install .
 }
 
 termux_step_create_debscripts() {
