@@ -4,8 +4,8 @@ index 0000000000..40fea8a3be
 --- /dev/null
 +++ b/extension/extension_config_local.cmake
 @@ -0,0 +1,5 @@
-+duckdb_extension_load(postgres_scanner
++duckdb_extension_load(ui
 +    DONT_LINK
-+    GIT_URL https://github.com/duckdb/postgres_scanner
-+    GIT_TAG 8461ed8b6f726564934e9c831cdc88d431e3148f
++    GIT_URL https://github.com/duckdb/duckdb-ui
++    GIT_TAG c1f6be62e3cc01719da4c2c4a8287d28661ba5bc
 +)
