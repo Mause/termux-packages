@@ -1,0 +1,11 @@
+diff --git a/extension/extension_config_local.cmake b/extension/extension_config_local.cmake
+new file mode 100644
+index 0000000000..40fea8a3be
+--- /dev/null
++++ b/extension/extension_config_local.cmake
+@@ -0,0 +1,5 @@
++duckdb_extension_load(postgres_scanner
++    DONT_LINK
++    GIT_URL https://github.com/duckdb/postgres_scanner
++    GIT_TAG cd043b49cdc9e0d3752535b8333c9433e1007a48
++)
