@@ -3,8 +3,12 @@ new file mode 100644
 index 0000000000..40fea8a3be
 --- /dev/null
 +++ b/extension/extension_config_local.cmake
-@@ -0,0 +1,4 @@
+@@ -0,0 +1,8 @@
 +duckdb_extension_load(ui
 +    GIT_URL https://github.com/duckdb/duckdb-ui
 +    GIT_TAG c1f6be62e3cc01719da4c2c4a8287d28661ba5bc
++)
++duckdb_extension_load(iceberg
++    GIT_URL https://github.com/duckdb/duckdb-iceberg
++    GIT_TAG 8bd92610d55bdb0c8274f3b8e819db77b8d08d0c
 +)
