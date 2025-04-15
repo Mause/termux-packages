@@ -1,0 +1,5 @@
+TERMUX_SUBPKG_INCLUDE="bin/duckdb"
+TERMUX_SUBPKG_DESCRIPTION="DuckDB Python Library"
+
+TERMUX_SUBPKG_DEPENDS="libc++, python"
+TERMUX_SUBPKG_PYTHON_COMMON_DEPS="wheel, pybind11, build"
