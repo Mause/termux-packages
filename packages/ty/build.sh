@@ -12,7 +12,7 @@ TERMUX_PKG_AUTO_UPDATE=true
 termux_step_post_get_source() {
 	echo "original"
 	ls $TERMUX_PKG_SRCDIR
- 	TERMUX_PKG_SRCDIR+="/ruff/crates/ty"
+	TERMUX_PKG_SRCDIR+="/ruff/crates/ty"
 	echo "modified"
 	ls $TERMUX_PKG_SRCDIR
 }
