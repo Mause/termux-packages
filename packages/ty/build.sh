@@ -10,9 +10,11 @@ TERMUX_PKG_DEPENDS="zstd"
 TERMUX_PKG_BUILD_IN_SRC=true
 TERMUX_PKG_AUTO_UPDATE=true
 
-termux_step_pre_configure() {
-	TERMUX_PKG_SRCDIR="${TERMUX_PKG_SRCDIR}/ruff/crates/ty"
+termux_step_post_get_source() {
+	TERMUX_PKG_SRCDIR+="/ruff/crates/ty"
+}
 
+termux_step_pre_configure() {
 	termux_setup_cmake
 	termux_setup_rust
 
