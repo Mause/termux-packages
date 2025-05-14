@@ -9,9 +9,10 @@ TERMUX_PKG_SHA256=c7cb67b8c8ba3ad91db1bf91c52100dbff670aefbc2be83fa7b712afd10a56
 TERMUX_PKG_DEPENDS="zstd"
 TERMUX_PKG_BUILD_IN_SRC=true
 TERMUX_PKG_AUTO_UPDATE=true
-TERMUX_PKG_ROOT=ruff/crates/ty
 
 termux_step_pre_configure() {
+	TERMUX_PKG_SRCDIR="${TERMUX_PKG_SRCDIR}/ruff/crates/ty"
+
 	termux_setup_cmake
 	termux_setup_rust
 
