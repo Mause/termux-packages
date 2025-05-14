@@ -19,10 +19,7 @@ termux_step_post_get_source() {
 }
 
 termux_step_pre_configure() {
-	echo "original $TERMUX_PKG_SRCDIR"
-	ls $TERMUX_PKG_SRCDIR
-	TERMUX_PKG_SRCDIR+="/ruff/crates/ty"
-	echo "modified $TERMUX_PKG_SRCDIR"
+	echo "TERMUX_PKG_SRCDIR $TERMUX_PKG_SRCDIR"
 	ls $TERMUX_PKG_SRCDIR
 
 	termux_setup_cmake
