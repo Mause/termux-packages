@@ -55,7 +55,7 @@ termux_step_make() {
 	PKG_CONFIG_PATH="$TERMUX_PKG_CONFIG_LIBDIR" \
 	PKG_CONFIG_ALL_DYNAMIC=1 \
 	ZSTD_SYS_USE_PKG_CONFIG=1 \
-	cargo build --jobs "${TERMUX_PKG_MAKE_PROCESSES}" --target "${CARGO_TARGET_NAME}" --release
+	cargo build --jobs "${TERMUX_PKG_MAKE_PROCESSES}" --target "${CARGO_TARGET_NAME}" --release --verbose
 }
 
 termux_step_make_install() {
