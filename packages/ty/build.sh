@@ -1,7 +1,7 @@
 TERMUX_PKG_HOMEPAGE=https://docs.astral.sh/ty/
 TERMUX_PKG_DESCRIPTION="An extremely fast Python typechecker, written in Rust."
-TERMUX_PKG_LICENSE="Apache-2.0, MIT"
-TERMUX_PKG_LICENSE_FILE="LICENSE-APACHE, LICENSE-MIT"
+TERMUX_PKG_LICENSE="MIT"
+TERMUX_PKG_LICENSE_FILE="../../LICENSE"
 TERMUX_PKG_MAINTAINER="@termux"
 TERMUX_PKG_VERSION="0.0.1-alpha.1"
 TERMUX_PKG_SRCURL=git+https://github.com/astral-sh/ty
