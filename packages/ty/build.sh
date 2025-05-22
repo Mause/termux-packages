@@ -28,12 +28,6 @@ termux_step_pre_configure() {
 
 	: "${CARGO_HOME:=$HOME/.cargo}"
 	export CARGO_HOME
-
-	rm -rf "${CARGO_HOME}"/registry/src/*/sys-info-*
-	cargo fetch --target "${CARGO_TARGET_NAME}"
-
-	#patch -p1 -d "${CARGO_HOME}"/registry/src/*/sys-info-* \
-	#-i "${TERMUX_PKG_BUILDER_DIR}"/0001-sys-info-replace-index-with-strchr.diff
 }
 
 termux_step_make() {
@@ -47,8 +41,4 @@ termux_step_make() {
 
 termux_step_make_install() {
 	install -Dm700 -t "${TERMUX_PREFIX}"/bin ruff/target/"${CARGO_TARGET_NAME}"/release/ty
-}
-
-termux_step_post_massage() {
-	rm -rf "${CARGO_HOME}"/registry/src/*/sys-info-*
 }
