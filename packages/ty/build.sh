@@ -15,7 +15,6 @@ termux_step_post_get_source() {
 }
 
 termux_step_pre_configure() {
-	termux_setup_cmake
 	termux_setup_rust
 
 	# Dummy CMake toolchain file to workaround build error:
