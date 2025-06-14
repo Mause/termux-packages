@@ -11,7 +11,7 @@ TERMUX_PKG_BUILD_IN_SRC=true
 TERMUX_PKG_AUTO_UPDATE=true
 
 termux_step_post_get_source() {
-	TERMUX_PKG_SRCDIR+="/ruff/crates/ty"
+	TERMUX_PKG_SRCDIR+="/crates/ty"
 }
 
 termux_step_pre_configure() {
@@ -39,5 +39,5 @@ termux_step_make() {
 }
 
 termux_step_make_install() {
-	install -Dm700 -t "${TERMUX_PREFIX}"/bin ruff/target/"${CARGO_TARGET_NAME}"/release/ty
+	install -Dm700 -t "${TERMUX_PREFIX}"/bin target/"${CARGO_TARGET_NAME}"/release/ty
 }
