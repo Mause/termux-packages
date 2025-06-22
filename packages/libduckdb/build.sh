@@ -12,4 +12,6 @@ TERMUX_PKG_EXTRA_CONFIGURE_ARGS="-DBUILD_EXTENSIONS='icu;parquet;json;autocomple
 termux_step_pre_configure() {
 	LDFLAGS+=" -llog"
 	CXXFLAGS+=" -D_GLIBCXX_USE_CXX11_ABI=1"
+	export OPENSSL_INCLUDE_DIR=$TERMUX_PREFIX/include
+	export OPENSSL_LIB_DIR=$TERMUX_PREFIX/lib
 }
