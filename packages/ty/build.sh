@@ -36,7 +36,7 @@ termux_step_pre_configure() {
 }
 
 termux_step_make() {
-	maturin build --locked --release --all-features --target "$CARGO_TARGET_NAME" --strip
+	maturin build --locked --release --all-features --target "$CARGO_TARGET_NAME" --strip --verbose
 }
 
 termux_step_make_install() {
