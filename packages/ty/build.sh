@@ -9,7 +9,7 @@ TERMUX_PKG_SHA256=dbabdf58fdfdd2ea8f80e2686e1d16c161458082c89c6ac3302df2fce88ab8
 TERMUX_PKG_DEPENDS="zstd, python"
 TERMUX_PKG_BUILD_IN_SRC=true
 TERMUX_PKG_AUTO_UPDATE=true
-TERMUX_PKG_PYTHON_COMMON_DEPS="maturin"
+TERMUX_PKG_PYTHON_COMMON_DEPS="wheel, maturin"
 
 termux_step_post_get_source() {
 	TERMUX_PKG_SRCDIR+="/ruff/crates/ty"
