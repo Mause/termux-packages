@@ -35,5 +35,5 @@ termux_step_pre_configure() {
 }
 
 termux_step_make_install() {
-	pip install --no-deps --prefix=$TERMUX_PREFIX
+	pip install . --no-deps --prefix=$TERMUX_PREFIX
 }
