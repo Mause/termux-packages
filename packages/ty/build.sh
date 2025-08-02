@@ -35,6 +35,10 @@ termux_step_pre_configure() {
 	export CARGO_HOME
 }
 
+termux_step_make() {
+	maturin build --locked --release --all-features --target "$CARGO_TARGET_NAME" --strip
+}
+
 termux_step_make_install() {
 	pip install . --no-deps --prefix=$TERMUX_PREFIX
 }
