@@ -36,6 +36,7 @@ termux_step_pre_configure() {
 }
 
 termux_step_make() {
+	rustc --version
 	cargo --version
 	ls
 	maturin build --locked --release --all-features --target "$CARGO_TARGET_NAME" --strip --verbose
