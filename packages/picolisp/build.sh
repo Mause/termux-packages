@@ -3,15 +3,14 @@ TERMUX_PKG_DESCRIPTION="Lisp interpreter and application server framework"
 TERMUX_PKG_LICENSE="MIT"
 TERMUX_PKG_LICENSE_FILE="COPYING"
 TERMUX_PKG_MAINTAINER="@termux"
-TERMUX_PKG_VERSION="24.12"
-TERMUX_PKG_REVISION=1
+TERMUX_PKG_VERSION="25.6"
 TERMUX_PKG_SRCURL=https://software-lab.de/picoLisp-${TERMUX_PKG_VERSION}.tgz
-TERMUX_PKG_SHA256=99fe187996e323ced5b9a6f3df789263fb0992abcb96dc0e06fa5ea81f4d3fd4
+TERMUX_PKG_SHA256=6d6eb2c77d32568f69400e25b24e342de3df04d9675ed0ce75377ecd28e12133
 TERMUX_PKG_AUTO_UPDATE=true
 TERMUX_PKG_DEPENDS="libcrypt, libffi, openssl, readline"
 TERMUX_PKG_BUILD_IN_SRC=true
 # For 32-bit archs we nees to build minipicolisp
-TERMUX_PKG_BLACKLISTED_ARCHES="arm, i686"
+TERMUX_PKG_EXCLUDED_ARCHES="arm, i686"
 
 termux_step_make() {
 	sed -i "s|/usr/lib/picolisp/lib.l|${TERMUX_PREFIX}/lib/picolisp/lib.l|" $TERMUX_PKG_SRCDIR/bin/pil

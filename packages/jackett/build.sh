@@ -2,15 +2,15 @@ TERMUX_PKG_HOMEPAGE="https://github.com/jackett/jackett"
 TERMUX_PKG_DESCRIPTION="API Support for your favorite torrent trackers"
 TERMUX_PKG_LICENSE="GPL-2.0-or-later"
 TERMUX_PKG_MAINTAINER="@termux"
-TERMUX_PKG_VERSION="0.22.1672"
+TERMUX_PKG_VERSION="0.22.2225"
 TERMUX_PKG_SRCURL="https://github.com/Jackett/Jackett/archive/refs/tags/v${TERMUX_PKG_VERSION}.tar.gz"
-TERMUX_PKG_SHA256=f682e6e9e2df77550d29b9aed467024d81f2ed103cdae1fc9bf7ed75412842ff
+TERMUX_PKG_SHA256=bd4a35185d436b1163e897f095bc251cb6102b1a3edf56e3a86ab9afa8e8f294
 TERMUX_PKG_BUILD_DEPENDS="aspnetcore-targeting-pack-8.0, dotnet-targeting-pack-8.0"
 TERMUX_PKG_DEPENDS="aspnetcore-runtime-8.0, dotnet-host, dotnet-runtime-8.0"
 TERMUX_PKG_BUILD_IN_SRC=true
 TERMUX_PKG_AUTO_UPDATE=true
 TERMUX_PKG_SERVICE_SCRIPT=("jackett" "exec ${TERMUX_PREFIX}/bin/jackett --DataFolder ${TERMUX_ANDROID_HOME}/.config/jackett 2>&1")
-TERMUX_PKG_BLACKLISTED_ARCHES="arm"
+TERMUX_PKG_EXCLUDED_ARCHES="arm"
 TERMUX_PKG_RM_AFTER_INSTALL="
 lib/jackett/README.md
 lib/jackett/LICENSE
