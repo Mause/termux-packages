@@ -36,6 +36,8 @@ termux_step_pre_configure() {
 }
 
 termux_step_make() {
+	. "$HOME/.cargo/env"
+
 	rustc --version
 	cargo --version
 	ls
