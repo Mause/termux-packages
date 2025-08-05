@@ -38,10 +38,10 @@ termux_step_pre_configure() {
 termux_step_make() {
 	. "$HOME/.cargo/env"
 
-	rustc --version
-	cargo --version
-	ls
-	maturin build --locked --release --all-features --target "$CARGO_TARGET_NAME" --strip --verbose
+	# --skip-auditwheel workaround for Maturin error
+	# 'Cannot repair wheel, because required library libdl.so could not be located.'
+	# found here in Termux-specific upstream discussion: https://github.com/PyO3/pyo3/issues/2324
+	maturin build --locked --skip-auditwheel --release --all-features --target "$CARGO_TARGET_NAME" --strip --verbose
 }
 
 termux_step_make_install() {
