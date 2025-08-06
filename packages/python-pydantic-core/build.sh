@@ -15,6 +15,7 @@ TERMUX_PKG_PYTHON_COMMON_DEPS="setuptools>=60, setuptools_rust, wheel, typing_ex
 
 termux_step_configure() {
 	termux_setup_rust
+	termux_setup_python_pip
 	export CARGO_BUILD_TARGET=${CARGO_TARGET_NAME}
 	export PYO3_CROSS_LIB_DIR=$TERMUX_PREFIX/lib
 	python3 --version
