@@ -5,7 +5,7 @@ TERMUX_PKG_VERSION="v0.1.0"
 TERMUX_PKG_HOMEPAGE="https://github.com/microsoft/typescript-go"
 TERMUX_PKG_LICENSE="Apache-2.0"
 TERMUX_PKG_LICENSE_FILE="LICENSE"
-TERMUX_PKG_SRCURL="git+https://github.com/microsoft/typescript-go.git"
+TERMUX_PKG_SRCURL="git+https://github.com/microsoft/typescript-go"
 TERMUX_PKG_BUILD_IN_SRC=true
 TERMUX_PKG_AUTO_UPDATE=true
 
