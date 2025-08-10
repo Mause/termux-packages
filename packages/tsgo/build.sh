@@ -22,4 +22,3 @@ termux_step_make() {
 	npm install
 	hereby build --release --target "$(go env GOOS)-$(go env GOARCH)" --outdir "$TERMUX_PKG_SRCDIR"
 }
-
