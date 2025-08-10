@@ -25,5 +25,6 @@ termux_step_make() {
 
 termux_step_make_install() {
 	install -Dm755 "$TERMUX_PKG_SRCDIR/built/local/tsgo" -t "$TERMUX_PREFIX/bin"
+	ls "$TERMUX_PKG_SRCDIR/built/local/*.d.ts"
 	install -Dm644 "$TERMUX_PKG_SRCDIR/built/local/*.d.ts" -t "$TERMUX_PREFIX/share/tsgo"
 }
