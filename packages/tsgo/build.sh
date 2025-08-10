@@ -25,4 +25,5 @@ termux_step_make() {
 
 termux_step_make_install() {
 	install -Dm755 "$TERMUX_PKG_SRCDIR/built/local/tsgo" -t "$TERMUX_PREFIX/bin"
+	install -Dm644 "$TERMUX_PKG_SRCDIR/internal/bundled/libs" -t "$TERMUX_PREFIX/bin/lib.d.ts"
 }
