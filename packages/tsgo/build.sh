@@ -11,7 +11,8 @@ TERMUX_PKG_AUTO_UPDATE=true
 
 termux_step_pre_configure() {
 	termux_setup_rust
-	termux_setup_go
+	termux_setup_golang
+	termux_setup_nodejs
 
 	: "${CARGO_HOME:=$HOME/.cargo}"
 	export CARGO_HOME
