@@ -22,3 +22,7 @@ termux_step_make() {
 	npm install
 	./node_modules/.bin/hereby build --release --target "$(go env GOOS)-$(go env GOARCH)" --outdir "$TERMUX_PKG_SRCDIR"
 }
+
+termux_step_make_install() {
+	install -Dm755 "$TERMUX_PKG_SRCDIR/built/local/tsgo" -t "$TERMUX_PREFIX/bin"
+}
