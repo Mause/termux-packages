@@ -9,6 +9,8 @@ TERMUX_PKG_SRCURL="git+https://github.com/microsoft/typescript-go"
 TERMUX_PKG_BUILD_IN_SRC=true
 TERMUX_PKG_AUTO_UPDATE=true
 
+set -o xtrace
+
 termux_step_pre_configure() {
 	termux_setup_rust
 	termux_setup_golang
