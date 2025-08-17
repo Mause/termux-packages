@@ -29,3 +29,12 @@ termux_step_make() {
 termux_step_make_install() {
 	install -Dm755 "$TERMUX_PKG_SRCDIR/git-town" -t "$TERMUX_PREFIX/bin"
 }
+
+termux_step_create_debscripts() {
+	cat <<-EOF >./postinst
+		#!${TERMUX_PREFIX}/bin/sh
+		git-town completions bash > ${TERMUX_PREFIX}/share/bash-completion/completions/git-town.bash
+		git-town completions zsh > ${TERMUX_PREFIX}/share/zsh/site-functions/_git-town
+		git-town completions fish > ${TERMUX_PREFIX}/share/fish/vendor_completions.d/git-town.fish
+	EOF
+}
