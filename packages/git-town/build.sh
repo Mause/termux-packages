@@ -16,12 +16,7 @@ termux_step_pre_configure() {
 }
 
 termux_step_make() {
-	go env GOPROXY
-	go env -w GOPROXY=https://proxy.golang.org,direct
-	go clean -modcache
-	go mod init || :
-	rm go.sum
-	go mod tidy
+	go get
 
 	go build
 }
