@@ -10,6 +10,7 @@ TERMUX_PKG_DEPENDS="abseil-cpp, c-ares, ca-certificates, libc++, libre2, openssl
 TERMUX_PKG_BUILD_DEPENDS="gflags, gflags-static"
 TERMUX_PKG_PYTHON_COMMON_DEPS="wheel, setuptools, 'Cython>=3.0.0'"
 TERMUX_PKG_BUILD_IN_SRC=true
+TERMUX_PKG_REVISION=1
 
 termux_step_pre_configure() {
 	rm CMakeLists.txt Makefile Rakefile
