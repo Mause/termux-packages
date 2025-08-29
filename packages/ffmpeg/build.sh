@@ -69,6 +69,7 @@ termux_step_configure() {
 		--disable-static \
 		--disable-symver \
 		--enable-cross-compile \
+		--enable-alsa \
 		--enable-gnutls \
 		--enable-gpl \
 		--enable-version3 \
