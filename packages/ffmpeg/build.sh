@@ -17,7 +17,7 @@ termux_step_pre_configure() {
 	# Do not forget to bump revision of reverse dependencies and rebuild them
 	# after SOVERSION is changed. (These variables are also used afterwards.)
 	_FFMPEG_SOVER_avutil=60
-	_FFMPEG_SOVER_avcodec=61
+	_FFMPEG_SOVER_avcodec=62
 	_FFMPEG_SOVER_avformat=61
 
 	local f
