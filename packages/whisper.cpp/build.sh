@@ -13,4 +13,3 @@ TERMUX_PKG_SRCURL=git+https://github.com/ggml-org/whisper.cpp
 # 	LDFLAGS+=" -llog"
 # 	CXXFLAGS+=" -D_GLIBCXX_USE_CXX11_ABI=1"
 # }
-
