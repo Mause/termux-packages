@@ -112,6 +112,7 @@ termux_step_configure() {
 		--enable-mediacodec \
 		--enable-opencl \
 		--enable-shared \
+		--enable-whisper \
 		--prefix="$TERMUX_PREFIX" \
 		--target-os=android \
 		--extra-libs="-landroid-glob" \
