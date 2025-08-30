@@ -18,7 +18,7 @@ termux_step_pre_configure() {
 	# after SOVERSION is changed. (These variables are also used afterwards.)
 	_FFMPEG_SOVER_avutil=60
 	_FFMPEG_SOVER_avcodec=62
-	_FFMPEG_SOVER_avformat=61
+	_FFMPEG_SOVER_avformat=62
 
 	local f
 	for f in util codec format; do
