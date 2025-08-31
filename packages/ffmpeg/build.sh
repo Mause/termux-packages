@@ -66,6 +66,7 @@ termux_step_configure() {
 		--disable-indevs \
 		--disable-outdevs \
 		--enable-indev=lavfi \
+		--enable-indev=pulse \
 		--disable-static \
 		--disable-symver \
 		--enable-cross-compile \
