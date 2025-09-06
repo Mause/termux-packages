@@ -24,7 +24,7 @@ termux_step_make() {
 	. "$HOME/.cargo/env"
 	export LD_LIBRARY_PATH="${TERMUX_PREFIX}/lib/"
 	echo "Building with CARGO_TARGET_NAME=${CARGO_TARGET_NAME} LD_LIBRARY_PATH=$LD_LIBRARY_PATH"
-	maturin build --release --target ${CARGO_TARGET_NAME} -vv
+	maturin build --release --target ${CARGO_TARGET_NAME} --skip-auditwheel -vv
 	# pip3 install .
 }
 
