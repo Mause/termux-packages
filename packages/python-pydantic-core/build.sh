@@ -18,24 +18,13 @@ termux_step_configure() {
 	termux_setup_python_pip
 	export CARGO_BUILD_TARGET=${CARGO_TARGET_NAME}
 	export PYO3_CROSS_LIB_DIR=$TERMUX_PREFIX/lib
-	python3 --version
-	which python3
-	ls -a $(which python3)
-	file $TERMUX_PREFIX/bin/python
-	file $(ls -a $(which python3.11))
-	/home/builder/.termux-build/python-crossenv-prefix-aarch64/build/bin/python3.11 --version || echo 'build failed'
-	/home/builder/.termux-build/python-crossenv-prefix-aarch64/cross/bin/python3.11 --version || echo 'cross failed'
-	echo 'okay, lets try to check the python version'
-	$TERMUX_PREFIX/bin/python --version || echo 'failed'
-	$TERMUX_PREFIX/bin/python3 --version || echo 'failed'
-	echo 'success?'
 }
 
 termux_step_make() {
 	. "$HOME/.cargo/env"
 	export LD_LIBRARY_PATH="${TERMUX_PREFIX}/lib/"
 	echo "Building with CARGO_TARGET_NAME=${CARGO_TARGET_NAME} LD_LIBRARY_PATH=$LD_LIBRARY_PATH"
-	maturin build --release --target ${CARGO_TARGET_NAME} --interpreter /home/builder/.termux-build/python-crossenv-prefix-aarch64/cross/bin/python3.11 -vv
+	maturin build --release --target ${CARGO_TARGET_NAME} -vv
 	# pip3 install .
 }
 
