@@ -4,6 +4,6 @@ TERMUX_PKG_LICENSE=MIT
 TERMUX_PKG_MAINTAINER=@termux
 TERMUX_PKG_API_LEVEL=28
 TERMUX_PKG_VERSION=3.4.1
-TERMUX_PKG_SHA256=e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855
+TERMUX_PKG_SHA256=4a693d881f5f9d1ba70004c13b00ae6f75c2e592192574ac1d549a025fb3c511
 TERMUX_PKG_SRCURL=https://github.com/ravachol/kew/archive/refs/tags/v${TERMUX_PKG_VERSION}.tar.gz
 TERMUX_PKG_DEPENDS="clang, pkg-config, taglib, fftw, git, make, chafa, glib, libopus, opusfile, libvorbis, libogg, dbus, termux-api"
