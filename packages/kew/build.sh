@@ -6,4 +6,4 @@ TERMUX_PKG_API_LEVEL=28
 TERMUX_PKG_VERSION=3.4.1
 TERMUX_PKG_SHA256=e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855
 TERMUX_PKG_SRCURL=https://github.com/ravachol/kew/archive/refs/tags/v${TERMUX_PKG_VERSION}.tar.gz
-TERMUX_PKG_DEPENDS="clang pkg-config taglib fftw git make chafa glib libopus opusfile libvorbis libogg dbus termux-api"
+TERMUX_PKG_DEPENDS="clang, pkg-config, taglib, fftw, git, make, chafa, glib, libopus, opusfile, libvorbis, libogg, dbus, termux-api"
