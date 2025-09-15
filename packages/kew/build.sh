@@ -1,7 +1,7 @@
 TERMUX_PKG_HOMEPAGE=https://github.com/ravachol/kew.git
-TERMUX_PKG_DESCRIPTION=tui music player
+TERMUX_PKG_DESCRIPTION="tui music player"
 TERMUX_PKG_LICENSE=MIT
 TERMUX_PKG_MAINTAINER=@termux
-TERMUX_PKG_API_LEVEL=1
+TERMUX_PKG_API_LEVEL=28
 TERMUX_PKG_VERSION=3.4.1
 TERMUX_PKG_SRCURL=https://github.com/ravachol/kew.git
