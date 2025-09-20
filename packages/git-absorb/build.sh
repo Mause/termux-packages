@@ -1,6 +1,6 @@
 TERMUX_PKG_HOMEPAGE=https://github.com/tummychow/git-absorb
 TERMUX_PKG_DESCRIPTION="git commit --fixup, but automatic"
-TERMUX_PKG_LICENSE="BSD3"
+TERMUX_PKG_LICENSE="BSD 3-Clause"
 TERMUX_PKG_LICENSE_FILE="LICENSE.md"
 TERMUX_PKG_MAINTAINER="@termux"
 TERMUX_PKG_VERSION="0.8.0"
