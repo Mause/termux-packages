@@ -21,7 +21,6 @@ termux_step_make_install() {
 	mkdir -p "${TERMUX_PREFIX}/share/bash-completion/completions"
 	mkdir -p "${TERMUX_PREFIX}/share/fish/vendor_completions.d"
 	mkdir -p "${TERMUX_PREFIX}/share/zsh/site-functions"
-
 	( # borrowed from packages/glow
 	unset GOOS GOARCH CGO_LDFLAGS
 	unset CC CXX CFLAGS CXXFLAGS LDFLAGS
