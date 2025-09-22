@@ -28,11 +28,10 @@ termux_step_pre_configure() {
 termux_step_make() {
 	. ~/.cargo/env
 
-	# PKG_CONFIG_PATH="/usr/lib/x86_64-linux-gnu/pkgconfig/" \
 	PKG_CONFIG_ALL_DYNAMIC=1 \
 	cargo build --jobs "${TERMUX_PKG_MAKE_PROCESSES}" --target "${CARGO_TARGET_NAME}" --release --verbose
 }
 
 termux_step_make_install() {
-	install -Dm700 -t "${TERMUX_PREFIX}"/bin target/"${CARGO_TARGET_NAME}"/release/git-aborb
+	install -Dm700 -t "${TERMUX_PREFIX}"/bin target/"${CARGO_TARGET_NAME}"/release/git-absorb
 }
