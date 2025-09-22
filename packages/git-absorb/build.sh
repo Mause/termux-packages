@@ -26,7 +26,7 @@ termux_step_pre_configure() {
 }
 
 termux_step_make() {
-	cd "$TERMUX_PKG_SRCDIR"
+	. ~/.cargo/env
 
 	PKG_CONFIG_PATH="/usr/lib/x86_64-linux-gnu/pkgconfig/" \
 	PKG_CONFIG_ALL_DYNAMIC=1 \
