@@ -2,14 +2,13 @@ TERMUX_PKG_HOMEPAGE=https://orca.gnome.org/
 TERMUX_PKG_DESCRIPTION="A free, open source, flexible, and extensible screen reader"
 TERMUX_PKG_LICENSE="LGPL-2.1"
 TERMUX_PKG_MAINTAINER="@termux"
-TERMUX_PKG_VERSION="48.1"
-TERMUX_PKG_REVISION=1
+TERMUX_PKG_VERSION="49.1"
 TERMUX_PKG_SRCURL=https://download.gnome.org/sources/orca/${TERMUX_PKG_VERSION%.*}/orca-${TERMUX_PKG_VERSION}.tar.xz
-TERMUX_PKG_SHA256=66c6f09822149da243a4633a7d84a7b1dbaaf14534a9feb9df2bfe01a505178a
+TERMUX_PKG_SHA256=65329686cd15f62ab4e4c0d00ceb984d499b28ec2c5117508c3b82890d62e7e3
 TERMUX_PKG_AUTO_UPDATE=true
-TERMUX_PKG_DEPENDS="at-spi2-core, glib, gst-python, gstreamer, gtk3, libwnck, pango, pyatspi, pygobject, python, python-pip, speechd"
+TERMUX_PKG_DEPENDS="at-spi2-core, glib, gsettings-desktop-schemas, gst-python, gstreamer, gtk3, libwnck, pango, pyatspi, pygobject, python, python-pip, speechd, xorg-xkbcomp"
 TERMUX_PKG_SETUP_PYTHON=true
-TERMUX_PKG_PYTHON_TARGET_DEPS="setproctitle"
+TERMUX_PKG_PYTHON_TARGET_DEPS="dasbus, setproctitle"
 TERMUX_MESON_WHEEL_CROSSFILE="$TERMUX_PKG_TMPDIR/wheel-cross-file.txt"
 TERMUX_PKG_PLATFORM_INDEPENDENT=true
 TERMUX_PKG_EXTRA_CONFIGURE_ARGS="
@@ -47,6 +46,6 @@ termux_step_create_debscripts() {
 	cat <<- EOF > ./postinst
 	#!$TERMUX_PREFIX/bin/sh
 	echo "Installing dependencies through pip..."
-	pip3 install $TERMUX_PKG_PYTHON_TARGET_DEPS
+	pip3 install ${TERMUX_PKG_PYTHON_TARGET_DEPS//, / }
 	EOF
 }

@@ -2,9 +2,9 @@ TERMUX_PKG_HOMEPAGE=https://cli.github.com/
 TERMUX_PKG_DESCRIPTION="GitHub’s official command line tool"
 TERMUX_PKG_LICENSE="MIT"
 TERMUX_PKG_MAINTAINER="Krishna kanhaiya @kcubeterm"
-TERMUX_PKG_VERSION="2.73.0"
+TERMUX_PKG_VERSION="2.80.0"
 TERMUX_PKG_SRCURL=https://github.com/cli/cli/archive/refs/tags/v${TERMUX_PKG_VERSION}.tar.gz
-TERMUX_PKG_SHA256=e432fd7e8944f94624fbd287b3bdd46f6bbed23609178c940bdb7b5d55a6d1c4
+TERMUX_PKG_SHA256=fd9a1fc392b10f99e9f6be287b696b8dbd1d1a14d71ccee1d1da52be3f1edd6e
 TERMUX_PKG_RECOMMENDS="openssh"
 TERMUX_PKG_AUTO_UPDATE=true
 
@@ -28,7 +28,6 @@ termux_step_make() {
 
 termux_step_make_install() {
 	install -Dm700 -t "$TERMUX_PREFIX"/bin "$GOPATH"/src/github.com/cli/cli/cmd/gh/gh
-	install -Dm600 -t "$TERMUX_PREFIX"/share/doc/gh/ "$TERMUX_PKG_SRCDIR"/docs/*
 
 	install -Dm644 /dev/null "$TERMUX_PREFIX"/share/bash-completion/completions/gh.bash
 	install -Dm644 /dev/null "$TERMUX_PREFIX"/share/zsh/site-functions/_gh
