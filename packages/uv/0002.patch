@@ -1,3 +1,16 @@
+diff --git a/crates/uv-distribution-types/src/installed.rs b/crates/uv-distribution-types/src/installed.rs
+index 4c291013c..e436fef46 100644
+--- a/crates/uv-distribution-types/src/installed.rs
++++ b/crates/uv-distribution-types/src/installed.rs
+@@ -504,7 +504,7 @@ impl InstalledDist {
+ 
+         // Parse the tags.
+         let tags = if let Some(tags) = wheel_file.tags() {
+-            Some(ExpandedTags::parse(tags.iter().map(String::as_str))?)
++            Some(ExpandedTags::parse(vec!["android_24_arm64_v8a"])?)
+         } else {
+             None
+         };
 diff --git a/crates/uv-installer/src/satisfies.rs b/crates/uv-installer/src/satisfies.rs
 index 9808bbdc4..7e8b0e7d5 100644
 --- a/crates/uv-installer/src/satisfies.rs
