@@ -1,5 +1,5 @@
 diff --git a/crates/uv-installer/src/satisfies.rs b/crates/uv-installer/src/satisfies.rs
-index 9808bbdc4..d425d18b1 100644
+index 9808bbdc4..7e8b0e7d5 100644
 --- a/crates/uv-installer/src/satisfies.rs
 +++ b/crates/uv-installer/src/satisfies.rs
 @@ -5,6 +5,7 @@ use same_file::is_same_file;
@@ -14,7 +14,7 @@ index 9808bbdc4..d425d18b1 100644
  
          // If the distribution isn't compatible with the current platform, it is a mismatch.
          if let Ok(Some(wheel_tags)) = distribution.read_tags() {
-+            warn!("Wheel tags: {wheel_tags:?}, current tags: {tags:?}");
++            warn!("{distribution} tags: {wheel_tags:?}, current tags: {tags:?}");
              if !wheel_tags.is_compatible(tags) {
                  if let Some(hint) = generate_dist_compatibility_hint(wheel_tags, tags) {
                      debug!("Platform tags mismatch for {distribution}: {hint}");
