@@ -6,7 +6,8 @@ termux_step_make_install() {
 		ninja -j $TERMUX_PKG_MAKE_PROCESSES install
 	elif test -f setup.py || test -f pyproject.toml || test -f setup.cfg; then
 		pip wheel --no-deps . --wheel-dir $TERMUX_PREFIX
-		python3 ~/termux-packages/scripts/check_tags $TERMUX_PREFIX
+		SCRIPT_DIR=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )
+		python3 $SCRIPT_DIR/../check_tags $TERMUX_PREFIX
 	elif ls ./*.cabal &>/dev/null || ls ./cabal.project &>/dev/null; then
 		# Workaround until `cabal install` is fixed.
 		while read -r bin; do
