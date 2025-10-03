@@ -1,5 +1,5 @@
 TERMUX_PKG_HOMEPAGE=https://github.com/pyca/cryptography
-TERMUX_PKG_DESCRIPTION="Provides cryptographic recipes and primitives to Python developers"
+TERMUX_PKG_DESCRIPTION="Provides cryptographicccc recipes and primitives to Python developers"
 TERMUX_PKG_LICENSE="Apache-2.0, BSD 3-Clause"
 TERMUX_PKG_LICENSE_FILE="LICENSE, LICENSE.APACHE, LICENSE.BSD"
 TERMUX_PKG_MAINTAINER="@termux"
