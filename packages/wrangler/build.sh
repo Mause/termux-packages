@@ -14,6 +14,10 @@ termux_step_post_get_source() {
 	TERMUX_PKG_SRCDIR+="/packages/wrangler"
 }
 
+termux_step_pre_configure() {
+	termux_setup_nodejs
+}
+
 termux_step_make() {
 	ls
 	npm build
