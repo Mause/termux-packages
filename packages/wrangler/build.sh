@@ -8,3 +8,7 @@ TERMUX_PKG_SRCURL="https://github.com/cloudflare/workers-sdk"
 TERMUX_PKG_SUBDIR="packages/wrangler"
 TERMUX_PKG_DEPENDS="nodejs"
 TERMUX_PKG_SHA256=0000000000000000000000000000000000000000000000000000000000000000
+
+termux_step_post_get_source() {
+	TERMUX_PKG_SRCDIR+="/src"
+}
