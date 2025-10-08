@@ -32,5 +32,9 @@ termux_step_make() {
 }
 
 termux_step_make_install() {
+	pnpm install --global .
+}
+
+termux_step_post_make_install() {
 	install -d -Dm600 $TERMUX_PKG_SRCDIR/wrangler-dist -D $TERMUX_PREFIX/lib/node_modules/wrangler
 }
