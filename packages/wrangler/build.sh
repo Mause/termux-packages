@@ -24,6 +24,7 @@ termux_step_make() {
 	pwd
 	cd $TERMUX_PKG_SRCDIR
 	pwd
+	source /home/builder/.bashrc
 	ls
 	npm run build
 }
