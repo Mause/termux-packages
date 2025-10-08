@@ -21,6 +21,9 @@ termux_step_pre_configure() {
 }
 
 termux_step_make() {
+	pwd
+	cd $TERMUX_PKG_SRCDIR
+	pwd
 	ls
 	npm run build
 }
