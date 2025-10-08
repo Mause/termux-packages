@@ -16,11 +16,12 @@ termux_step_post_get_source() {
 
 termux_step_pre_configure() {
 	termux_setup_nodejs
+	curl -fsSL https://get.pnpm.io/install.sh | sh -
 }
 
 termux_step_make() {
 	ls
-	npm build
+	npm run build
 }
 
 termux_step_make_install() {
