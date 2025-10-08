@@ -1,6 +1,5 @@
 TERMUX_PKG_LICENSE="MIT, Apache-2.0"
-TERMUX_PKG_LICENSE_FILE="../../LICENCE-MIT, .
-/../LICENCE-APACHE"
+TERMUX_PKG_LICENSE_FILE="../../LICENCE-MIT, ../../LICENCE-APACHE"
 TERMUX_PKG_MAINTAINER="@termux"
 TERMUX_PKG_DESCRIPTION="CLI for building CloudFlare worker applications"
 TERMUX_PKG_HOMEPAGE="https://github.com/cloudflare/workers-sdk"
