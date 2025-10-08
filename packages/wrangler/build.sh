@@ -16,7 +16,7 @@ termux_step_post_get_source() {
 
 termux_step_pre_configure() {
 	termux_setup_nodejs
-	curl -fsSL https://get.pnpm.io/install.sh | sh -
+	curl -fsSL https://get.pnpm.io/install.sh | ENV="$HOME/.bashrc" SHELL="$(which bash)" bash -
 }
 
 termux_step_make() {
