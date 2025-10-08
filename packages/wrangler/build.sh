@@ -24,13 +24,11 @@ termux_step_pre_configure() {
 
 termux_step_make() {
 	pwd
-	cd $TERMUX_PKG_SRCDIR
-	pwd
 	export PNPM_HOME="/home/builder/.local/share/pnpm"
 	export PATH="$PNPM_HOME:$PATH"
 	ls
 	pnpm install
-	pnpm build
+	pnpm run build --filter wrangler
 }
 
 termux_step_make_install() {
