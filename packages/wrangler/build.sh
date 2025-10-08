@@ -10,5 +10,5 @@ TERMUX_PKG_DEPENDS="nodejs"
 TERMUX_PKG_SHA256=0c0477663aaa85fcf2f798581529a9cdacdb14f5d093dd5b861a854c7b056e05
 
 termux_step_post_get_source() {
-	TERMUX_PKG_SRCDIR+="/src"
+	TERMUX_PKG_SRCDIR+="/packages/wrangler"
 }
