@@ -27,7 +27,7 @@ termux_step_make() {
 	export PNPM_HOME="/home/builder/.local/share/pnpm"
 	export PATH="$PNPM_HOME:$PATH"
 	ls
-	pnpm install --filter wrangler
+	pnpm install
 	pnpm build --filter wrangler
 }
 
