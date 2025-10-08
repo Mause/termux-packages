@@ -30,5 +30,5 @@ termux_step_make_install() {
 	pwd
 	ls
 	ls $TERMUX_PKG_SRCDIR/packages/wrangler/wrangler-dist
-	find $TERMUX_PKG_SRCDIR/packages/wrangler/wrangler-dist -type f -exec install -m 600 "{}" $TERMUX_PREFIX/lib/node_modules/wrangler -v  \;
+	find $TERMUX_PKG_SRCDIR/packages/wrangler/wrangler-dist -type f -exec install -m 600 "{}" $TERMUX_PREFIX/lib/node_modules/wrangler/ -v  \;
 }
