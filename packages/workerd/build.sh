@@ -17,5 +17,6 @@ termux_step_pre_configure() {
 }
 
 termux_step_make() {
-	bazel build //src/workerd/server:workerd
+	ls $TERMUX_PREFIX/bin
+	$TERMUX_PREFIX/bin/bazel build //src/workerd/server:workerd
 }
