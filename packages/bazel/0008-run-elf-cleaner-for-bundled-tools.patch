@@ -23,7 +23,7 @@ index dd3bc4039771c7..418ffad053bca7 100644
 @@ -141,6 +141,21 @@ cc_binary(
      ],
  )
- 
+
 +genrule(
 +    name = "client_cleaner",
 +    srcs = [
@@ -58,7 +58,7 @@ index c1d3db9174b97d..9290c20aee8080 100644
 +++ b/src/main/tools/BUILD
 @@ -1,13 +1,28 @@
  package(default_visibility = ["//src:__subpackages__"])
- 
+
  cc_binary(
 -    name = "daemonize",
 +    name = "daemonize_orig",
