@@ -8,30 +8,13 @@ TERMUX_PKG_GIT_BRANCH="wrangler@$TERMUX_PKG_VERSION"
 TERMUX_PKG_SRCURL="git+https://github.com/cloudflare/workers-sdk"
 TERMUX_PKG_DEPENDS="nodejs"
 TERMUX_PKG_SHA256=0c0477663aaa85fcf2f798581529a9cdacdb14f5d093dd5b861a854c7b056e05
-TERMUX_PKG_BUILD_IN_SRC=true
 
 set -o xtrace
 
 termux_step_pre_configure() {
 	termux_setup_nodejs
-	curl -fsSL https://get.pnpm.io/install.sh | ENV="$HOME/.bashrc" SHELL="$(which bash)" bash -
-}
-
-termux_step_make() {
-	pwd
-	export PNPM_HOME="/home/builder/.local/share/pnpm"
-	export PATH="$PNPM_HOME:$PATH"
-	ls
-	pnpm install
-	pnpm build --filter wrangler
 }
 
 termux_step_make_install() {
-	pwd
-	ls
-	ls $TERMUX_PKG_SRCDIR/packages/wrangler/wrangler-dist
-	mkdir -p $TERMUX_PREFIX/lib/node_modules/wrangler/
-	mkdir -p $TERMUX_PREFIX/lib/node_modules/wrangler/node_modules/
-	find $TERMUX_PKG_SRCDIR/packages/wrangler/wrangler-dist -type f -exec install -m 600 "{}" $TERMUX_PREFIX/lib/node_modules/wrangler/ -v  \;
-	cp -r $TERMUX_PKG_SRCDIR/node_modules $TERMUX_PREFIX/lib/node_modules/wrangler
+	npm install --global wrangler@$TERMUX_PKG_VERSION --prefix $TERMUX_PREFIX/lib/node_modules
 }
