@@ -8,6 +8,7 @@ TERMUX_PKG_SRCURL="git+https://github.com/cloudflare/workerd"
 TERMUX_PKG_DEPENDS="python, bazel"
 TERMUX_PKG_SHA256=0c0477663aaa85fcf2f798581529a9cdacdb14f5d093dd5b861a854c7b056e05
 TERMUX_PKG_BUILD_IN_SRC=true
+TERMUX_PKG_EXCLUDED_ARCHES="arm, i686"
 
 set -o xtrace
 
