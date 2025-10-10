@@ -1,9 +1,10 @@
 --- a/MODULE.bazel
 +++ b/MODULE.bazel
-@@ -442,3 +442,29 @@
+@@ -436,3 +436,30 @@ register_toolchains("@local_config_winsdk//:all")
+ register_toolchains("//src/main/res:empty_rc_toolchain")
  
- remote_android_extensions = use_extension("//tools/android:android_extensions.bzl", "remote_android_tools_extensions")
- use_repo(remote_android_extensions, "android_gmaven_r8", "android_tools")
+ register_toolchains("@graalvm_toolchains//:gvm")
++
 +
 +new_local_repository_ = use_repo_rule("@bazel_tools//tools/build_defs/repo:local.bzl", "new_local_repository")
 +
