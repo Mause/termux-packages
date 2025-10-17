@@ -1,7 +1,6 @@
 TERMUX_PKG_HOMEPAGE='https://github.com/j178/prek'
 TERMUX_PKG_DESCRIPTION='⚡ Better `pre-commit`, re-engineered in Rust'
 TERMUX_PKG_LICENSE='MIT'
-TERMUX_PKG_LICENSE_FILE='LICENSE-MIT'
 TERMUX_PKG_MAINTAINER='@termux'
 TERMUX_PKG_VERSION='0.2.9'
 TERMUX_PKG_SRCURL=https://github.com/j178/prek/archive/refs/tags/v${TERMUX_PKG_VERSION}.tar.gz
