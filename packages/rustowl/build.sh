@@ -7,3 +7,7 @@ TERMUX_PKG_SRCURL=https://github.com/cordx56/rustowl/archive/refs/tags/v${TERMUX
 TERMUX_PKG_SHA256='fa120643aeb48061eb32a7c993dabff88aa4e9d0b32f8ab0f3289b3fb2cf5744'
 TERMUX_PKG_BUILD_IN_SRC='true'
 TERMUX_PKG_AUTO_UPDATE='true'
+
+termux_step_pre_configure() {
+	termux_setup_rust
+}
