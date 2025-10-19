@@ -1,7 +1,7 @@
 From 7c36bca93f4220f37e39babe2526ba24360883dc Mon Sep 17 00:00:00 2001
 From: Elliana May <me@mause.me>
 Date: Sun, 19 Oct 2025 19:28:15 +0800
-Subject: [PATCH] apply
+Subject: [PATCH 1/4] apply
 
 ---
  src/fs.rs | 28 +++++++++++++---------------
@@ -60,3 +60,140 @@ index 5398b4ce..6f6e8f93 100644
                  Ok(Self(file))
              }
          }
+
+From 814742033116877706edad3457e5a25e94cd7a69 Mon Sep 17 00:00:00 2001
+From: Elliana May <me@mause.me>
+Date: Sun, 19 Oct 2025 19:40:33 +0800
+Subject: [PATCH 2/4] Refactor acquire function and add create helper
+
+---
+ src/fs.rs | 55 ++++++++++++++++++++++++++++++++++++++++++++++++++++++-
+ 1 file changed, 54 insertions(+), 1 deletion(-)
+
+diff --git a/src/fs.rs b/src/fs.rs
+index 6f6e8f93..ef00acb2 100644
+--- a/src/fs.rs
++++ b/src/fs.rs
+@@ -71,14 +71,67 @@ impl LockedFile {
+     }
+ 
+     /// Acquire a cross-process lock for a resource using a file at the provided path.
++    #[cfg(feature = "tokio")]
+     pub async fn acquire(
+         path: impl AsRef<Path>,
+         resource: impl Display,
+     ) -> Result<Self, std::io::Error> {
+-        let file = fs_err::File::create(path.as_ref())?;
++        let file = Self::create(path)?;
+         let resource = resource.to_string();
+         tokio::task::spawn_blocking(move || Self::lock_file_blocking(file, &resource)).await?
+     }
++
++        #[cfg(unix)]
++    fn create(path: impl AsRef<Path>) -> Result<fs_err::File, std::io::Error> {
++        use std::os::unix::fs::PermissionsExt;
++
++        // If path already exists, return it.
++        if let Ok(file) = fs_err::OpenOptions::new()
++            .read(true)
++            .write(true)
++            .open(path.as_ref())
++        {
++            return Ok(file);
++        }
++
++        // Otherwise, create a temporary file with 777 permissions. We must set
++        // permissions _after_ creating the file, to override the `umask`.
++        let file = if let Some(parent) = path.as_ref().parent() {
++            NamedTempFile::new_in(parent)?
++        } else {
++            NamedTempFile::new()?
++        };
++        if let Err(err) = file
++            .as_file()
++            .set_permissions(std::fs::Permissions::from_mode(0o777))
++        {
++            warn!("Failed to set permissions on temporary file: {err}");
++        }
++
++        // Try to move the file to path, but if path exists now, just open path
++        match file.persist_noclobber(path.as_ref()) {
++            Ok(file) => Ok(fs_err::File::from_parts(file, path.as_ref())),
++            Err(err) => {
++                if err.error.kind() == std::io::ErrorKind::AlreadyExists {
++                    fs_err::OpenOptions::new()
++                        .read(true)
++                        .write(true)
++                        .open(path.as_ref())
++                } else {
++                    Err(err.error)
++                }
++            }
++        }
++    }
++
++    #[cfg(not(unix))]
++    fn create(path: impl AsRef<Path>) -> std::io::Result<fs_err::File> {
++        fs_err::OpenOptions::new()
++            .read(true)
++            .write(true)
++            .create(true)
++            .open(path.as_ref())
++                }
+ }
+ 
+ impl Drop for LockedFile {
+
+From e8d61f836a1dc4a36f55d13d022f2f8fdaf60f13 Mon Sep 17 00:00:00 2001
+From: Elliana May <me@mause.me>
+Date: Sun, 19 Oct 2025 19:41:38 +0800
+Subject: [PATCH 3/4] fmt
+
+---
+ src/fs.rs | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/src/fs.rs b/src/fs.rs
+index ef00acb2..cdb754b1 100644
+--- a/src/fs.rs
++++ b/src/fs.rs
+@@ -81,7 +81,7 @@ impl LockedFile {
+         tokio::task::spawn_blocking(move || Self::lock_file_blocking(file, &resource)).await?
+     }
+ 
+-        #[cfg(unix)]
++    #[cfg(unix)]
+     fn create(path: impl AsRef<Path>) -> Result<fs_err::File, std::io::Error> {
+         use std::os::unix::fs::PermissionsExt;
+ 
+@@ -131,7 +131,7 @@ impl LockedFile {
+             .write(true)
+             .create(true)
+             .open(path.as_ref())
+-                }
++    }
+ }
+ 
+ impl Drop for LockedFile {
+
+From ff90082d07eee4aa55b897101569fb04116134b7 Mon Sep 17 00:00:00 2001
+From: Elliana May <me@mause.me>
+Date: Sun, 19 Oct 2025 19:45:34 +0800
+Subject: [PATCH 4/4] Remove conditional compilation for tokio feature
+
+---
+ src/fs.rs | 1 -
+ 1 file changed, 1 deletion(-)
+
+diff --git a/src/fs.rs b/src/fs.rs
+index cdb754b1..190361a1 100644
+--- a/src/fs.rs
++++ b/src/fs.rs
+@@ -71,7 +71,6 @@ impl LockedFile {
+     }
+ 
+     /// Acquire a cross-process lock for a resource using a file at the provided path.
+-    #[cfg(feature = "tokio")]
+     pub async fn acquire(
+         path: impl AsRef<Path>,
+         resource: impl Display,
