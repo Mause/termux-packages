@@ -20,3 +20,14 @@ termux_step_make() {
 termux_step_make_install() {
 	install -Dm700 -t $TERMUX_PREFIX/bin target/${CARGO_TARGET_NAME}/release/prek
 }
+
+termux_step_create_debscripts() {
+	cat <<-EOF >./postinst
+		#!${TERMUX_PREFIX}/bin/sh
+
+		COMPLETE=bash prek > "${TERMUX_PREFIX}/share/bash-completion/completions/prek"
+		COMPLETE=elvish prek > "$TERMUX_PREFIX/share/elvish/lib/prek.elv"
+		COMPLETE=fish prek > "${TERMUX_PREFIX}/share/fish/vendor_completions.d/prek.fish"
+		COMPLETE=zsh prek > "${TERMUX_PREFIX}/share/zsh/site-functions/_prek"
+	EOF
+}
