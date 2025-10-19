@@ -1,0 +1,62 @@
+From 7c36bca93f4220f37e39babe2526ba24360883dc Mon Sep 17 00:00:00 2001
+From: Elliana May <me@mause.me>
+Date: Sun, 19 Oct 2025 19:28:15 +0800
+Subject: [PATCH] apply
+
+---
+ src/fs.rs | 28 +++++++++++++---------------
+ 1 file changed, 13 insertions(+), 15 deletions(-)
+
+diff --git a/src/fs.rs b/src/fs.rs
+index 5398b4ce..6f6e8f93 100644
+--- a/src/fs.rs
++++ b/src/fs.rs
+@@ -38,35 +38,33 @@ impl LockedFile {
+     /// Inner implementation for [`LockedFile::acquire_blocking`] and [`LockedFile::acquire`].
+     fn lock_file_blocking(file: fs_err::File, resource: &str) -> Result<Self, std::io::Error> {
+         trace!(
+-            resource,
+-            path = %file.path().display(),
+-            "Checking lock",
++            "Checking lock for `{resource}` at `{}`",
++            file.path().user_display()
+         );
+-        match file.try_lock() {
++        match file.file().try_lock_exclusive() {
+             Ok(()) => {
+-                debug!(resource, "Acquired lock");
++                debug!("Acquired lock for `{resource}`");
+                 Ok(Self(file))
+             }
+             Err(err) => {
+-                // Log error code and enum kind to help debugging more exotic failures
+-                if !matches!(err, std::fs::TryLockError::WouldBlock) {
+-                    trace!(error = ?err, "Try lock error");
++                // Log error code and enum kind to help debugging more exotic failures.
++                if !is_known_already_locked_error(&err) {
++                    debug!("Try lock error: {err:?}");
+                 }
+                 info!(
+-                    resource,
+-                    path = %file.path().display(),
+-                    "Waiting to acquire lock",
++                    "Waiting to acquire lock for `{resource}` at `{}`",
++                    file.path().user_display(),
+                 );
+-                file.lock().map_err(|err| {
+-                    // Not a fs_err method, we need to build our own path context
++                file.file().lock_exclusive().map_err(|err| {
++                    // Not an fs_err method, we need to build our own path context
+                     std::io::Error::other(format!(
+                         "Could not acquire lock for `{resource}` at `{}`: {}",
+-                        file.path().display(),
++                        file.path().user_display(),
+                         err
+                     ))
+                 })?;
+ 
+-                trace!(resource, "Acquired lock");
++                debug!("Acquired lock for `{resource}`");
+                 Ok(Self(file))
+             }
+         }
