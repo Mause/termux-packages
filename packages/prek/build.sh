@@ -9,8 +9,11 @@ TERMUX_PKG_BUILD_IN_SRC='true'
 TERMUX_PKG_AUTO_UPDATE='true'
 TERMUX_PKG_EXCLUDED_ARCHES="arm, i686"
 
-termux_step_make() {
+termux_step_pre_configure() {
 	termux_setup_rust
+}
+
+termux_step_make() {
 	cargo build --jobs $TERMUX_PKG_MAKE_PROCESSES --target $CARGO_TARGET_NAME --release
 }
 
