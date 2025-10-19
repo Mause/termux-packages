@@ -1,7 +1,7 @@
 From 7c36bca93f4220f37e39babe2526ba24360883dc Mon Sep 17 00:00:00 2001
 From: Elliana May <me@mause.me>
 Date: Sun, 19 Oct 2025 19:28:15 +0800
-Subject: [PATCH 1/4] apply
+Subject: [PATCH 1/6] apply
 
 ---
  src/fs.rs | 28 +++++++++++++---------------
@@ -64,7 +64,7 @@ index 5398b4ce..6f6e8f93 100644
 From 814742033116877706edad3457e5a25e94cd7a69 Mon Sep 17 00:00:00 2001
 From: Elliana May <me@mause.me>
 Date: Sun, 19 Oct 2025 19:40:33 +0800
-Subject: [PATCH 2/4] Refactor acquire function and add create helper
+Subject: [PATCH 2/6] Refactor acquire function and add create helper
 
 ---
  src/fs.rs | 55 ++++++++++++++++++++++++++++++++++++++++++++++++++++++-
@@ -147,7 +147,7 @@ index 6f6e8f93..ef00acb2 100644
 From e8d61f836a1dc4a36f55d13d022f2f8fdaf60f13 Mon Sep 17 00:00:00 2001
 From: Elliana May <me@mause.me>
 Date: Sun, 19 Oct 2025 19:41:38 +0800
-Subject: [PATCH 3/4] fmt
+Subject: [PATCH 3/6] fmt
 
 ---
  src/fs.rs | 4 ++--
@@ -179,7 +179,7 @@ index ef00acb2..cdb754b1 100644
 From ff90082d07eee4aa55b897101569fb04116134b7 Mon Sep 17 00:00:00 2001
 From: Elliana May <me@mause.me>
 Date: Sun, 19 Oct 2025 19:45:34 +0800
-Subject: [PATCH 4/4] Remove conditional compilation for tokio feature
+Subject: [PATCH 4/6] Remove conditional compilation for tokio feature
 
 ---
  src/fs.rs | 1 -
@@ -197,3 +197,107 @@ index cdb754b1..190361a1 100644
      pub async fn acquire(
          path: impl AsRef<Path>,
          resource: impl Display,
+
+From d69a1fc226949ac7c595b302f5533384cc24dc0f Mon Sep 17 00:00:00 2001
+From: Elliana May <me@mause.me>
+Date: Sun, 19 Oct 2025 19:50:58 +0800
+Subject: [PATCH 5/6] add function
+
+---
+ src/fs.rs | 14 ++++++++++++++
+ 1 file changed, 14 insertions(+)
+
+diff --git a/src/fs.rs b/src/fs.rs
+index 190361a1..0f1b8fd1 100644
+--- a/src/fs.rs
++++ b/src/fs.rs
+@@ -30,6 +30,20 @@ use anyhow::Context;
+ pub static CWD: LazyLock<PathBuf> =
+     LazyLock::new(|| std::env::current_dir().expect("The current directory must be exist"));
+ 
++/// Whether the error is due to a lock being held.
++fn is_known_already_locked_error(err: &std::io::Error) -> bool {
++    if matches!(err.kind(), std::io::ErrorKind::WouldBlock) {
++        return true;
++    }
++
++    // On Windows, we've seen: Os { code: 33, kind: Uncategorized, message: "The process cannot access the file because another process has locked a portion of the file." }
++    if cfg!(windows) && err.raw_os_error() == Some(33) {
++        return true;
++    }
++
++    false
++}
++
+ /// A file lock that is automatically released when dropped.
+ #[derive(Debug)]
+ pub struct LockedFile(fs_err::File);
+
+From 3a961c7ef9d5f5e217571a3a90b268cec0f6280a Mon Sep 17 00:00:00 2001
+From: Elliana May <me@mause.me>
+Date: Sun, 19 Oct 2025 20:05:03 +0800
+Subject: [PATCH 6/6] add missing imports
+
+---
+ Cargo.lock | 11 +++++++++++
+ Cargo.toml |  1 +
+ src/fs.rs  |  5 ++++-
+ 3 files changed, 16 insertions(+), 1 deletion(-)
+
+diff --git a/Cargo.lock b/Cargo.lock
+index 048d3ff5..1c2888a1 100644
+--- a/Cargo.lock
++++ b/Cargo.lock
+@@ -749,6 +749,16 @@ dependencies = [
+  "tokio",
+ ]
+ 
++[[package]]
++name = "fs2"
++version = "0.4.3"
++source = "registry+https://github.com/rust-lang/crates.io-index"
++checksum = "9564fc758e15025b46aa6643b1b77d047d1a56a1aea6e01002ac0c7026876213"
++dependencies = [
++ "libc",
++ "winapi",
++]
++
+ [[package]]
+ name = "futures"
+ version = "0.3.31"
+@@ -1769,6 +1779,7 @@ dependencies = [
+  "etcetera",
+  "fancy-regex",
+  "fs-err",
++ "fs2",
+  "futures",
+  "hex",
+  "http",
+diff --git a/Cargo.toml b/Cargo.toml
+index 89b526ea..a3c83f46 100644
+--- a/Cargo.toml
++++ b/Cargo.toml
+@@ -50,6 +50,7 @@ dunce = { version = "1.0.5" }
+ etcetera = { version = "0.10.0" }
+ fancy-regex = { version = "0.16.0" }
+ fs-err = { version = "3.1.0", features = ["tokio"] }
++fs2 = "0.4.3"
+ futures = { version = "0.3.31" }
+ hex = { version = "0.4.3" }
+ http = { version = "1.1.0" }
+diff --git a/src/fs.rs b/src/fs.rs
+index 0f1b8fd1..67138d93 100644
+--- a/src/fs.rs
++++ b/src/fs.rs
+@@ -23,7 +23,10 @@
+ use std::fmt::Display;
+ use std::path::{Path, PathBuf};
+ use std::sync::LazyLock;
+-use tracing::{debug, error, info, trace};
++use tracing::{debug, error, info, trace, warn};
++
++use fs2::FileExt;
++use tempfile::NamedTempFile;
+ 
+ use anyhow::Context;
+ 
