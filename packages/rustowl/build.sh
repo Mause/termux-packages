@@ -8,6 +8,8 @@ TERMUX_PKG_SHA256='fa120643aeb48061eb32a7c993dabff88aa4e9d0b32f8ab0f3289b3fb2cf5
 TERMUX_PKG_BUILD_IN_SRC='true'
 TERMUX_PKG_AUTO_UPDATE='true'
 
+set -eux
+
 termux_step_pre_configure() {
 	termux_setup_rust
 	. ~/.cargo/env
