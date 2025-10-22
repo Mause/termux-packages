@@ -1,0 +1,83 @@
+commit 530c2ccd72359406319695674033dfda858fa2aa
+Author: Elliana May <me@mause.me>
+Date:   Wed Oct 22 09:28:57 2025 +0800
+
+    add polonius-engine
+
+diff --git a/Cargo.lock b/Cargo.lock
+index 484951f..f3a1594 100644
+--- a/Cargo.lock
++++ b/Cargo.lock
+@@ -171,7 +171,7 @@ dependencies = [
+  "proc-macro2",
+  "quote",
+  "regex",
+- "rustc-hash",
++ "rustc-hash 2.1.1",
+  "shlex",
+  "syn",
+ ]
+@@ -575,6 +575,12 @@ dependencies = [
+  "parking_lot_core",
+ ]
+ 
++[[package]]
++name = "datafrog"
++version = "2.0.1"
++source = "registry+https://github.com/rust-lang/crates.io-index"
++checksum = "a0afaad2b26fa326569eb264b1363e8ae3357618c43982b3f285f0774ce76b69"
++
+ [[package]]
+ name = "deflate64"
+ version = "0.1.9"
+@@ -1440,6 +1446,17 @@ dependencies = [
+  "plotters-backend",
+ ]
+ 
++[[package]]
++name = "polonius-engine"
++version = "0.13.0"
++source = "registry+https://github.com/rust-lang/crates.io-index"
++checksum = "c4e8e505342045d397d0b6674dcb82d6faf5cf40484d30eeb88fc82ef14e903f"
++dependencies = [
++ "datafrog",
++ "log",
++ "rustc-hash 1.1.0",
++]
++
+ [[package]]
+ name = "potential_utf"
+ version = "0.1.2"
+@@ -1621,6 +1638,12 @@ version = "0.2.2"
+ source = "registry+https://github.com/rust-lang/crates.io-index"
+ checksum = "88f8660c1ff60292143c98d08fc6e2f654d722db50410e3f3797d40baaf9d8f3"
+ 
++[[package]]
++name = "rustc-hash"
++version = "1.1.0"
++source = "registry+https://github.com/rust-lang/crates.io-index"
++checksum = "08d43f7aa6b08d49f382cde6a7982047c3426db949b1424bc4b7ec9ae12c6ce2"
++
+ [[package]]
+ name = "rustc-hash"
+ version = "2.1.1"
+@@ -1699,6 +1722,7 @@ dependencies = [
+  "criterion",
+  "flate2",
+  "log",
++ "polonius-engine",
+  "process_alive",
+  "rayon",
+  "regex",
+diff --git a/Cargo.toml b/Cargo.toml
+index 2734c13..4ad144c 100644
+--- a/Cargo.toml
++++ b/Cargo.toml
+@@ -36,6 +36,7 @@ clap_complete = "4"
+ clap_complete_nushell = "4"
+ flate2 = "1"
+ log = "0.4"
++polonius-engine = "0.13.0"
+ process_alive = "0.1"
+ rayon = "1"
+ reqwest = { version = "0.12", default-features = false, features = [
