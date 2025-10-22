@@ -11,5 +11,5 @@ TERMUX_PKG_AUTO_UPDATE='true'
 termux_step_pre_configure() {
 	termux_setup_rust
 	. ~/.cargo/env
-	rustup component add rust-src rustc-dev llvm-tools-preview --target $CARGO_TARGET_NAME
+	rustup component add rust-src rustc-dev llvm-tools-preview --toolchain 1.90.0-$CARGO_TARGET_NAME
 }
