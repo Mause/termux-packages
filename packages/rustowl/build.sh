@@ -10,7 +10,7 @@ TERMUX_PKG_AUTO_UPDATE='true'
 
 set -o xtrace
 
-TERMUX_RUST_VERSION="nightly-2025-04-08"
+TERMUX_RUST_VERSION="nightly"
 
 termux_step_pre_configure() {
 	termux_setup_rust
