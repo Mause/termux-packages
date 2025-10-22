@@ -10,10 +10,8 @@ TERMUX_PKG_AUTO_UPDATE='true'
 
 set -o xtrace
 
-TERMUX_RUST_VERSION="nightly"
-
 termux_step_pre_configure() {
 	termux_setup_rust
 	. ~/.cargo/env
-	rustup component add rust-src rustc-dev llvm-tools-preview --target $CARGO_TARGET_NAME --toolchain $TERMUX_RUST_VERSION
+	rustup component add rust-src rustc-dev llvm-tools-preview --target $CARGO_TARGET_NAME
 }
