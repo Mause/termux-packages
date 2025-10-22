@@ -12,5 +12,4 @@ termux_step_pre_configure() {
 	termux_setup_rust
 	. ~/.cargo/env
 	rustup component add rust-src rustc-dev llvm-tools-preview
-	rm src/bin/rustowlc.rs
 }
