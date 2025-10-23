@@ -7,3 +7,4 @@ TERMUX_PKG_SRCURL=https://github.com/mrcjkb/vimcats/archive/refs/tags/v${TERMUX_
 TERMUX_PKG_SHA256='665ad9ff02e1430822d7738c8c8f204ed9fb5808f264d4e93c64d241f33e9a63'
 TERMUX_PKG_BUILD_IN_SRC='true'
 TERMUX_PKG_AUTO_UPDATE='true'
+TERMUX_PKG_EXTRA_CONFIGURE_ARGS='--features=cli'
