@@ -13,5 +13,7 @@ set -o xtrace
 termux_step_pre_configure() {
 	termux_setup_rust
 	. ~/.cargo/env
+	rustup component list | grep llvm
+	rustup component add llvm-tools-preview --target $CARGO_TARGET_NAME
 	rustup component add rust-src rustc-dev llvm-tools-preview
 }
