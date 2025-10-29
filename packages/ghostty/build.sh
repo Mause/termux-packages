@@ -7,3 +7,12 @@ TERMUX_PKG_SRCURL=https://github.com/ghostty-org/ghostty/archive/refs/tags/v${TE
 TERMUX_PKG_SHA256='e17d39482fc70fba3d72f5f25c12e9d9a72b87dd45a61a854d9928e98b69edd8'
 TERMUX_PKG_BUILD_IN_SRC='true'
 TERMUX_PKG_AUTO_UPDATE='true'
+
+termux_step_make() {
+	termux_setup_zig
+	zig build -Dtarget="$ZIG_TARGET_NAME" -Doptimize=ReleaseSafe
+}
+
+termux_step_make_install() {
+	install -Dm700 -t "$TERMUX_PREFIX/bin" zig-out/bin/zls
+}
