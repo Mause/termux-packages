@@ -13,8 +13,8 @@ set -o xtrace
 
 termux_step_make() {
 	termux_setup_zig
-	zig build lib-vt --help
-	zig build lib-vt -Dtarget="$ZIG_TARGET_NAME" -Doptimize=ReleaseSafe
+	zig build --help
+	zig build -Dapp-runtime=none -Dtarget="$ZIG_TARGET_NAME" -Doptimize=ReleaseSafe
 }
 
 termux_step_make_install() {
