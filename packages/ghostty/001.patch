@@ -1,0 +1,17 @@
+diff --git a/build.zig b/build.zig
+index a2fb25e96..137e985c7 100644
+--- a/build.zig
++++ b/build.zig
+@@ -83,10 +83,12 @@ pub fn build(b: *std.Build) !void {
+     const libghostty_shared = try buildpkg.GhosttyLib.initShared(
+         b,
+         &deps,
++        .pic = true,
+     );
+     const libghostty_static = try buildpkg.GhosttyLib.initStatic(
+         b,
+         &deps,
++        .pic = true,
+     );
+ 
+     // Runtime "none" is libghostty, anything else is an executable.
