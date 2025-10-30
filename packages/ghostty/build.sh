@@ -14,7 +14,7 @@ set -o xtrace
 termux_step_make() {
 	termux_setup_zig
 	zig build --help
-	zig build -Dapp-runtime=none -Dtarget="$ZIG_TARGET_NAME" -Doptimize=ReleaseSafe
+	zig build -Dapp-runtime=none -Dtarget="$ZIG_TARGET_NAME" -Doptimize=ReleaseSafe -Dpie=true -fPIC
 }
 
 termux_step_make_install() {
