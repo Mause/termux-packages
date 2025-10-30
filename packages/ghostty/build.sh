@@ -13,8 +13,8 @@ set -o xtrace
 
 termux_step_make() {
 	termux_setup_zig
-	zig build --help
-	zig build -Dtarget="$ZIG_TARGET_NAME" -Doptimize=ReleaseSafe -fno-sys=gtk4-layer-shell
+	zig build install --help
+	zig build install -Dtarget="$ZIG_TARGET_NAME" -Doptimize=ReleaseSafe -fno-sys=gtk4-layer-shell
 }
 
 termux_step_make_install() {
