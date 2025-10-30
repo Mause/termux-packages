@@ -7,6 +7,7 @@ TERMUX_PKG_SRCURL=https://github.com/ghostty-org/ghostty/archive/refs/tags/v${TE
 TERMUX_PKG_SHA256='e17d39482fc70fba3d72f5f25c12e9d9a72b87dd45a61a854d9928e98b69edd8'
 TERMUX_PKG_BUILD_IN_SRC='true'
 TERMUX_PKG_AUTO_UPDATE='true'
+TERMUX_PKG_DEPENDS="libadwaita"
 TERMUX_ZIG_VERSION='0.14.0'
 
 set -o xtrace
