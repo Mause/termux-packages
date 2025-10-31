@@ -1,17 +1,20 @@
-diff --git a/build.zig b/build.zig
-index a2fb25e96..137e985c7 100644
---- a/build.zig
-+++ b/build.zig
-@@ -83,10 +83,12 @@ pub fn build(b: *std.Build) !void {
-     const libghostty_shared = try buildpkg.GhosttyLib.initShared(
-         b,
-         &deps,
-+        .pic = true,
-     );
-     const libghostty_static = try buildpkg.GhosttyLib.initStatic(
-         b,
-         &deps,
-+        .pic = true,
-     );
- 
-     // Runtime "none" is libghostty, anything else is an executable.
+diff --git a/src/build/GhosttyLib.zig b/src/build/GhosttyLib.zig
+index b244a72c5..c5ff4405b 100644
+--- a/src/build/GhosttyLib.zig
++++ b/src/build/GhosttyLib.zig
+@@ -27,6 +27,7 @@ pub fn initStatic(
+             .strip = deps.config.strip,
+             .omit_frame_pointer = deps.config.strip,
+             .unwind_tables = if (deps.config.strip) .none else .sync,
++            .pic = true,
+         }),
+         .linkage = .static,
+     });
+@@ -78,6 +79,7 @@ pub fn initShared(
+             .strip = deps.config.strip,
+             .omit_frame_pointer = deps.config.strip,
+             .unwind_tables = if (deps.config.strip) .none else .sync,
++            .pic = true,
+         }),
+     });
+     _ = try deps.add(lib);
