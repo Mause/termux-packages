@@ -28,7 +28,7 @@ termux_step_pre_configure() {
 
 termux_step_make() {
 	npm install
-	./node_modules/.bin/hereby build --release --target "$(go env GOOS)-$(go env GOARCH)" --outdir "$TERMUX_PKG_SRCDIR"
+	./node_modules/.bin/hereby native-preview:build-packages --for-release --target "$(go env GOOS)-$(go env GOARCH)" --outdir "$TERMUX_PKG_SRCDIR"
 }
 
 termux_step_make_install() {
