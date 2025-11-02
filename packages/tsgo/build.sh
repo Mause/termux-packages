@@ -34,5 +34,5 @@ termux_step_make() {
 
 termux_step_make_install() {
 	ls ./built/npm
-	npm install -g ./built/npm/tsgo-*.tgz
+	npm install -g ./built/npm/native-preview*.tgz
 }
