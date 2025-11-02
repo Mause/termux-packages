@@ -33,6 +33,6 @@ termux_step_make() {
 }
 
 termux_step_make_install() {
-	tree ./built/npm
+	ls ./built/npm
 	npm install -g ./built/npm/tsgo-*.tgz
 }
