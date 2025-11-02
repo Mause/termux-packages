@@ -8,12 +8,13 @@ TERMUX_PKG_LICENSE_FILE="LICENSE"
 TERMUX_PKG_SRCURL="git+https://github.com/microsoft/typescript-go"
 TERMUX_PKG_BUILD_IN_SRC=true
 TERMUX_PKG_AUTO_UPDATE=true
-TERMUX_PKG_GIT_COMMIT="6fb55b7eabb48336d58a4ead49df12e91e386a15"
+_COMMIT="6fb55b7eabb48336d58a4ead49df12e91e386a15"
 
 set -o xtrace
 
 termux_post_get_source() {
-	git checkout "$TERMUX_PKG_GIT_COMMIT"
+	git fetch --unshallow
+	git checkout $_COMMIT
 }
 
 termux_step_pre_configure() {
