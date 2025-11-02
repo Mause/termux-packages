@@ -28,10 +28,11 @@ termux_step_pre_configure() {
 
 termux_step_make() {
 	npm install
-	./node_modules/.bin/hereby native-preview:build-packages --for-release --target "$(go env GOOS)-$(go env GOARCH)" --outdir "$TERMUX_PKG_SRCDIR"
+	./node_modules/.bin/hereby native-preview:build-packages --for-release --target "$(go env GOOS)-$(go env GOARCH)"
+	./node_modules/.bin/hereby native-preview:pack-packages --for-release --target "$(go env GOOS)-$(go env GOARCH)"
 }
 
 termux_step_make_install() {
-	install -Dm644 "$TERMUX_PKG_SRCDIR/built/local" -t "$TERMUX_PREFIX/share/tsgo"
-	install -Dm755 "$TERMUX_PKG_SRCDIR/built/local/tsgo" -t "$TERMUX_PREFIX/share/tsgo/tsgo"
+	tree ./built/npm
+	npm install -g ./built/npm/tsgo-*.tgz
 }
