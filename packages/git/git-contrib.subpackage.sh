@@ -1,4 +1,4 @@
 TERMUX_SUBPKG_DESCRIPTION="Git contrib"
 TERMUX_SUBPKG_INCLUDE="
-contrib/git-jump/*
+contrib/git-jump/
 "
