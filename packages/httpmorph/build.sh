@@ -11,7 +11,9 @@ TERMUX_PKG_DEPENDS="python"
 
 termux_step_pre_configure() {
 	termux_setup_python_pip
+}
 
+termux_step_configure() {
 	pwd
 	ls
 
