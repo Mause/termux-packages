@@ -8,3 +8,7 @@ TERMUX_PKG_SHA256='64f506b0393315faa49b97390f76fd05844424fbb21c0d40a196841e82f4f
 TERMUX_PKG_BUILD_IN_SRC='true'
 TERMUX_PKG_AUTO_UPDATE='true'
 TERMUX_PKG_DEPENDS="python"
+
+termux_step_pre_configure() {
+	termux_setup_python
+}
