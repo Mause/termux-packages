@@ -10,7 +10,8 @@ TERMUX_PKG_AUTO_UPDATE='true'
 TERMUX_PKG_DEPENDS="python"
 
 termux_step_pre_configure() {
-	termux_setup_python
+	termux_setup_python_pip
 
 	make setup
 }
+
