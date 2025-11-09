@@ -7,7 +7,7 @@ TERMUX_PKG_SRCURL=https://github.com/arman-bd/httpmorph/archive/refs/tags/v${TER
 TERMUX_PKG_SHA256='64f506b0393315faa49b97390f76fd05844424fbb21c0d40a196841e82f4faab'
 TERMUX_PKG_BUILD_IN_SRC=true
 TERMUX_PKG_AUTO_UPDATE=true
-TERMUX_PKG_DEPENDS="python"
+TERMUX_PKG_DEPENDS="python, libunwind"
 
 termux_step_pre_configure() {
 	termux_setup_python_pip
