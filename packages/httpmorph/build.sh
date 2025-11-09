@@ -11,4 +11,6 @@ TERMUX_PKG_DEPENDS="python"
 
 termux_step_pre_configure() {
 	termux_setup_python
+
+	make setup
 }
