@@ -1,4 +1,4 @@
 TERMUX_SUBPKG_DESCRIPTION="Git contrib"
 TERMUX_SUBPKG_INCLUDE="
-contrib/git-jump/
+$TERMUX_PKG_SRCDIR/contrib/git-jump/
 "
