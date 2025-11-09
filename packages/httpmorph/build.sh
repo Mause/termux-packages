@@ -1,4 +1,4 @@
-TERMUX_PKG_HOMEPAGE='https://github.com/arman-bd/httpmorph/archive/refs/tags/v0.2.4.tar.gz'
+TERMUX_PKG_HOMEPAGE='https://github.com/arman-bd/httpmorph'
 TERMUX_PKG_DESCRIPTION="httpmorph is a drop-in replacement for Python's requests library that uses a custom C implementation with BoringSSL instead of Python's standard HTTP stack."
 TERMUX_PKG_LICENSE='MIT'
 TERMUX_PKG_MAINTAINER='@termux'
