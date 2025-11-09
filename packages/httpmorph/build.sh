@@ -12,6 +12,7 @@ TERMUX_PKG_DEPENDS="python, libunwind"
 termux_step_pre_configure() {
 	termux_setup_python_pip
 	termux_setup_cmake
+	termux_setup_golang
 }
 
 termux_step_configure() {
