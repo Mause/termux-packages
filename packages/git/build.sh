@@ -70,6 +70,7 @@ termux_step_post_make_install() {
 	cp "$TERMUX_PKG_SRCDIR/contrib/completion/git-completion.bash" \
 		"$TERMUX_PKG_SRCDIR/contrib/completion/git-prompt.sh" \
 		"$TERMUX_PREFIX/etc/bash_completion.d/"
+	install -Dm700 -t $TERMUX_PKG_SRCDIR/contrib/git-jump/git-jump $TERMUX_PREFIX/bin/git-jump
 
 	# Remove the build machine perl setup in termux_step_pre_configure to avoid it being packaged:
 	rm "$TERMUX_PREFIX/bin/perl"
