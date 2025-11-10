@@ -16,9 +16,9 @@ termux_step_pre_configure() {
 	termux_setup_golang
 }
 
-termux_step_post_configure() {
-	pwd
-	ls
+# termux_step_post_configure() {
+# 	pwd
+# 	ls
 
-	make setup
-}
+# 	make setup
+# }
