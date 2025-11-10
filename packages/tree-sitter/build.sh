@@ -63,7 +63,7 @@ termux_step_pre_configure() {
 termux_step_post_make_install() {
 	cargo build --jobs "$TERMUX_PKG_MAKE_PROCESSES" --target "$CARGO_TARGET_NAME" --release
 	install -Dm700 -t "$TERMUX_PREFIX"/bin target/"${CARGO_TARGET_NAME}"/release/tree-sitter
-	install -m644 $TERMUX_PKG_SRCDIR/lib/src/parser.h '$TERMUX_PREFIX/include'/tree_sitter/parser.h
+	install -m644 $TERMUX_PKG_SRCDIR/lib/src/parser.h "$TERMUX_PREFIX/include/tree_sitter/parser.h"
 
 	mkdir -p "${TERMUX_PREFIX}/share/zsh/site-functions"
 	mkdir -p "${TERMUX_PREFIX}/share/bash-completion/completions"
