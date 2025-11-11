@@ -1,6 +1,6 @@
 TERMUX_PKG_HOMEPAGE='https://github.com/jonathanmagambo/otterlang'
 TERMUX_PKG_DESCRIPTION='Otterlang programming language 🦦'
-TERMUX_PKG_LICENSE='BSD-3-Clause'
+TERMUX_PKG_LICENSE='BSD 3-Clause'
 TERMUX_PKG_MAINTAINER='@termux'
 TERMUX_PKG_VERSION='0.0.1'
 _COMMIT='ea61aa0a7869741edaa641c06831afca3bbd221a'
