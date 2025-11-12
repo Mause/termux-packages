@@ -11,5 +11,6 @@ TERMUX_PKG_BUILD_IN_SRC=true
 TERMUX_PKG_AUTO_UPDATE=true
 
 termux_step_post_get_source() {
+	git fetch --unshallow
 	git checkout $_COMMIT
 }
