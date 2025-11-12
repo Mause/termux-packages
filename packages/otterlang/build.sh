@@ -20,5 +20,6 @@ termux_step_post_get_source() {
 termux_step_make() {
 	termux_setup_rust
 	. $HOME/.cargo/env
+	rustup target add nightly-aarch64-linux-android
 	cargo +nightly install --jobs 4 --path . --force --locked --no-track --target $CARGO_TARGET_NAME --root $TERMUX_PREFIX
 }
