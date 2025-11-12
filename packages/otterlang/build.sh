@@ -10,6 +10,8 @@ TERMUX_PKG_SHA256='b532a8b732e0a953116a44e98dc2d289053604bb5b6fff4ab2ab4694de510
 TERMUX_PKG_BUILD_IN_SRC=true
 TERMUX_PKG_AUTO_UPDATE=true
 
+set -x otrace
+
 termux_step_post_get_source() {
 	git fetch --unshallow
 	git checkout $_COMMIT
