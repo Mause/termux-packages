@@ -16,3 +16,7 @@ termux_step_post_get_source() {
 	git fetch --unshallow
 	git checkout $_COMMIT
 }
+
+termux_step_make() {
+	cargo +nightly install --jobs 4 --path . --force --locked --no-track --target $CARGO_TARGET_NAME --root $TERMUX_PREFIX
+}
