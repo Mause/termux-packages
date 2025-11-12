@@ -18,5 +18,6 @@ termux_step_post_get_source() {
 }
 
 termux_step_make() {
+	. $HOME/.cargo/env
 	cargo +nightly install --jobs 4 --path . --force --locked --no-track --target $CARGO_TARGET_NAME --root $TERMUX_PREFIX
 }
