@@ -9,6 +9,7 @@ TERMUX_PKG_SRCURL=git+https://github.com/jonathanmagambo/otterlang
 TERMUX_PKG_SHA256='b532a8b732e0a953116a44e98dc2d289053604bb5b6fff4ab2ab4694de510d07'
 TERMUX_PKG_BUILD_IN_SRC=true
 TERMUX_PKG_AUTO_UPDATE=true
+TERMUX_PKG_BUILD_DEPENDS="llvm"
 
 set -x otrace
 
