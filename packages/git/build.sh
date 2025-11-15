@@ -3,6 +3,7 @@ TERMUX_PKG_DESCRIPTION="Fast, scalable, distributed revision control system"
 TERMUX_PKG_LICENSE="GPL-2.0"
 TERMUX_PKG_MAINTAINER="Joshua Kahn @TomJo2000"
 TERMUX_PKG_VERSION="2.51.2"
+TERMUX_PKG_REVISION=1
 TERMUX_PKG_SRCURL=https://mirrors.kernel.org/pub/software/scm/git/git-${TERMUX_PKG_VERSION}.tar.xz
 TERMUX_PKG_SHA256=233d7143a2d58e60755eee9b76f559ec73ea2b3c297f5b503162ace95966b4e3
 TERMUX_PKG_AUTO_UPDATE=true
@@ -69,6 +70,7 @@ termux_step_post_make_install() {
 	cp "$TERMUX_PKG_SRCDIR/contrib/completion/git-completion.bash" \
 		"$TERMUX_PKG_SRCDIR/contrib/completion/git-prompt.sh" \
 		"$TERMUX_PREFIX/etc/bash_completion.d/"
+	install -Dm700 $TERMUX_PKG_SRCDIR/contrib/git-jump/git-jump $TERMUX_PREFIX/bin/git-jump
 
 	# Remove the build machine perl setup in termux_step_pre_configure to avoid it being packaged:
 	rm "$TERMUX_PREFIX/bin/perl"
