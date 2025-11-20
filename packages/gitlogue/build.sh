@@ -7,6 +7,7 @@ TERMUX_PKG_SRCURL=https://github.com/unhappychoice/gitlogue/archive/refs/tags/v$
 TERMUX_PKG_SHA256='7346e59149f48c34f7b6c7777a6c02da342c27202c257dea86a5d20e6b3d8828'
 TERMUX_PKG_BUILD_IN_SRC=true
 TERMUX_PKG_AUTO_UPDATE=true
+TERMUX_PKG_DEPENDS="zlib"
 
 termux_step_pre_configure() {
 	termux_setup_rust
