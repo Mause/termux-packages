@@ -21,6 +21,6 @@ termux_step_pre_configure() {
 }
 
 termux_step_make_install() {
-	rustup target add $CARGO_TARGET_NAME
-	cargo +nightly install --jobs 6 --path . --force --locked --no-track --target $CARGO_TARGET_NAME --root $TERMUX_PREFIX
+	export RUSTC_BOOTSTRAP=1
+	cargo install --jobs $TERMUX_PKG_MAKE_PROCESSES --locked --target $CARGO_TARGET_NAME --root "$TERMUX_PREFIX"
 }
