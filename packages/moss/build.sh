@@ -9,6 +9,8 @@ _COMMIT='fae19e3cba73d2ad65651167a76e92c9802853a3'
 TERMUX_PKG_BUILD_IN_SRC=true
 TERMUX_PKG_AUTO_UPDATE=true
 
+set -x
+
 termux_step_post_get_source() {
 	git fetch --unshallow
 	git checkout $_COMMIT
