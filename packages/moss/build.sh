@@ -22,5 +22,6 @@ termux_step_pre_configure() {
 
 termux_step_make_install() {
 	export RUSTC_BOOTSTRAP=1
-	cargo install --jobs $TERMUX_PKG_MAKE_PROCESSES --locked --target $CARGO_TARGET_NAME --root "$TERMUX_PREFIX"
+	cargo install --jobs $TERMUX_PKG_MAKE_PROCESSES --path . --locked --target $CARGO_TARGET_NAME --root "$TERMUX_PREFIX"
+
 }
