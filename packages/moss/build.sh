@@ -19,3 +19,7 @@ termux_step_post_get_source() {
 termux_step_pre_configure() {
 	termux_setup_rust
 }
+
+termux_step_make_install() {
+	cargo +nightly install --jobs 6 --path . --force --locked --no-track --target $CARGO_TARGET_NAME --root $TERMUX_PREFIX
+}
