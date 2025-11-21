@@ -13,3 +13,7 @@ termux_step_post_get_source() {
 	git fetch --unshallow
 	git checkout $_COMMIT
 }
+
+termux_step_pre_configure() {
+	termux_setup_rust
+}
