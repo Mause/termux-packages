@@ -10,3 +10,12 @@ TERMUX_PKG_AUTO_UPDATE=true
 TERMUX_PKG_DEPENDS="llvm"
 
 set -o xtrace
+
+termux_step_pre_configure() {
+	termux_setup_zig
+}
+
+termux_step_make() {
+	ZIG_TARGET_NAME=${TERMUX_ARCH}-linux-android
+	zig build -Dtarget=$ZIG_TARGET_NAME
+}
