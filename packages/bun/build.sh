@@ -15,6 +15,10 @@ termux_step_pre_configure() {
 	termux_setup_zig
 }
 
+termux_step_configure() {
+	echo 'doing nothing'
+}
+
 termux_step_make() {
 	ZIG_TARGET_NAME=${TERMUX_ARCH}-linux-android
 	zig build -Dtarget=$ZIG_TARGET_NAME
