@@ -7,3 +7,7 @@ TERMUX_PKG_SRCURL=https://github.com/hengyoush/kyanos/archive/refs/tags/v${TERMU
 TERMUX_PKG_SHA256='e262ea0b5f529601edf83ff969a91abdfc3362231b027b6dce72e3fbf127ca76'
 TERMUX_PKG_BUILD_IN_SRC=true
 TERMUX_PKG_AUTO_UPDATE=true
+
+termux_step_pre_configure() {
+	termux_setup_golang
+}
