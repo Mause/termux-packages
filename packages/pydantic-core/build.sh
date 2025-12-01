@@ -1,0 +1,9 @@
+TERMUX_PKG_HOMEPAGE='https://github.com/pydantic/pydantic-core'
+TERMUX_PKG_DESCRIPTION='Core validation logic for pydantic written in rust'
+TERMUX_PKG_LICENSE='MIT'
+TERMUX_PKG_MAINTAINER='@termux'
+TERMUX_PKG_VERSION='2.41.5'
+TERMUX_PKG_SRCURL=https://github.com/pydantic/pydantic-core/archive/refs/tags/v${TERMUX_PKG_VERSION}.tar.gz
+TERMUX_PKG_SHA256='872f700f7e42723e17cec5291d00677d790c14768030f4f37e7de72c2935d731'
+TERMUX_PKG_BUILD_IN_SRC=true
+TERMUX_PKG_AUTO_UPDATE=true
