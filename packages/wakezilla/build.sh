@@ -7,3 +7,7 @@ TERMUX_PKG_SRCURL=https://github.com/guibeira/wakezilla/archive/${TERMUX_PKG_VER
 TERMUX_PKG_SHA256='9e2a23225ed3abc0e8451fde501909bb8b4f09adf7daa5273e699483792b78c9'
 TERMUX_PKG_BUILD_IN_SRC=true
 TERMUX_PKG_AUTO_UPDATE=true
+
+termux_step_pre_configure() {
+	termux_setup_rust
+}
