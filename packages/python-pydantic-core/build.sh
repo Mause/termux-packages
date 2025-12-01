@@ -28,10 +28,14 @@ termux_step_make() {
 	# pip3 install .
 }
 
-termux_step_create_debscripts() {
-	cat <<- EOF > ./postinst
-	#!$TERMUX_PREFIX/bin/sh
-	echo "Installing dependencies through pip..."
-	pip3 install $TERMUX_PKG_PYTHON_TARGET_DEPS
-	EOF
+termux_step_make_install() {
+	install /home/builder/.termux-build/python-pydantic-core/src/target/wheels/pydantic_core-$TERMUX_PKG_VERSION-cp312-cp312-linux_aarch64.whl $TERMUX_PREFIX/lib
 }
+
+#termux_step_create_debscripts() {
+#	cat <<- EOF > ./postinst
+#	#!$TERMUX_PREFIX/bin/sh
+#	echo "Installing dependencies through pip..."
+#	pip3 install $TERMUX_PKG_PYTHON_TARGET_DEPS
+#	EOF
+#}
