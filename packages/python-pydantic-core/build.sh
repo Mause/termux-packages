@@ -31,8 +31,8 @@ termux_step_make() {
 termux_step_make_install() {
 	local _pyv="${TERMUX_PYTHON_VERSION/./}"
 	local _whl="pydantic_core-$TERMUX_PKG_VERSION-cp$_pyv-cp$_pyv-linux_$TERMUX_ARCH.whl"
-	pip install --no-deps --prefix=$TERMUX_PREFIX --force-reinstall $TERMUX_PKG_SRCDIR/src/target/wheels/$_whl
-	cp $TERMUX_PKG_SRCDIR/src/target/wheels/$_whl $TERMUX_PREFIX
+	pip install --no-deps --prefix=$TERMUX_PREFIX --force-reinstall $TERMUX_PKG_SRCDIR/target/wheels/$_whl
+	cp $TERMUX_PKG_SRCDIR/target/wheels/$_whl $TERMUX_PREFIX
 }
 
 #termux_step_create_debscripts() {
