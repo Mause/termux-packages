@@ -7,3 +7,5 @@ TERMUX_PKG_SRCURL=https://github.com/piqoni/matcha/archive/refs/tags/v${TERMUX_P
 TERMUX_PKG_SHA256='239f97bed3014c8809d3d70c7840b77985c7cd12dc73510ae7a2fe3f557a0e1d'
 TERMUX_PKG_BUILD_IN_SRC=true
 TERMUX_PKG_AUTO_UPDATE=true
+
+termux_step_pre_configure() { termux_setup_golang }
