@@ -1,4 +1,5 @@
-TERMUX_PKG_DESCRIPTION="Provides cryptographic recipes and primitives to Python developers"
+TERMUX_PKG_HOMEPAGE='https://github.com/pydantic/pydantic-core'
+TERMUX_PKG_DESCRIPTION='Core validation logic for pydantic written in rust'
 TERMUX_PKG_LICENSE="MIT"
 TERMUX_PKG_MAINTAINER="@termux"
 TERMUX_PKG_VERSION="2.20.1"
