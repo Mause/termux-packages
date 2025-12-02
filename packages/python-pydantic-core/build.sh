@@ -8,7 +8,6 @@ TERMUX_PKG_SHA256=872f700f7e42723e17cec5291d00677d790c14768030f4f37e7de72c2935d7
 TERMUX_PKG_AUTO_UPDATE=true
 TERMUX_PKG_DEPENDS="python, python-pip"
 TERMUX_PKG_BUILD_IN_SRC=true
-TERMUX_PKG_UPDATE_TAG_TYPE="newest-tag"
 TERMUX_PKG_PYTHON_COMMON_DEPS="setuptools>=60, setuptools_rust, wheel, typing_extensions, maturin"
 
 termux_step_configure() {
@@ -23,7 +22,6 @@ termux_step_make() {
 	export LD_LIBRARY_PATH="${TERMUX_PREFIX}/lib/"
 	echo "Building with CARGO_TARGET_NAME=${CARGO_TARGET_NAME} LD_LIBRARY_PATH=$LD_LIBRARY_PATH"
 	maturin build --release --target ${CARGO_TARGET_NAME} --skip-auditwheel -vv
-	# pip3 install .
 }
 
 termux_step_make_install() {
@@ -32,11 +30,3 @@ termux_step_make_install() {
 	pip install --no-deps --prefix=$TERMUX_PREFIX --force-reinstall $TERMUX_PKG_SRCDIR/target/wheels/$_whl
 	cp $TERMUX_PKG_SRCDIR/target/wheels/$_whl $TERMUX_PREFIX
 }
-
-#termux_step_create_debscripts() {
-#	cat <<- EOF > ./postinst
-#	#!$TERMUX_PREFIX/bin/sh
-#	echo "Installing dependencies through pip..."
-#	pip3 install $TERMUX_PKG_PYTHON_TARGET_DEPS
-#	EOF
-#}
