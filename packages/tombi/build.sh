@@ -10,6 +10,8 @@ TERMUX_PKG_DEPENDS="zstd"
 TERMUX_PKG_BUILD_IN_SRC=true
 TERMUX_PKG_AUTO_UPDATE=true
 
+set -o xtrace
+
 termux_step_pre_configure() {
 	termux_setup_rust
 
