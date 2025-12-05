@@ -2,11 +2,11 @@ TERMUX_PKG_HOMEPAGE=https://github.com/ggml-org/llama.cpp
 TERMUX_PKG_DESCRIPTION="LLM inference in C/C++"
 TERMUX_PKG_LICENSE="MIT"
 TERMUX_PKG_MAINTAINER=@termux
-TERMUX_PKG_VERSION="0.0.0-b6996"
+TERMUX_PKG_VERSION="0.0.0-b7275"
 TERMUX_PKG_SRCURL=https://github.com/ggml-org/llama.cpp/archive/refs/tags/${TERMUX_PKG_VERSION#*-}.tar.gz
-TERMUX_PKG_SHA256=15bc352b6bc78d130514aa00ea2949a976c49b956994d8dc02ffff7166845718
+TERMUX_PKG_SHA256=b8348300697f359f18c26ee2e901e15d4046f58f981905a7911b1b7bf64ec310
 TERMUX_PKG_AUTO_UPDATE=true
-TERMUX_PKG_DEPENDS="libc++, libcurl"
+TERMUX_PKG_DEPENDS="libandroid-spawn, libc++, libcurl"
 TERMUX_PKG_BUILD_DEPENDS="vulkan-headers, opencl-headers, ocl-icd"
 TERMUX_PKG_SUGGESTS="llama-cpp-backend-vulkan, llama-cpp-backend-opencl"
 TERMUX_PKG_EXTRA_CONFIGURE_ARGS="
@@ -38,6 +38,7 @@ termux_pkg_auto_update() {
 
 termux_step_pre_configure() {
 	export PATH="$NDK/shader-tools/linux-x86_64:$PATH"
+	LDFLAGS+=" -landroid-spawn"
 
 	local _libvulkan=vulkan
 	if [[ "${TERMUX_ON_DEVICE_BUILD}" == "false" && "${TERMUX_PKG_API_LEVEL}" -lt 28 ]]; then

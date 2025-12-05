@@ -151,7 +151,10 @@ _fetch_and_cache_tags() {
 		__PACKAGES+=("${pkg_dir}")
 
 		# bash-builtin version of `grep '^TERMUX_PKG_SRCURL=' "${pkg_dir}/build.sh" | grep -q 'github.com'` without spawning extra processes
-		[[ "$(<"$pkg_dir/build.sh")" =~ TERMUX_PKG_SRCURL=[^[:space:]]*github\.com ]] && __GITHUB_PACKAGES+=("$pkg_dir") || :
+		if [[ "$(<"$pkg_dir/build.sh")" =~ TERMUX_PKG_SRCURL=[^[:space:]]*github\.com ]] &&
+			[[ "$(<"$pkg_dir/build.sh")" =~ TERMUX_PKG_UPDATE_METHOD=[^[:space:]]*github || ! "$(<"$pkg_dir/build.sh")" =~ TERMUX_PKG_UPDATE_METHOD=[^[:space:]]* ]]; then
+			__GITHUB_PACKAGES+=("$pkg_dir")
+		fi
 
 	# Find all build.sh files and explicitly filter only files without custom `termux_pkg_auto_update`
 	done < <(grep -rL '^termux_pkg_auto_update' $(jq --raw-output 'del(.pkg_format) | keys | .[]' "${TERMUX_SCRIPTDIR}/repo.json") --include=build.sh | sed 's#/build\.sh$##')
@@ -419,10 +422,8 @@ _gh_create_new_issue() {
 	local issue_number
 	local body
 	local link
-	local assignee="${GITHUB_ACTOR:-}"
-	if [[ "${assignee:-termuxbot2}" == "termuxbot2" ]]; then
-		assignee="MrAdityaAlok" # Assign myself if termuxbot2 is the actor.
-	fi
+	local assignee=""
+	[[ "${GITHUB_ACTOR:-termuxbot2}" != "termuxbot2" ]] && assignee="--assignee $GITHUB_ACTOR"
 
 	if [[ "${CREATE_ISSUE}" != "true" ]]; then
 		echo "INFO: CREATE_ISSUE set to '${CREATE_ISSUE}'. Not creating new issue."
@@ -458,12 +459,13 @@ _gh_create_new_issue() {
 			</i>
 		EOF
 	)"
+	# shellcheck disable=SC2086
 	issue_number=$(
 		gh issue create \
 			--title "Auto update failing for ${pkg_name}" \
 			--body "${body:0:${max_body_length}}" \
 			--label "auto update failing" --label "bot" \
-			--assignee "${assignee}" |
+			$assignee |
 			grep -oE "[0-9]+" # Last component of the URL returned is the issue number.
 	)
 	if [ -z "${issue_number}" ]; then
