@@ -2,10 +2,9 @@ TERMUX_PKG_HOMEPAGE=https://github.com/xtaci/kcptun
 TERMUX_PKG_DESCRIPTION="A Stable & Secure Tunnel based on KCP with N:M multiplexing and FEC"
 TERMUX_PKG_LICENSE="MIT"
 TERMUX_PKG_MAINTAINER="@termux"
-TERMUX_PKG_VERSION="20250730"
-TERMUX_PKG_REVISION=1
+TERMUX_PKG_VERSION="20251124"
 TERMUX_PKG_SRCURL=https://github.com/xtaci/kcptun/archive/refs/tags/v${TERMUX_PKG_VERSION}.tar.gz
-TERMUX_PKG_SHA256=5d418e87ff41be3cc19cac4514dda8697af8de6b68089eb7e46817a0963619b7
+TERMUX_PKG_SHA256=40cb63b8b026dfadb954c352c7a3633507fc49a0a1f12b47e6c69000f4eb5ab0
 TERMUX_PKG_REPLACES="kcptun-client, kcptun-server"
 TERMUX_PKG_BREAKS="kcptun-client, kcptun-server"
 TERMUX_PKG_BUILD_IN_SRC=true
@@ -23,5 +22,4 @@ termux_step_make() {
 termux_step_make_install() {
 	install -Dm700 -t "${TERMUX_PREFIX}"/bin kcptun-client
 	install -Dm700 -t "${TERMUX_PREFIX}"/bin kcptun-server
-
 }

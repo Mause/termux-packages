@@ -3,9 +3,10 @@ TERMUX_PKG_HOMEPAGE=https://www.rust-lang.org/
 TERMUX_PKG_DESCRIPTION="Systems programming language focused on safety, speed and concurrency"
 TERMUX_PKG_LICENSE="MIT"
 TERMUX_PKG_MAINTAINER="@termux"
-TERMUX_PKG_VERSION="1.91.0"
+TERMUX_PKG_VERSION="1.91.1"
+TERMUX_PKG_REVISION=1
 TERMUX_PKG_SRCURL=https://static.rust-lang.org/dist/rustc-${TERMUX_PKG_VERSION}-src.tar.xz
-TERMUX_PKG_SHA256=9b94161dba3aa32192e0e75f7891912d98095ffb86087b07a05af35a0265a938
+TERMUX_PKG_SHA256=66401bb815e236cc6b2aacbbe23b61b286c1fe27a67902e7c0222cfe77b3dbab
 _LLVM_MAJOR_VERSION=$(. $TERMUX_SCRIPTDIR/packages/libllvm/build.sh; echo $LLVM_MAJOR_VERSION)
 _LLVM_MAJOR_VERSION_NEXT=$((_LLVM_MAJOR_VERSION + 1))
 _LZMA_VERSION=$(. $TERMUX_SCRIPTDIR/packages/liblzma/build.sh; echo $TERMUX_PKG_VERSION)
@@ -84,6 +85,32 @@ termux_step_pre_configure() {
 	sed "s|@TERMUX_PKG_API_LEVEL@|${TERMUX_PKG_API_LEVEL}|g" "${p}" \
 		| patch --silent -p1
 
+	# assist with downstream patch methods that bulk-replace
+	# string 'com.termux' throughout the repository
+	local original_prefix_component_one="/data/data/com."
+	local original_prefix_component_two="termux/files/usr"
+	local original_prefix="${original_prefix_component_one}${original_prefix_component_two}"
+	if [[ "$TERMUX_PREFIX" != "$original_prefix" ]]; then
+		local patch="$TERMUX_PKG_BUILDER_DIR/force-allow-edit-vendor.diff"
+		echo "Applying patch: $(basename "$patch")"
+		patch --silent -p1 < "$patch"
+
+		local crate=openssl-probe
+		local crate_src_dir="$(realpath "$(find "$TERMUX_PKG_SRCDIR/vendor" -name "$crate"'*' | sort | tail -n1)")"
+		local crate_dest_dir="$crate_src_dir-custom-termux-prefix"
+		cp -r "$crate_src_dir" "$crate_dest_dir"
+
+		echo "Replacing '$original_prefix' with '$TERMUX_PREFIX' in '$crate_dest_dir/src/lib.rs'"
+		sed -i -e "s|$original_prefix|$TERMUX_PREFIX|g" "$crate_dest_dir/src/lib.rs"
+
+		local dir
+		for dir in "$TERMUX_PKG_SRCDIR"/{,src/tools/cargo,src/tools/miri}; do
+			echo '' >> "$dir/Cargo.toml"
+			echo '[patch.crates-io]' >> "$dir/Cargo.toml"
+			echo "$crate = { path = \"${crate_dest_dir}\" }" >> "$dir/Cargo.toml"
+		done
+	fi
+
 	export RUST_LIBDIR=$TERMUX_PKG_BUILDDIR/_lib
 	mkdir -p $RUST_LIBDIR
 
@@ -116,7 +143,7 @@ termux_step_configure() {
 	# like 30 to 40 + minutes ... so lets get it right
 
 	# upstream tests build using versions N and N-1
-	local BOOTSTRAP_VERSION=1.90.0
+	local BOOTSTRAP_VERSION=1.91.0
 	if [[ "${TERMUX_ON_DEVICE_BUILD}" == "false" ]]; then
 		if ! rustup install "${BOOTSTRAP_VERSION}"; then
 			echo "WARN: ${BOOTSTRAP_VERSION} is unavailable, fallback to stable version!"

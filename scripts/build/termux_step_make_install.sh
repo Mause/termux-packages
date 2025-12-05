@@ -5,7 +5,7 @@ termux_step_make_install() {
 	if test -f build.ninja; then
 		ninja -j $TERMUX_PKG_MAKE_PROCESSES install
 	elif test -f setup.py || test -f pyproject.toml || test -f setup.cfg; then
-	    python -m pip install cibuildwheel==3.2.0
+		python -m pip install cibuildwheel==3.2.0
 		python -m cibuildwheel . --wheel-dir $TERMUX_PREFIX
 		SCRIPT_DIR=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )
 		python3 $SCRIPT_DIR/../check_tags.py $TERMUX_PREFIX
@@ -25,7 +25,9 @@ termux_step_make_install() {
 			make -j 1 ${TERMUX_PKG_EXTRA_MAKE_ARGS} ${TERMUX_PKG_MAKE_INSTALL_TARGET}
 		fi
 	elif test -f Cargo.toml; then
-		termux_setup_rust
+		if [[ -z "$(command -v cargo)" ]]; then
+			termux_error_exit "cargo command is not found! Please add termux_setup_rust in package's build.sh!"
+		fi
 		cargo install \
 			--jobs $TERMUX_PKG_MAKE_PROCESSES \
 			--path . \
