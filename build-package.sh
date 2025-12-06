@@ -18,7 +18,7 @@ else
 	touch "$TERMUX_BUILD_PACKAGE_CALL_BUILDING_PACKAGES_LIST_FILE_PATH"
 fi
 
-set -euo pipefail
+set -e -o pipefail -u -o xtrace
 
 cd "$(realpath "$(dirname "$0")")"
 TERMUX_SCRIPTDIR=$(pwd)
