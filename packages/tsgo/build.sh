@@ -1,14 +1,14 @@
 TERMUX_PKG_DESCRIPTION="A port of the typescript compiler to go"
 TERMUX_PKG_MAINTAINER="@termux"
 TERMUX_PKG_GIT_BRANCH=main
-TERMUX_PKG_VERSION="7.0.3"
+TERMUX_PKG_VERSION="7.0.4"
 TERMUX_PKG_HOMEPAGE="https://github.com/microsoft/typescript-go"
 TERMUX_PKG_LICENSE="Apache-2.0"
 TERMUX_PKG_LICENSE_FILE="LICENSE"
 TERMUX_PKG_SRCURL="git+https://github.com/microsoft/typescript-go"
 TERMUX_PKG_BUILD_IN_SRC=true
 TERMUX_PKG_AUTO_UPDATE=true
-_COMMIT="ea6a3dc055cfcac80fecf12264b01d62bfd7a094"
+_COMMIT="1d138eaa29bc189e6b4f04b87fe278b6afe7e62f"
 
 set -o xtrace
 
