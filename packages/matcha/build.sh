@@ -13,3 +13,7 @@ set -o xtrace
 termux_step_pre_configure() {
 	termux_setup_golang
 }
+
+termux_step_make() {
+	go build -v -ldflags "-X \"main.Version=$TERMUX_PKG_VERSION\""
+}
