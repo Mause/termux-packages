@@ -1,0 +1,9 @@
+TERMUX_PKG_HOMEPAGE='https://github.com/unisonweb/unison'
+TERMUX_PKG_DESCRIPTION='A friendly programming language from the future'
+TERMUX_PKG_LICENSE='NAUMEN'
+TERMUX_PKG_MAINTAINER='@termux'
+TERMUX_PKG_VERSION='release/1.0.0'
+TERMUX_PKG_SRCURL=https://github.com/unisonweb/unison/archive/refs/tags/${TERMUX_PKG_VERSION}.tar.gz
+TERMUX_PKG_SHA256='2c0df99e84af3d5f2ef90a8c253dca5cb5ace2653345096e327f3b19d190f9c7'
+TERMUX_PKG_BUILD_IN_SRC=true
+TERMUX_PKG_AUTO_UPDATE=true
