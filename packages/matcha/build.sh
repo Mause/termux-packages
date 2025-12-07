@@ -17,3 +17,7 @@ termux_step_pre_configure() {
 termux_step_make() {
 	go build -v -ldflags "-X \"main.Version=$TERMUX_PKG_VERSION\""
 }
+
+termux_step_make_install() {
+	install -Dm700 -t "$TERMUX_PREFIX"/bin matcha
+}
