@@ -18,5 +18,6 @@ termux_step_pre_configure() {
 termux_step_make() {
 	# cabal --config="$TERMUX_CABAL_CONFIG" build exe:hledger-ui
 	stack --version # we'll want to know this version if you run into trouble
-	stack build --fast --test && stack exec unison
+	stack build --fast --test --host
+	# stack exec unison
 }
