@@ -11,13 +11,13 @@ TERMUX_PKG_AUTO_UPDATE=true
 set -o xtrace
 
 termux_step_pre_configure() {
-	# termux_setup_cabal
+	termux_setup_cabal
 	termux_setup_ghc
-	curl -sSL https://get.haskellstack.org/ | sh
+	# curl -sSL https://get.haskellstack.org/ | sh
 }
 termux_step_make() {
-	# cabal --config="$TERMUX_CABAL_CONFIG" build exe:hledger-ui
-	stack --version # we'll want to know this version if you run into trouble
-	CFLAGS="-arch arm64 ${CFLAGS:-}" stack build --fast --test
+	cabal --config="$TERMUX_CABAL_CONFIG" build exe:unison-cli --config-file=contrib/cabal.project
+	# stack --version # we'll want to know this version if you run into trouble
+	# CFLAGS="-arch arm64 ${CFLAGS:-}" stack build --fast --test
 	# stack exec unison
 }
