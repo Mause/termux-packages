@@ -9,5 +9,9 @@ TERMUX_PKG_BUILD_IN_SRC=true
 TERMUX_PKG_AUTO_UPDATE=true
 
 termux_step_pre_configure() {
+	termux_setup_cabal
 	termux_setup_ghc
+}
+termux_step_make() {
+	cabal --config="$TERMUX_CABAL_CONFIG" build exe:hledger-ui
 }
