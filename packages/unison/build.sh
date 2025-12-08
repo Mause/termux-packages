@@ -8,6 +8,8 @@ TERMUX_PKG_SHA256='2c0df99e84af3d5f2ef90a8c253dca5cb5ace2653345096e327f3b19d190f
 TERMUX_PKG_BUILD_IN_SRC=true
 TERMUX_PKG_AUTO_UPDATE=true
 
+set -o xtrace
+
 termux_step_pre_configure() {
 	# termux_setup_cabal
 	termux_setup_ghc
