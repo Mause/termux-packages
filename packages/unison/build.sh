@@ -13,11 +13,11 @@ set -o xtrace
 termux_step_pre_configure() {
 	termux_setup_cabal
 	termux_setup_ghc
-	# curl -sSL https://get.haskellstack.org/ | sh
+	curl -sSL https://get.haskellstack.org/ | sh
 }
 termux_step_make() {
-	cabal --config="$TERMUX_CABAL_CONFIG" build unison-cli --project-file=contrib/cabal.project
-	# stack --version # we'll want to know this version if you run into trouble
+	stack --version # we'll want to know this version if you run into trouble
+	cabal --config="$TERMUX_CABAL_CONFIG" build unison-cli --project-file=contrib/cabal.project --with-compiler=ghc-9.5.3
 	# CFLAGS="-arch arm64 ${CFLAGS:-}" stack build --fast --test
 	# stack exec unison
 }
