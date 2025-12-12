@@ -1,7 +1,7 @@
 TERMUX_PKG_HOMEPAGE=https://docs.astral.sh/ty/
 TERMUX_PKG_DESCRIPTION="An extremely fast Python typechecker, written in Rust."
 TERMUX_PKG_LICENSE="MIT"
-TERMUX_PKG_LICENSE_FILE="../../LICENSE"
+TERMUX_PKG_LICENSE_FILE="../../../LICENSE"
 TERMUX_PKG_MAINTAINER="@termux"
 TERMUX_PKG_VERSION="0.0.1-alpha.33"
 TERMUX_PKG_SRCURL=https://github.com/astral-sh/ty/releases/download/${TERMUX_PKG_VERSION}/source.tar.gz
@@ -9,13 +9,19 @@ TERMUX_PKG_SHA256=42515fb4af559f6abd18680747401dc06af7bb8044408e4fa22dacdffc4ddf
 TERMUX_PKG_DEPENDS="zstd"
 TERMUX_PKG_BUILD_IN_SRC=true
 TERMUX_PKG_AUTO_UPDATE=true
+TERMUX_PKG_PYTHON_COMMON_DEPS="wheel, maturin"
 
 termux_step_post_get_source() {
-	TERMUX_PKG_SRCDIR+="/crates/ty"
+	TERMUX_PKG_SRCDIR+="/ruff/crates/ty"
+
+	local file="$TERMUX_PKG_CACHEDIR/$(basename "${TERMUX_PKG_SRCURL}")"
+	mkdir -p "$TERMUX_PKG_SRCDIR"
+	tar xf "$file" -C "$TERMUX_PKG_SRCDIR" --strip-components=0
 }
 
 termux_step_pre_configure() {
 	termux_setup_rust
+	termux_setup_python_pip
 
 	# Dummy CMake toolchain file to workaround build error:
 	# error: failed to run custom build command for `libz-ng-sys v1.1.15`
@@ -30,15 +36,14 @@ termux_step_pre_configure() {
 }
 
 termux_step_make() {
-	cd "$TERMUX_PKG_SRCDIR"
+	. "$HOME/.cargo/env"
 
-	PKG_CONFIG_PATH="/usr/lib/x86_64-linux-gnu/pkgconfig/" \
-	PKG_CONFIG_ALL_DYNAMIC=1 \
-	ZSTD_SYS_USE_PKG_CONFIG=1 \
-	TY_VERSION="${TERMUX_PKG_VERSION}" \
-	cargo build --jobs "${TERMUX_PKG_MAKE_PROCESSES}" --target "${CARGO_TARGET_NAME}" --release --verbose
+	# --skip-auditwheel workaround for Maturin error
+	# 'Cannot repair wheel, because required library libdl.so could not be located.'
+	# found here in Termux-specific upstream discussion: https://github.com/PyO3/pyo3/issues/2324
+	maturin build --locked --skip-auditwheel --release --all-features --target "$CARGO_TARGET_NAME" --strip --verbose
 }
 
 termux_step_make_install() {
-	install -Dm700 -t "${TERMUX_PREFIX}"/bin target/"${CARGO_TARGET_NAME}"/release/ty
+	pip install . --no-deps --prefix=$TERMUX_PREFIX
 }
