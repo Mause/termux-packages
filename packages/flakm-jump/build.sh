@@ -1,6 +1,6 @@
 TERMUX_PKG_HOMEPAGE='https://github.com/FlakM/jump'
-TERMUX_PKG_LICENSE=''
-TERMUX_PKG_LICENSE_FILE=''
+TERMUX_PKG_DESCRIPTION='A CLI tool for navigating code references'
+TERMUX_PKG_LICENSE='Custom'
 TERMUX_PKG_MAINTAINER='@termux'
 TERMUX_PKG_VERSION='257db12226bdeb4bab90eb4c445a324c66cf0169'
 TERMUX_PKG_SRCURL=https://github.com/FlakM/jump/archive/${TERMUX_PKG_VERSION}.tar.gz
