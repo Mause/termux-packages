@@ -1,0 +1,14 @@
+TERMUX_PKG_HOMEPAGE='https://github.com/FlakM/jump'
+TERMUX_PKG_LICENSE=''
+TERMUX_PKG_LICENSE_FILE=''
+TERMUX_PKG_MAINTAINER='@termux'
+TERMUX_PKG_VERSION='257db12226bdeb4bab90eb4c445a324c66cf0169'
+TERMUX_PKG_SRCURL=https://github.com/FlakM/jump/archive/${TERMUX_PKG_VERSION}.tar.gz
+TERMUX_PKG_SHA256='9a1d9019b1be36ac750d2612fd4ea2459191c3203ee90f56310c6787db2ecfda'
+TERMUX_PKG_BUILD_IN_SRC=true
+TERMUX_PKG_AUTO_UPDATE=true
+
+termux_step_pre_configure() {
+	termux_setup_rust
+}
+            
