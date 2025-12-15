@@ -9,6 +9,7 @@ TERMUX_PKG_GIT_BRANCH='main'
 TERMUX_PKG_SHA256='d626e01f31cceb4177195a392345a8b8631ac627c0f4e682b65a36e1e2ecdd47'
 TERMUX_PKG_BUILD_IN_SRC=true
 TERMUX_PKG_AUTO_UPDATE=true
+TERMUX_PKG_DEPENDS="openssl"
 
 termux_step_pre_configure() {
 	termux_setup_rust
