@@ -7,14 +7,8 @@ TERMUX_PKG_SRCURL=https://codeberg.org/p2502/lspmux/archive/v${TERMUX_PKG_VERSIO
 TERMUX_PKG_SHA256='92410dfcda4429e0463db91b67712da00fda5fa9fb5316174126e702eb988440'
 TERMUX_PKG_BUILD_IN_SRC=true
 TERMUX_PKG_AUTO_UPDATE=true
+TERMUX_PKG_SERVICE_SCRIPT=("lspmux" "${TERMUX_PREFIX}/bin/lspmux server")
 
 termux_step_pre_configure() {
 	termux_setup_rust
-}
-
-termux_step_post_install() {
-	SERVICE=$TERMUX_PREFIX/var/service/lspmux/log
-	mkdir -p $SERVICE
-	echo "$TERMUX_PREFIX/bin/lspmux server" > $SERVICE/run
-	chmod +x $SERVICE/run
 }
