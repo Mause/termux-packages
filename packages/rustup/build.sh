@@ -11,4 +11,5 @@ TERMUX_PKG_DEPENDS="openssl"
 
 termux_step_pre_configure() {
 	termux_setup_rust
+	termux_setup_cmake
 }
