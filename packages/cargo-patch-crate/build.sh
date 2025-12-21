@@ -10,6 +10,7 @@ TERMUX_PKG_SHA256='d626e01f31cceb4177195a392345a8b8631ac627c0f4e682b65a36e1e2ecd
 TERMUX_PKG_BUILD_IN_SRC=true
 TERMUX_PKG_AUTO_UPDATE=true
 TERMUX_PKG_DEPENDS="openssl"
+TERMUX_PKG_EXCLUDED_ARCHES="arm, i686"
 
 termux_step_pre_configure() {
 	termux_setup_rust
