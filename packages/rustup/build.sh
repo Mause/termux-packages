@@ -12,4 +12,12 @@ TERMUX_PKG_DEPENDS="openssl"
 termux_step_pre_configure() {
 	termux_setup_rust
 	termux_setup_cmake
+
+	# Dummy CMake toolchain file to workaround build error:
+	# error: failed to run custom build command for `libz-ng-sys v1.1.15`
+	# ...
+	# CMake Error at /home/builder/.termux-build/_cache/cmake-3.28.3/share/cmake-3.28/Modules/Platform/Android-Determine.cmake:217 (message):
+	# Android: Neither the NDK or a standalone toolchain was found.
+	export TARGET_CMAKE_TOOLCHAIN_FILE="${TERMUX_PKG_BUILDDIR}/android.toolchain.cmake"
+	touch "${TERMUX_PKG_BUILDDIR}/android.toolchain.cmake"
 }
