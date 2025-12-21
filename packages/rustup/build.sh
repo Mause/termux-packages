@@ -7,6 +7,7 @@ TERMUX_PKG_SRCURL=https://github.com/rust-lang/rustup/archive/refs/tags/${TERMUX
 TERMUX_PKG_SHA256='5987dcb828068a4a5e29ba99ab26f2983ac0c6e2e4dc3e5b3a3c0fafb69abbc0'
 TERMUX_PKG_BUILD_IN_SRC=true
 TERMUX_PKG_AUTO_UPDATE=true
+TERMUX_PKG_DEPENDS="openssl"
 
 termux_step_pre_configure() {
 	termux_setup_rust
