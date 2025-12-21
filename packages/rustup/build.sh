@@ -21,3 +21,12 @@ termux_step_pre_configure() {
 	export TARGET_CMAKE_TOOLCHAIN_FILE="${TERMUX_PKG_BUILDDIR}/android.toolchain.cmake"
 	touch "${TERMUX_PKG_BUILDDIR}/android.toolchain.cmake"
 }
+
+termux_step_make() {
+	cargo build \
+		--jobs "$TERMUX_PKG_MAKE_PROCESSES" \
+		--target "$CARGO_TARGET_NAME" \
+		--no-default-features \
+		--features curl-backend \
+		--release
+}
