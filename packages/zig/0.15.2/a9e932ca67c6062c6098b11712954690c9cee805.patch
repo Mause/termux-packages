@@ -1,0 +1,895 @@
+From a9e932ca67c6062c6098b11712954690c9cee805 Mon Sep 17 00:00:00 2001
+From: pfg <pfg@pfg.pw>
+Date: Wed, 29 Oct 2025 14:36:13 -0700
+Subject: [PATCH] reapply other changes
+
+---
+ lib/std/Build/Module.zig       |   4 +
+ lib/std/Build/Step/Compile.zig |  15 +++
+ src/Compilation.zig            |  48 ++++++++-
+ src/Compilation/Config.zig     |   3 +
+ src/Package/Module.zig         |  12 +++
+ src/arch/x86_64/CodeGen.zig    |  21 +++-
+ src/codegen/llvm.zig           |  26 ++++-
+ src/codegen/llvm/bindings.zig  |   4 +
+ src/link.zig                   |   3 +
+ src/link/Coff.zig              |   1 +
+ src/link/Elf.zig               |  29 +++++-
+ src/link/MachO.zig             |  31 +++++-
+ src/main.zig                   |  25 +++++
+ src/zig_llvm.cpp               | 172 +++++++++++++++++++++++++++++----
+ src/zig_llvm.h                 |   5 +
+ 15 files changed, 364 insertions(+), 35 deletions(-)
+
+diff --git a/lib/std/Build/Module.zig b/lib/std/Build/Module.zig
+index 6f7892483dfc..48f69223fe57 100644
+--- a/lib/std/Build/Module.zig
++++ b/lib/std/Build/Module.zig
+@@ -34,6 +34,7 @@ omit_frame_pointer: ?bool,
+ error_tracing: ?bool,
+ link_libc: ?bool,
+ link_libcpp: ?bool,
++no_init_undefined: ?bool,
+ no_builtin: ?bool,
+ 
+ /// Symbols to be exported when compiling to WebAssembly.
+@@ -257,6 +258,7 @@ pub const CreateOptions = struct {
+     /// more difficult to obtain stack traces. Has target-dependent effects.
+     omit_frame_pointer: ?bool = null,
+     error_tracing: ?bool = null,
++    no_init_undefined: ?bool = null,
+     no_builtin: ?bool = null,
+ };
+ 
+@@ -304,6 +306,7 @@ pub fn init(
+                 .red_zone = options.red_zone,
+                 .omit_frame_pointer = options.omit_frame_pointer,
+                 .error_tracing = options.error_tracing,
++                .no_init_undefined = options.no_init_undefined,
+                 .export_symbol_names = &.{},
+                 .no_builtin = options.no_builtin,
+             };
+@@ -555,6 +558,7 @@ pub fn appendZigProcessFlags(
+     try addFlag(zig_args, m.sanitize_address, "-fsanitize-address", "-fno-sanitize-address");
+     try addFlag(zig_args, m.fuzz, "-ffuzz", "-fno-fuzz");
+     try addFlag(zig_args, m.valgrind, "-fvalgrind", "-fno-valgrind");
++    try addFlag(zig_args, m.no_init_undefined, "-fno-init-undefined", "-finit-undefined");
+     try addFlag(zig_args, m.pic, "-fPIC", "-fno-PIC");
+     try addFlag(zig_args, m.red_zone, "-mred-zone", "-mno-red-zone");
+     try addFlag(zig_args, m.no_builtin, "-fno-builtin", "-fbuiltin");
+diff --git a/lib/std/Build/Step/Compile.zig b/lib/std/Build/Step/Compile.zig
+index b64ce59778f2..fc23d2da389a 100644
+--- a/lib/std/Build/Step/Compile.zig
++++ b/lib/std/Build/Step/Compile.zig
+@@ -157,6 +157,15 @@ headerpad_max_install_names: bool = false,
+ /// (Darwin) Remove dylibs that are unreachable by the entry point or exported symbols.
+ dead_strip_dylibs: bool = false,
+ 
++/// Number of threads to use for LLVM backend code generation.
++/// 0 means single-threaded (default). > 1 enables parallel codegen.
++/// When enabled, outputs multiple .o files: filename.0.o, filename.1.o, etc.
++llvm_codegen_threads: u32 = 0,
++
++/// Skip linker step for build-obj - outputs raw LLVM object file(s).
++/// Saves time by avoiding parse/resolve/write cycle.
++no_link_obj: bool = false,
++
+ /// (Darwin) Force load all members of static archives that implement an Objective-C class or category
+ force_load_objc: bool = false,
+ 
+@@ -1520,6 +1529,12 @@ fn getZigArgs(compile: *Compile, fuzz: bool) ![][]const u8 {
+     if (compile.link_data_sections) {
+         try zig_args.append("-fdata-sections");
+     }
++    if (compile.llvm_codegen_threads > 0) {
++        try zig_args.append(b.fmt("--llvm-codegen-threads={d}", .{compile.llvm_codegen_threads}));
++    }
++    if (compile.no_link_obj) {
++        try zig_args.append("--no-link");
++    }
+     if (compile.link_gc_sections) |x| {
+         try zig_args.append(if (x) "--gc-sections" else "--no-gc-sections");
+     }
+diff --git a/src/Compilation.zig b/src/Compilation.zig
+index c47a99f892cb..948896252871 100644
+--- a/src/Compilation.zig
++++ b/src/Compilation.zig
+@@ -264,6 +264,8 @@ link_task_wait_group: WaitGroup = .{},
+ link_prog_node: std.Progress.Node = std.Progress.Node.none,
+ 
+ llvm_opt_bisect_limit: c_int,
++llvm_codegen_threads: u32,
++no_link_obj: bool,
+ 
+ time_report: ?TimeReport,
+ 
+@@ -1726,6 +1728,8 @@ pub const CreateOptions = struct {
+     linker_print_icf_sections: bool = false,
+     linker_print_map: bool = false,
+     llvm_opt_bisect_limit: i32 = -1,
++    llvm_codegen_threads: u32 = 0,
++    no_link_obj: bool = false,
+     build_id: ?std.zig.BuildId = null,
+     disable_c_depfile: bool = false,
+     linker_z_nodelete: bool = false,
+@@ -2293,6 +2297,8 @@ pub fn create(gpa: Allocator, arena: Allocator, diag: *CreateDiagnostic, options
+             .link_inputs = options.link_inputs,
+             .framework_dirs = options.framework_dirs,
+             .llvm_opt_bisect_limit = options.llvm_opt_bisect_limit,
++            .llvm_codegen_threads = options.llvm_codegen_threads,
++            .no_link_obj = options.no_link_obj,
+             .skip_linker_dependencies = options.skip_linker_dependencies,
+             .queued_jobs = .{},
+             .function_sections = options.function_sections,
+@@ -2402,6 +2408,7 @@ pub fn create(gpa: Allocator, arena: Allocator, diag: *CreateDiagnostic, options
+             .pdb_out_path = options.pdb_out_path,
+             .entry_addr = null, // CLI does not expose this option (yet?)
+             .object_host_name = "env",
++            .llvm_codegen_threads = options.llvm_codegen_threads,
+         };
+ 
+         switch (options.cache_mode) {
+@@ -3346,15 +3353,41 @@ fn flush(
+                 comp.time_report.?.stats.real_ns_llvm_emit = ns;
+             };
+ 
++            const base_bin_path: ?[*:0]const u8 = p: {
++                const lf = comp.bin_file orelse break :p null;
++                // With --no-link, write LLVM output directly to final location
++                const basename = if (comp.no_link_obj)
++                    lf.emit.sub_path  // Direct to final output (skip flushObject)
++                else
++                    lf.zcu_object_basename.?;  // To intermediate (flushObject will copy)
++                const p = try comp.resolveEmitPathFlush(arena, if (comp.no_link_obj) .artifact else .temp, basename);
++                break :p (try p.toStringZ(arena)).ptr;
++            };
++
++            // Generate parallel codegen output filenames if enabled
++            const bin_path_list: ?[]const [*:0]const u8 = if (comp.llvm_codegen_threads > 1 and base_bin_path != null) blk: {
++                const num_threads = comp.llvm_codegen_threads;
++                const list = try arena.alloc([*:0]const u8, num_threads);
++                const base_path_slice = std.mem.sliceTo(base_bin_path.?, 0);
++
++                // Strip .o extension if present
++                const base_name: []const u8 = if (std.mem.endsWith(u8, base_path_slice, ".o"))
++                    base_path_slice[0 .. base_path_slice.len - 2]
++                else
++                    base_path_slice;
++
++                for (0..num_threads) |i| {
++                    list[i] = (try std.fmt.allocPrintSentinel(arena, "{s}.{d}.o", .{base_name, i}, 0)).ptr;
++                }
++                break :blk list;
++            } else null;
++
+             llvm_object.emit(pt, .{
+                 .pre_ir_path = comp.verbose_llvm_ir,
+                 .pre_bc_path = comp.verbose_llvm_bc,
+ 
+-                .bin_path = p: {
+-                    const lf = comp.bin_file orelse break :p null;
+-                    const p = try comp.resolveEmitPathFlush(arena, .temp, lf.zcu_object_basename.?);
+-                    break :p try p.toStringZ(arena);
+-                },
++                .bin_path = base_bin_path,
++                .bin_path_list = bin_path_list,
+                 .asm_path = p: {
+                     const raw = comp.emit_asm orelse break :p null;
+                     const p = try comp.resolveEmitPathFlush(arena, .artifact, raw);
+@@ -7242,6 +7275,11 @@ pub fn addCCArgs(
+                 if (comp.config.san_cov_trace_pc_guard) {
+                     try argv.append("-fsanitize-coverage=trace-pc-guard");
+                 }
++
++                if (comp.config.gcov_profiling) {
++                    try argv.append("-fprofile-arcs");
++                    try argv.append("-ftest-coverage");
++                }
+             }
+ 
+             switch (mod.optimize_mode) {
+diff --git a/src/Compilation/Config.zig b/src/Compilation/Config.zig
+index efc3fceb86f9..bff1886e4517 100644
+--- a/src/Compilation/Config.zig
++++ b/src/Compilation/Config.zig
+@@ -64,6 +64,7 @@ root_error_tracing: bool,
+ dll_export_fns: bool,
+ rdynamic: bool,
+ san_cov_trace_pc_guard: bool,
++gcov_profiling: bool,
+ 
+ pub const CFrontend = enum { clang, aro };
+ 
+@@ -115,6 +116,7 @@ pub const Options = struct {
+     dll_export_fns: ?bool = null,
+     rdynamic: ?bool = null,
+     san_cov_trace_pc_guard: bool = false,
++    gcov_profiling: bool = false,
+ };
+ 
+ pub const ResolveError = error{
+@@ -533,6 +535,7 @@ pub fn resolve(options: Options) ResolveError!Config {
+         .any_sanitize_c = options.any_sanitize_c,
+         .any_fuzz = options.any_fuzz,
+         .san_cov_trace_pc_guard = options.san_cov_trace_pc_guard,
++        .gcov_profiling = options.gcov_profiling,
+         .root_error_tracing = root_error_tracing,
+         .pie = pie,
+         .lto = lto,
+diff --git a/src/Package/Module.zig b/src/Package/Module.zig
+index 068793f0337a..5ba0ac765a17 100644
+--- a/src/Package/Module.zig
++++ b/src/Package/Module.zig
+@@ -35,6 +35,8 @@ cc_argv: []const []const u8,
+ /// (SPIR-V) whether to generate a structured control flow graph or not
+ structured_cfg: bool,
+ no_builtin: bool,
++/// Disable writing 0xaa to undefined memory even in ReleaseSafe mode
++no_init_undefined: bool,
+ 
+ pub const Deps = std.StringArrayHashMapUnmanaged(*Module);
+ 
+@@ -83,6 +85,7 @@ pub const CreateOptions = struct {
+         fuzz: ?bool = null,
+         structured_cfg: ?bool = null,
+         no_builtin: ?bool = null,
++        no_init_undefined: ?bool = null,
+     };
+ };
+ 
+@@ -342,6 +345,12 @@ pub fn create(arena: Allocator, options: CreateOptions) !*Package.Module {
+         break :b target.cpu.arch.isBpf();
+     };
+ 
++    const no_init_undefined = b: {
++        if (options.inherited.no_init_undefined) |x| break :b x;
++        if (options.parent) |p| break :b p.no_init_undefined;
++        break :b false;
++    };
++
+     const llvm_cpu_features: ?[*:0]const u8 = b: {
+         if (resolved_target.llvm_cpu_features) |x| break :b x;
+         if (!options.global.use_llvm) break :b null;
+@@ -412,6 +421,7 @@ pub fn create(arena: Allocator, options: CreateOptions) !*Package.Module {
+         .cc_argv = options.cc_argv,
+         .structured_cfg = structured_cfg,
+         .no_builtin = no_builtin,
++        .no_init_undefined = no_init_undefined,
+     };
+     return mod;
+ }
+@@ -452,6 +462,7 @@ pub fn createLimited(gpa: Allocator, options: LimitedOptions) Allocator.Error!*P
+         .cc_argv = undefined,
+         .structured_cfg = undefined,
+         .no_builtin = undefined,
++        .no_init_undefined = undefined,
+     };
+     return mod;
+ }
+@@ -492,6 +503,7 @@ pub fn createBuiltin(arena: Allocator, opts: Builtin, dirs: Compilation.Director
+         .sanitize_c = .off,
+         .structured_cfg = false,
+         .no_builtin = false,
++        .no_init_undefined = false,
+     };
+     return new;
+ }
+diff --git a/src/arch/x86_64/CodeGen.zig b/src/arch/x86_64/CodeGen.zig
+index e1ad9e3d074e..10ab8845aeb9 100644
+--- a/src/arch/x86_64/CodeGen.zig
++++ b/src/arch/x86_64/CodeGen.zig
+@@ -181166,7 +181166,10 @@ fn genSetReg(
+         .elementwise_args,
+         .reserved_frame,
+         => unreachable,
+-        .undef => if (opts.safety) switch (dst_reg.class()) {
++        .undef => if (opts.safety and !switch (self.owner) {
++            .nav_index => |nav_index| if (self.pt.zcu.navFileScope(nav_index).mod) |mod| mod.no_init_undefined else false,
++            .lazy_sym => false,
++        }) switch (dst_reg.class()) {
+             .general_purpose, .gphi => switch (abi_size) {
+                 1 => try self.asmRegisterImmediate(.{ ._, .mov }, dst_reg.to8(), .u(0xaa)),
+                 2 => try self.asmRegisterImmediate(.{ ._, .mov }, dst_reg.to16(), .u(0xaaaa)),
+@@ -182838,7 +182841,11 @@ fn airMemset(self: *CodeGen, inst: Air.Inst.Index, safety: bool) !void {
+     const bin_op = self.air.instructions.items(.data)[@intFromEnum(inst)].bin_op;
+ 
+     result: {
+-        if (!safety and (try self.resolveInst(bin_op.rhs)) == .undef) break :result;
++        const should_skip = switch (self.owner) {
++            .nav_index => |nav_index| (!safety or if (self.pt.zcu.navFileScope(nav_index).mod) |mod| mod.no_init_undefined else false),
++            .lazy_sym => !safety,
++        };
++        if (should_skip and (try self.resolveInst(bin_op.rhs)) == .undef) break :result;
+ 
+         try self.spillRegisters(&.{ .rax, .rdi, .rsi, .rcx });
+         const reg_locks = self.register_manager.lockRegsAssumeUnused(4, .{ .rax, .rdi, .rsi, .rcx });
+@@ -186711,7 +186718,10 @@ const Temp = struct {
+             const val_mcv = val.tracking(cg).short;
+             switch (val_mcv) {
+                 else => |mcv| std.debug.panic("{s}: {f}\n", .{ @src().fn_name, mcv }),
+-                .undef => if (opts.safe) {
++                .undef => if (opts.safe and !switch (cg.owner) {
++                    .nav_index => |nav_index| if (cg.pt.zcu.navFileScope(nav_index).mod) |mod| mod.no_init_undefined else false,
++                    .lazy_sym => false,
++                }) {
+                     var pat = try cg.tempInit(.u8, .{ .immediate = 0xaa });
+                     var len = try cg.tempInit(.usize, .{ .immediate = val_ty.abiSize(cg.pt.zcu) });
+                     try ptr.memset(&pat, &len, cg);
+@@ -186858,7 +186868,10 @@ const Temp = struct {
+             switch (val_mcv) {
+                 else => |mcv| std.debug.panic("{s}: {f}\n", .{ @src().fn_name, mcv }),
+                 .none => {},
+-                .undef => if (opts.safe) {
++                .undef => if (opts.safe and !switch (cg.owner) {
++                    .nav_index => |nav_index| if (cg.pt.zcu.navFileScope(nav_index).mod) |mod| mod.no_init_undefined else false,
++                    .lazy_sym => false,
++                }) {
+                     var dst_ptr = try cg.tempInit(.usize, dst.tracking(cg).short.address().offset(opts.disp));
+                     var pat = try cg.tempInit(.u8, .{ .immediate = 0xaa });
+                     var len = try cg.tempInit(.usize, .{ .immediate = val_ty.abiSize(cg.pt.zcu) });
+diff --git a/src/codegen/llvm.zig b/src/codegen/llvm.zig
+index cb03f796db18..f452f8dd3967 100644
+--- a/src/codegen/llvm.zig
++++ b/src/codegen/llvm.zig
+@@ -755,6 +755,7 @@ pub const Object = struct {
+     }
+ 
+     pub const EmitOptions = struct {
++        bin_path_list: ?[]const [*:0]const u8 = null,
+         pre_ir_path: ?[]const u8,
+         pre_bc_path: ?[]const u8,
+         bin_path: ?[*:0]const u8,
+@@ -1061,6 +1062,17 @@ pub const Object = struct {
+         // Unfortunately, LLVM shits the bed when we ask for both binary and assembly.
+         // So we call the entire pipeline multiple times if this is requested.
+         // var error_message: [*:0]const u8 = undefined;
++
++        // Convert bin_path_list to NULL-terminated C array if provided
++        const bin_filename_list: ?[*:null]const ?[*:0]const u8 = if (options.bin_path_list) |list| blk: {
++            const null_term = try comp.gpa.alloc(?[*:0]const u8, list.len + 1);
++            for (list, 0..) |path, i| {
++                null_term[i] = path;
++            }
++            null_term[list.len] = null;
++            break :blk @ptrCast(null_term.ptr);
++        } else null;
++
+         var lowered_options: llvm.TargetMachine.EmitOptions = .{
+             .is_debug = options.is_debug,
+             .is_small = options.is_small,
+@@ -1083,6 +1095,8 @@ pub const Object = struct {
+ 
+             // `.coverage` value is only used when `.sancov` is enabled.
+             .sancov = options.fuzz or comp.config.san_cov_trace_pc_guard,
++            .gcov_profiling = comp.config.gcov_profiling,
++            .bin_filename_list = bin_filename_list,
+             .coverage = .{
+                 .CoverageType = .Edge,
+                 // Works in tandem with Inline8bitCounters or InlineBoolFlag.
+@@ -9716,15 +9730,16 @@ pub const FuncGen = struct {
+             self.maybeMarkAllowZeroAccess(ptr_info);
+ 
+             const len = try o.builder.intValue(try o.lowerType(pt, Type.usize), operand_ty.abiSize(zcu));
++            const should_init = safety and !owner_mod.no_init_undefined;
+             _ = try self.wip.callMemSet(
+                 dest_ptr,
+                 ptr_ty.ptrAlignment(zcu).toLlvm(),
+-                if (safety) try o.builder.intValue(.i8, 0xaa) else try o.builder.undefValue(.i8),
++                if (should_init) try o.builder.intValue(.i8, 0xaa) else try o.builder.undefValue(.i8),
+                 len,
+                 if (ptr_ty.isVolatilePtr(zcu)) .@"volatile" else .normal,
+                 self.disable_intrinsics,
+             );
+-            if (safety and owner_mod.valgrind) {
++            if (should_init and owner_mod.valgrind) {
+                 try self.valgrindMarkUndef(dest_ptr, len);
+             }
+             return .none;
+@@ -10033,7 +10048,9 @@ pub const FuncGen = struct {
+                 // Even if safety is disabled, we still emit a memset to undefined since it conveys
+                 // extra information to LLVM. However, safety makes the difference between using
+                 // 0xaa or actual undefined for the fill byte.
+-                const fill_byte = if (safety)
++                const owner_mod = self.ng.ownerModule();
++                const should_init = safety and !owner_mod.no_init_undefined;
++                const fill_byte = if (should_init)
+                     try o.builder.intValue(.i8, 0xaa)
+                 else
+                     try o.builder.undefValue(.i8);
+@@ -10046,8 +10063,7 @@ pub const FuncGen = struct {
+                     access_kind,
+                     self.disable_intrinsics,
+                 );
+-                const owner_mod = self.ng.ownerModule();
+-                if (safety and owner_mod.valgrind) {
++                if (should_init and owner_mod.valgrind) {
+                     try self.valgrindMarkUndef(dest_ptr, len);
+                 }
+                 return .none;
+diff --git a/src/codegen/llvm/bindings.zig b/src/codegen/llvm/bindings.zig
+index 06b5c72ffa53..bfbee010b50a 100644
+--- a/src/codegen/llvm/bindings.zig
++++ b/src/codegen/llvm/bindings.zig
+@@ -100,6 +100,10 @@ pub const TargetMachine = opaque {
+         llvm_ir_filename: ?[*:0]const u8,
+         bitcode_filename: ?[*:0]const u8,
+         coverage: Coverage,
++        gcov_profiling: bool,
++        // For parallel codegen: NULL-terminated array of output filenames
++        // NULL = single-threaded. Array length determines thread count.
++        bin_filename_list: ?[*:null]const ?[*:0]const u8,
+ 
+         pub const LtoPhase = enum(c_int) {
+             None,
+diff --git a/src/link.zig b/src/link.zig
+index 09f4d38606bc..ef9b9aaae5f6 100644
+--- a/src/link.zig
++++ b/src/link.zig
+@@ -389,6 +389,8 @@ pub const File = struct {
+     ///
+     /// To convert this to an actual path, see `Compilation.resolveEmitPath` (with `kind == .temp`).
+     zcu_object_basename: ?[]const u8 = null,
++    /// Number of parallel codegen partitions (0 or 1 = single file)
++    zcu_object_partition_count: u32 = 0,
+     gc_sections: bool,
+     print_gc_sections: bool,
+     build_id: std.zig.BuildId,
+@@ -451,6 +453,7 @@ pub const File = struct {
+         print_gc_sections: bool,
+         print_icf_sections: bool,
+         print_map: bool,
++        llvm_codegen_threads: u32,
+ 
+         /// Use a wrapper function for symbol. Any undefined reference to symbol
+         /// will be resolved to __wrap_symbol. Any undefined reference to
+diff --git a/src/link/Coff.zig b/src/link/Coff.zig
+index 62430f6c08e6..43853a2a066a 100644
+--- a/src/link/Coff.zig
++++ b/src/link/Coff.zig
+@@ -234,6 +234,7 @@ pub fn createEmpty(
+                 try std.fmt.allocPrint(arena, "{s}_zcu.obj", .{fs.path.stem(emit.sub_path)})
+             else
+                 null,
++            .zcu_object_partition_count = @intCast(options.llvm_codegen_threads),
+             .stack_size = options.stack_size orelse 16777216,
+             .gc_sections = options.gc_sections orelse (optimize_mode != .Debug),
+             .print_gc_sections = options.print_gc_sections,
+diff --git a/src/link/Elf.zig b/src/link/Elf.zig
+index 99d0ad71b0ef..44af8627277f 100644
+--- a/src/link/Elf.zig
++++ b/src/link/Elf.zig
+@@ -264,6 +264,7 @@ pub fn createEmpty(
+                 try std.fmt.allocPrint(arena, "{s}_zcu.o", .{fs.path.stem(emit.sub_path)})
+             else
+                 null,
++            .zcu_object_partition_count = @intCast(options.llvm_codegen_threads),
+             .gc_sections = options.gc_sections orelse (optimize_mode != .Debug and output_mode != .Obj),
+             .print_gc_sections = options.print_gc_sections,
+             .stack_size = options.stack_size orelse 16777216,
+@@ -765,13 +766,39 @@ fn flushInner(self: *Elf, arena: Allocator, tid: Zcu.PerThread.Id) !void {
+     const gpa = comp.gpa;
+     const diags = &comp.link_diags;
+ 
++    // Skip linking entirely if --no-link flag is set
++    if (comp.no_link_obj) {
++        return;
++    }
++
+     const zcu_obj_path: ?Path = if (self.base.zcu_object_basename) |raw| p: {
+         break :p try comp.resolveEmitPathFlush(arena, .temp, raw);
+     } else null;
+ 
+     if (self.zigObjectPtr()) |zig_object| try zig_object.flush(self, tid);
+ 
+-    if (zcu_obj_path) |path| openParseObjectReportingFailure(self, path);
++    // Parse LLVM-generated object file(s)
++    if (zcu_obj_path) |path| {
++        const partition_count = self.base.zcu_object_partition_count;
++        if (partition_count > 1) {
++            // Parallel codegen: parse all partition files
++            const base_path = path.sub_path;
++            const base_name = if (std.mem.endsWith(u8, base_path, ".o"))
++                base_path[0 .. base_path.len - 2]
++            else
++                base_path;
++
++            for (0..partition_count) |i| {
++                const partition_path: Path = .{
++                    .root_dir = path.root_dir,
++                    .sub_path = try std.fmt.allocPrint(arena, "{s}.{d}.o", .{ base_name, i }),
++                };
++                openParseObjectReportingFailure(self, partition_path);
++            }
++        } else {
++            openParseObjectReportingFailure(self, path);
++        }
++    }
+ 
+     switch (comp.config.output_mode) {
+         .Obj => return relocatable.flushObject(self, comp),
+diff --git a/src/link/MachO.zig b/src/link/MachO.zig
+index 434c27bfa357..a2629d7df675 100644
+--- a/src/link/MachO.zig
++++ b/src/link/MachO.zig
+@@ -185,6 +185,7 @@ pub fn createEmpty(
+                 try std.fmt.allocPrint(arena, "{s}_zcu.o", .{fs.path.stem(emit.sub_path)})
+             else
+                 null,
++            .zcu_object_partition_count = @intCast(options.llvm_codegen_threads),
+             .gc_sections = options.gc_sections orelse (optimize_mode != .Debug),
+             .print_gc_sections = options.print_gc_sections,
+             .stack_size = options.stack_size orelse 16777216,
+@@ -357,7 +358,13 @@ pub fn flush(
+ 
+     if (self.getZigObject()) |zo| try zo.flush(self, tid);
+     if (self.base.isStaticLib()) return relocatable.flushStaticLib(self, comp, zcu_obj_path);
+-    if (self.base.isObject()) return relocatable.flushObject(self, comp, zcu_obj_path);
++    if (self.base.isObject()) {
++        // Skip linker if --no-link flag is set
++        if (comp.no_link_obj) {
++            return;
++        }
++        return relocatable.flushObject(self, comp, zcu_obj_path);
++    }
+ 
+     var positionals = std.array_list.Managed(link.Input).init(gpa);
+     defer positionals.deinit();
+@@ -379,7 +386,27 @@ pub fn flush(
+         positionals.appendAssumeCapacity(try link.openObjectInput(diags, key.status.success.object_path));
+     }
+ 
+-    if (zcu_obj_path) |path| try positionals.append(try link.openObjectInput(diags, path));
++    // Parse LLVM-generated object file(s) - handle parallel codegen partitions
++    if (zcu_obj_path) |path| {
++        const partition_count = self.base.zcu_object_partition_count;
++        if (partition_count > 1) {
++            const base_path = path.sub_path;
++            const base_name = if (std.mem.endsWith(u8, base_path, ".o"))
++                base_path[0 .. base_path.len - 2]
++            else
++                base_path;
++
++            for (0..partition_count) |i| {
++                const partition_path: Path = .{
++                    .root_dir = path.root_dir,
++                    .sub_path = try std.fmt.allocPrint(arena, "{s}.{d}.o", .{ base_name, i }),
++                };
++                try positionals.append(try link.openObjectInput(diags, partition_path));
++            }
++        } else {
++            try positionals.append(try link.openObjectInput(diags, path));
++        }
++    }
+ 
+     if (comp.config.any_sanitize_thread) {
+         try positionals.append(try link.openObjectInput(diags, comp.tsan_lib.?.full_object_path));
+diff --git a/src/main.zig b/src/main.zig
+index eef94193e62d..8769fccde93d 100644
+--- a/src/main.zig
++++ b/src/main.zig
+@@ -474,6 +474,8 @@ const usage_build_generic =
+     \\  -fno-reference-trace      Disable reference trace
+     \\  -ffunction-sections       Places each function in a separate section
+     \\  -fno-function-sections    All functions go into same section
++    \\  --llvm-codegen-threads=[threads] Number of threads for LLVM codegen (0=single-threaded)
++    \\  --no-link                 Skip linker step for build-obj (outputs raw LLVM object)
+     \\  -fdata-sections           Places each data in a separate section
+     \\  -fno-data-sections        All data go into same section
+     \\  -fformatted-panics        Enable formatted safety panics
+@@ -538,6 +540,8 @@ const usage_build_generic =
+     \\  -fno-fuzz                 Disable fuzz testing instrumentation
+     \\  -fbuiltin                 Enable implicit builtin knowledge of functions
+     \\  -fno-builtin              Disable implicit builtin knowledge of functions
++    \\  -finit-undefined          Write 0xaa to undefined memory in ReleaseSafe mode
++    \\  -fno-init-undefined       Disable writing 0xaa to undefined memory
+     \\  -funwind-tables           Always produce unwind table entries for all functions
+     \\  -fasync-unwind-tables     Always produce asynchronous unwind table entries for all functions
+     \\  -fno-unwind-tables        Never produce unwind table entries
+@@ -874,6 +878,8 @@ fn buildOutputType(
+     var linker_print_icf_sections: bool = false;
+     var linker_print_map: bool = false;
+     var llvm_opt_bisect_limit: c_int = -1;
++    var llvm_codegen_threads: u32 = 0;
++    var no_link_obj: bool = false;
+     var linker_z_nocopyreloc = false;
+     var linker_z_nodelete = false;
+     var linker_z_notext = false;
+@@ -1499,6 +1505,10 @@ fn buildOutputType(
+                         create_module.opts.san_cov_trace_pc_guard = true;
+                     } else if (mem.eql(u8, arg, "-fno-sanitize-coverage-trace-pc-guard")) {
+                         create_module.opts.san_cov_trace_pc_guard = false;
++                    } else if (mem.eql(u8, arg, "-fprofile-arcs") or mem.eql(u8, arg, "-ftest-coverage")) {
++                        create_module.opts.gcov_profiling = true;
++                    } else if (mem.eql(u8, arg, "-fno-profile-arcs") or mem.eql(u8, arg, "-fno-test-coverage")) {
++                        create_module.opts.gcov_profiling = false;
+                     } else if (mem.eql(u8, arg, "-freference-trace")) {
+                         reference_trace = 256;
+                     } else if (mem.startsWith(u8, arg, "-freference-trace=")) {
+@@ -1610,10 +1620,19 @@ fn buildOutputType(
+                         mod_opts.no_builtin = false;
+                     } else if (mem.eql(u8, arg, "-fno-builtin")) {
+                         mod_opts.no_builtin = true;
++                    } else if (mem.eql(u8, arg, "-finit-undefined")) {
++                        mod_opts.no_init_undefined = false;
++                    } else if (mem.eql(u8, arg, "-fno-init-undefined")) {
++                        mod_opts.no_init_undefined = true;
+                     } else if (mem.startsWith(u8, arg, "-fopt-bisect-limit=")) {
+                         const next_arg = arg["-fopt-bisect-limit=".len..];
+                         llvm_opt_bisect_limit = std.fmt.parseInt(c_int, next_arg, 0) catch |err|
+                             fatal("unable to parse '{s}': {s}", .{ arg, @errorName(err) });
++                    } else if (mem.startsWith(u8, arg, "--llvm-codegen-threads=")) {
++                        llvm_codegen_threads = std.fmt.parseInt(u32, arg["--llvm-codegen-threads=".len..], 10) catch |err|
++                            fatal("unable to parse '{s}': {s}", .{ arg, @errorName(err) });
++                    } else if (mem.eql(u8, arg, "--no-link")) {
++                        no_link_obj = true;
+                     } else if (mem.eql(u8, arg, "--eh-frame-hdr")) {
+                         link_eh_frame_hdr = true;
+                     } else if (mem.eql(u8, arg, "--no-eh-frame-hdr")) {
+@@ -2039,6 +2058,8 @@ fn buildOutputType(
+                     .no_data_sections => data_sections = false,
+                     .builtin => mod_opts.no_builtin = false,
+                     .no_builtin => mod_opts.no_builtin = true,
++                    .init_undefined => mod_opts.no_init_undefined = false,
++                    .no_init_undefined => mod_opts.no_init_undefined = true,
+                     .color_diagnostics => color = .on,
+                     .no_color_diagnostics => color = .off,
+                     .stack_check => mod_opts.stack_check = true,
+@@ -3470,6 +3491,8 @@ fn buildOutputType(
+         .linker_print_icf_sections = linker_print_icf_sections,
+         .linker_print_map = linker_print_map,
+         .llvm_opt_bisect_limit = llvm_opt_bisect_limit,
++        .llvm_codegen_threads = llvm_codegen_threads,
++        .no_link_obj = no_link_obj,
+         .linker_global_base = linker_global_base,
+         .linker_export_symbol_names = linker_export_symbol_names.items,
+         .linker_z_nocopyreloc = linker_z_nocopyreloc,
+@@ -5933,6 +5956,8 @@ pub const ClangArgIterator = struct {
+         no_data_sections,
+         builtin,
+         no_builtin,
++        init_undefined,
++        no_init_undefined,
+         color_diagnostics,
+         no_color_diagnostics,
+         stack_check,
+diff --git a/src/zig_llvm.cpp b/src/zig_llvm.cpp
+index 9bd50a476bb0..19e24fd22dbd 100644
+--- a/src/zig_llvm.cpp
++++ b/src/zig_llvm.cpp
+@@ -39,6 +39,7 @@
+ #include <llvm/Passes/StandardInstrumentations.h>
+ #include <llvm/Object/Archive.h>
+ #include <llvm/Object/ArchiveWriter.h>
++#include <llvm/Object/ObjectFile.h>
+ #include <llvm/Object/COFF.h>
+ #include <llvm/Object/COFFImportFile.h>
+ #include <llvm/Object/COFFModuleDefinition.h>
+@@ -57,14 +58,21 @@
+ #include <llvm/Transforms/Instrumentation/ThreadSanitizer.h>
+ #include <llvm/Transforms/Instrumentation/AddressSanitizer.h>
+ #include <llvm/Transforms/Instrumentation/SanitizerCoverage.h>
++#include <llvm/Transforms/Instrumentation/GCOVProfiler.h>
+ #include <llvm/Transforms/Scalar.h>
+ #include <llvm/Transforms/Utils.h>
+ #include <llvm/Transforms/Utils/AddDiscriminators.h>
+ #include <llvm/Transforms/Utils/CanonicalizeAliases.h>
+ #include <llvm/Transforms/Utils/NameAnonGlobals.h>
++#include <llvm/Transforms/Utils/SplitModule.h>
++#include <llvm/Support/ThreadPool.h>
++#include <llvm/Bitcode/BitcodeReader.h>
++#include <llvm/Support/Threading.h>
+ 
+ #include <lld/Common/Driver.h>
+ 
++#include <thread>
++
+ #if __GNUC__ >= 9
+ #pragma GCC diagnostic pop
+ #endif
+@@ -246,7 +254,13 @@ ZIG_EXTERN_C bool ZigLLVMTargetMachineEmitToFile(LLVMTargetMachineRef targ_machi
+             return true;
+         }
+     }
+-    if (options->bin_filename) {
++    // Open single bin file if not using parallel codegen
++    // Check early if parallel will actually be used
++    bool will_use_parallel = options->bin_filename_list != nullptr &&
++                             !options->lto &&
++                             !options->asm_filename;
++
++    if (options->bin_filename && !will_use_parallel) {
+         std::error_code EC;
+         dest_bin_ptr = new(std::nothrow) raw_fd_ostream(options->bin_filename, EC, sys::fs::OF_None);
+         if (EC) {
+@@ -335,6 +349,12 @@ ZIG_EXTERN_C bool ZigLLVMTargetMachineEmitToFile(LLVMTargetMachineRef targ_machi
+         if (!options->is_debug) {
+             module_pm.addPass(createModuleToFunctionPassAdaptor(AddDiscriminatorsPass()));
+         }
++
++        // GCOV profiling instrumentation
++        if (options->gcov_profiling) {
++            GCOVOptions gcov_opts = GCOVOptions::getDefault();
++            module_pm.addPass(GCOVProfilerPass(gcov_opts));
++        }
+     });
+ 
+     const bool early_san = options->is_debug;
+@@ -404,29 +424,145 @@ ZIG_EXTERN_C bool ZigLLVMTargetMachineEmitToFile(LLVMTargetMachineRef targ_machi
+       module_pm = pass_builder.buildPerModuleDefaultPipeline(opt_level);
+     }
+ 
+-    // Unfortunately we don't have new PM for code generation
+-    legacy::PassManager codegen_pm;
+-    codegen_pm.add(
+-      createTargetTransformInfoWrapperPass(target_machine.getTargetIRAnalysis()));
++    // Optimization phase
++    module_pm.run(llvm_module, module_am);
+ 
+-    if (dest_bin && !options->lto) {
+-        if (target_machine.addPassesToEmitFile(codegen_pm, *dest_bin, nullptr, CodeGenFileType::ObjectFile)) {
+-            *error_message = strdup("TargetMachine can't emit an object file");
+-            return true;
++    // Code generation phase
++    // Check if we should use parallel codegen (same condition as will_use_parallel above)
++    bool use_parallel_codegen = options->bin_filename_list != nullptr &&
++                                !options->lto &&
++                                !options->asm_filename;
++
++    if (use_parallel_codegen) {
++        // Count number of output files (NULL-terminated array)
++        unsigned NumThreads = 0;
++        while (options->bin_filename_list[NumThreads] != nullptr) {
++            NumThreads++;
+         }
+-    }
+-    if (dest_asm) {
+-        if (target_machine.addPassesToEmitFile(codegen_pm, *dest_asm, nullptr, CodeGenFileType::AssemblyFile)) {
+-            *error_message = strdup("TargetMachine can't emit an assembly file");
+-            return true;
++
++        if (NumThreads <= 1) {
++            use_parallel_codegen = false;
+         }
+     }
+ 
+-    // Optimization phase
+-    module_pm.run(llvm_module, module_am);
++    if (use_parallel_codegen) {
++        // Parallel code generation path
++        unsigned NumThreads = 0;
++        while (options->bin_filename_list[NumThreads] != nullptr) {
++            NumThreads++;
++        }
+ 
+-    // Code generation phase
+-    codegen_pm.run(llvm_module);
++        std::vector<std::unique_ptr<raw_fd_ostream>> temp_streams;
++        std::vector<raw_pwrite_stream *> stream_ptrs;
++
++        // Create N output streams using the provided filenames
++        for (unsigned i = 0; i < NumThreads; ++i) {
++            std::error_code EC;
++            auto stream = std::make_unique<raw_fd_ostream>(options->bin_filename_list[i], EC, sys::fs::OF_None);
++            if (EC) {
++                *error_message = strdup((const char *)StringRef(EC.message()).bytes_begin());
++                return true;
++            }
++            stream_ptrs.push_back(stream.get());
++            temp_streams.push_back(std::move(stream));
++        }
++
++        // TargetMachine factory - creates a new TM for each thread
++        Target *TheTarget = reinterpret_cast<Target*>(const_cast<void*>(
++            reinterpret_cast<const void*>(&target_machine.getTarget())));
++        std::string Triple = std::string(target_machine.getTargetTriple().str());
++        std::string CPU = std::string(target_machine.getTargetCPU());
++        std::string Features = std::string(target_machine.getTargetFeatureString());
++        CodeGenOptLevel CGOptLevel = target_machine.getOptLevel();
++        auto RM = target_machine.getRelocationModel();
++        auto CM = target_machine.getCodeModel();
++        TargetOptions Opts = target_machine.Options;
++
++        auto TMFactory = [=]() -> std::unique_ptr<TargetMachine> {
++            std::unique_ptr<TargetMachine> TM(TheTarget->createTargetMachine(
++                Triple, CPU, Features, Opts, RM, CM, CGOptLevel, false));
++            if (options->allow_fast_isel) {
++                TM->setO0WantsFastISel(true);
++            } else {
++                TM->setFastISel(false);
++            }
++            return TM;
++        };
++
++        // Manual parallel code generation (same as llvm::splitCodeGen)
++        {
++            llvm::StdThreadPool CodegenThreadPool(llvm::hardware_concurrency(NumThreads));
++            std::atomic<unsigned> ThreadCount(0);
++
++            SplitModule(
++                llvm_module, NumThreads,
++                [&](std::unique_ptr<Module> MPart) {
++                    SmallString<0> BC;
++                    raw_svector_ostream BCOS(BC);
++                    WriteBitcodeToFile(*MPart, BCOS);
++
++                    llvm::raw_pwrite_stream *ThreadOS = stream_ptrs[ThreadCount++];
++
++                    CodegenThreadPool.async(
++                        [TMFactory, ThreadOS](const SmallString<0> &BC) {
++                            LLVMContext Ctx;
++                            auto BufferRef = MemoryBufferRef(StringRef(BC.data(), BC.size()), "<split-module>");
++                            Expected<std::unique_ptr<Module>> MOrErr = parseBitcodeFile(BufferRef, Ctx);
++                            if (!MOrErr) {
++                                std::string Msg;
++                                handleAllErrors(MOrErr.takeError(), [&](ErrorInfoBase &EIB) {
++                                    Msg = EIB.message();
++                                });
++                                report_fatal_error(Twine("Failed to read bitcode: ") + Msg);
++                            }
++                            std::unique_ptr<Module> MPartInCtx = std::move(*MOrErr);
++
++                            std::unique_ptr<TargetMachine> TM = TMFactory();
++                            legacy::PassManager CodeGenPasses;
++                            if (TM->addPassesToEmitFile(CodeGenPasses, *ThreadOS, nullptr, CodeGenFileType::ObjectFile))
++                                report_fatal_error("Failed to setup codegen");
++                            CodeGenPasses.run(*MPartInCtx);
++                        },
++                        std::move(BC));
++                },
++                true);  // avoid symbol globalization overhead
++        }
++
++        // Flush and close streams
++        for (auto &stream : temp_streams) {
++            stream->flush();
++        }
++        temp_streams.clear();
++
++        // Output files are now: bin_filename.0.o, bin_filename.1.o, ..., bin_filename.(N-1).o
++        // The linker will automatically pick up all of them
++    } else {
++        // Single-threaded code generation path (original)
++        legacy::PassManager codegen_pm;
++        codegen_pm.add(
++          createTargetTransformInfoWrapperPass(target_machine.getTargetIRAnalysis()));
++
++        if (dest_bin && !options->lto) {
++            if (target_machine.addPassesToEmitFile(codegen_pm, *dest_bin, nullptr, CodeGenFileType::ObjectFile)) {
++                *error_message = strdup("TargetMachine can't emit an object file");
++                return true;
++            }
++        }
++        if (dest_asm) {
++            if (target_machine.addPassesToEmitFile(codegen_pm, *dest_asm, nullptr, CodeGenFileType::AssemblyFile)) {
++                *error_message = strdup("TargetMachine can't emit an assembly file");
++                return true;
++            }
++        }
++
++        if (options->allow_fast_isel) {
++            target_machine.setO0WantsFastISel(true);
++        } else {
++            target_machine.setFastISel(false);
++        }
++
++        codegen_pm.run(llvm_module);
++    }
+ 
+     if (options->llvm_ir_filename) {
+         if (LLVMPrintModuleToFile(module_ref, options->llvm_ir_filename, error_message)) {
+diff --git a/src/zig_llvm.h b/src/zig_llvm.h
+index 65bdfa16f964..3e62e86c5a2f 100644
+--- a/src/zig_llvm.h
++++ b/src/zig_llvm.h
+@@ -81,6 +81,11 @@ struct ZigLLVMEmitOptions {
+     const char *llvm_ir_filename;
+     const char *bitcode_filename;
+     ZigLLVMCoverageOptions coverage;
++    bool gcov_profiling;
++    // For parallel codegen: array of output filenames (NULL-terminated)
++    // If NULL, use single-threaded with bin_filename
++    // If set, array length determines number of threads
++    const char **bin_filename_list;
+ };
+ 
+ // synchronize with llvm/include/Object/Archive.h::Object::Archive::Kind
