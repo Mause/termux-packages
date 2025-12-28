@@ -9,7 +9,7 @@ TERMUX_PKG_BUILD_IN_SRC=true
 TERMUX_PKG_AUTO_UPDATE=true
 TERMUX_PKG_SHA256='bc052cc7ac742b4a2dcfb82212b157f4adce9193ed27fe4d495f1349546eecdd'
 TERMUX_PKG_DEPENDS='python'
-TERMUX_PKG_PYTHON_COMMON_DEPS="Cython"
+TERMUX_PKG_PYTHON_COMMON_DEPS="build"
 
 set -o xtrace
 
@@ -19,4 +19,8 @@ termux_step_post_get_source() {
 
 termux_step_pre_configure() {
 	termux_setup_python_pip
+}
+
+termux_step_make() {
+	pyproject-build .
 }
