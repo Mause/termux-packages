@@ -9,6 +9,10 @@ TERMUX_PKG_AUTO_UPDATE=true
 TERMUX_PKG_SHA256='bc052cc7ac742b4a2dcfb82212b157f4adce9193ed27fe4d495f1349546eecdd'
 TERMUX_PKG_DEPENDS='python'
 
+termux_step_post_get_source() {
+	git submodule update --init --recursive --depth=1
+}
+
 termux_step_pre_configure() {
 	termux_setup_python_pip
 }
