@@ -7,6 +7,7 @@ TERMUX_PKG_SRCURL=https://github.com/Automattic/harper/archive/refs/tags/v${TERM
 TERMUX_PKG_BUILD_IN_SRC=true
 TERMUX_PKG_AUTO_UPDATE=true
 TERMUX_PKG_SHA256='ccc408a4f9124cacfdb76bbf9aa42a5950b2cc6acebadca9c8dd0f02c70f4104'
+TERMUX_PKG_EXTRA_CONFIGURE_ARGS='--path harper-ls'
 
 termux_step_pre_configure() {
 	termux_setup_rust
