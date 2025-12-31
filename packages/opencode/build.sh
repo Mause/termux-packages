@@ -18,4 +18,6 @@ termux_step_make() {
 	bun install
 
 	./packages/opencode/script/build.ts --single
+
+	bun build --target=bun-linux-arm64-musl --outdir=$TERMUX_PREFIX/bin
 }
