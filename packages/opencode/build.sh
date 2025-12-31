@@ -10,7 +10,7 @@ TERMUX_PKG_SHA256='2ec05c65e06947df238bf534c53a0b2a72e23d6303883fdb242263d5c9935
 
 termux_step_make() {
 	curl -fsSL https://bun.com/install | bash
-	source /home/builder/.bashrc
+	export PATH="$HOME/.bun/bin:$PATH"
 
 	bun install
 	./packages/opencode/script/build.ts --single
