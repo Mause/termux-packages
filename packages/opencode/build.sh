@@ -8,6 +8,8 @@ TERMUX_PKG_BUILD_IN_SRC=true
 TERMUX_PKG_AUTO_UPDATE=true
 TERMUX_PKG_SHA256='2ec05c65e06947df238bf534c53a0b2a72e23d6303883fdb242263d5c9935a79'
 
+set -o xtrace
+
 termux_step_make() {
 	curl -fsSL https://bun.com/install | bash
 	export PATH="$HOME/.bun/bin:$PATH"
