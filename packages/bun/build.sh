@@ -16,7 +16,8 @@ termux_step_pre_configure() {
 	termux_setup_zig
 	termux_setup_rust
 	termux_setup_cmake
-	curl -fsSL https://bun.sh/install | bash
+	termux_setup_ninja
+	curl -fsSL https://bun.sh/install | bash  # need a host version of bun as well
 }
 
 termux_step_configure() {
