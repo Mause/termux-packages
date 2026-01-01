@@ -16,4 +16,13 @@ termux_step_pre_configure() {
 	termux_setup_zig
 	termux_setup_rust
 	termux_setup_cmake
+	curl -fsSL https://bun.sh/install | bash
+}
+
+termux_step_configure() {
+	echo 'nothing'
+}
+
+termux_step_make() {
+	bun bd
 }
