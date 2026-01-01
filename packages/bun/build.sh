@@ -21,7 +21,7 @@ termux_step_pre_configure() {
 }
 
 termux_step_configure() {
-	echo 'nothing'
+	:
 }
 
 termux_step_make() {
