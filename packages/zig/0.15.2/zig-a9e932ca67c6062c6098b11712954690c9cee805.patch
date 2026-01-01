@@ -1,31 +1,17 @@
-From a9e932ca67c6062c6098b11712954690c9cee805 Mon Sep 17 00:00:00 2001
-From: pfg <pfg@pfg.pw>
-Date: Wed, 29 Oct 2025 14:36:13 -0700
-Subject: [PATCH] reapply other changes
+From 342fa1fefe6e7a7e5af1f51936cc7067d155e07d Mon Sep 17 00:00:00 2001
+From: Elliana May <me@mause.me>
+Date: Fri, 2 Jan 2026 01:30:32 +0800
+Subject: [PATCH 1/3] add no_init_undefined
 
 ---
- lib/std/Build/Module.zig       |   4 +
- lib/std/Build/Step/Compile.zig |  15 +++
- src/Compilation.zig            |  48 ++++++++-
- src/Compilation/Config.zig     |   3 +
- src/Package/Module.zig         |  12 +++
- src/arch/x86_64/CodeGen.zig    |  21 +++-
- src/codegen/llvm.zig           |  26 ++++-
- src/codegen/llvm/bindings.zig  |   4 +
- src/link.zig                   |   3 +
- src/link/Coff.zig              |   1 +
- src/link/Elf.zig               |  29 +++++-
- src/link/MachO.zig             |  31 +++++-
- src/main.zig                   |  25 +++++
- src/zig_llvm.cpp               | 172 +++++++++++++++++++++++++++++----
- src/zig_llvm.h                 |   5 +
- 15 files changed, 364 insertions(+), 35 deletions(-)
+ lib/std/Build/Module.zig | 4 ++++
+ 1 file changed, 4 insertions(+)
 
 diff --git a/lib/std/Build/Module.zig b/lib/std/Build/Module.zig
-index 6f7892483dfc..48f69223fe57 100644
+index 2719aea1c6..f4888dfaf1 100644
 --- a/lib/std/Build/Module.zig
 +++ b/lib/std/Build/Module.zig
-@@ -34,6 +34,7 @@ omit_frame_pointer: ?bool,
+@@ -33,6 +33,7 @@ omit_frame_pointer: ?bool,
  error_tracing: ?bool,
  link_libc: ?bool,
  link_libcpp: ?bool,
@@ -33,7 +19,7 @@ index 6f7892483dfc..48f69223fe57 100644
  no_builtin: ?bool,
  
  /// Symbols to be exported when compiling to WebAssembly.
-@@ -257,6 +258,7 @@ pub const CreateOptions = struct {
+@@ -255,6 +256,7 @@ pub const CreateOptions = struct {
      /// more difficult to obtain stack traces. Has target-dependent effects.
      omit_frame_pointer: ?bool = null,
      error_tracing: ?bool = null,
@@ -41,7 +27,7 @@ index 6f7892483dfc..48f69223fe57 100644
      no_builtin: ?bool = null,
  };
  
-@@ -304,6 +306,7 @@ pub fn init(
+@@ -301,6 +303,7 @@ pub fn init(
                  .red_zone = options.red_zone,
                  .omit_frame_pointer = options.omit_frame_pointer,
                  .error_tracing = options.error_tracing,
@@ -49,19 +35,32 @@ index 6f7892483dfc..48f69223fe57 100644
                  .export_symbol_names = &.{},
                  .no_builtin = options.no_builtin,
              };
-@@ -555,6 +558,7 @@ pub fn appendZigProcessFlags(
-     try addFlag(zig_args, m.sanitize_address, "-fsanitize-address", "-fno-sanitize-address");
+@@ -551,6 +554,7 @@ pub fn appendZigProcessFlags(
+     try addFlag(zig_args, m.sanitize_thread, "-fsanitize-thread", "-fno-sanitize-thread");
      try addFlag(zig_args, m.fuzz, "-ffuzz", "-fno-fuzz");
      try addFlag(zig_args, m.valgrind, "-fvalgrind", "-fno-valgrind");
 +    try addFlag(zig_args, m.no_init_undefined, "-fno-init-undefined", "-finit-undefined");
      try addFlag(zig_args, m.pic, "-fPIC", "-fno-PIC");
      try addFlag(zig_args, m.red_zone, "-mred-zone", "-mno-red-zone");
      try addFlag(zig_args, m.no_builtin, "-fno-builtin", "-fbuiltin");
+-- 
+2.51.0
+
+
+From 8ce323f69f61536dd37ffda598fd794cb49ff4f9 Mon Sep 17 00:00:00 2001
+From: Elliana May <me@mause.me>
+Date: Fri, 2 Jan 2026 01:32:05 +0800
+Subject: [PATCH 2/3] add llvm_codegen_threads
+
+---
+ lib/std/Build/Step/Compile.zig | 8 ++++++++
+ 1 file changed, 8 insertions(+)
+
 diff --git a/lib/std/Build/Step/Compile.zig b/lib/std/Build/Step/Compile.zig
-index b64ce59778f2..fc23d2da389a 100644
+index b64ce59778..69ed5fa78b 100644
 --- a/lib/std/Build/Step/Compile.zig
 +++ b/lib/std/Build/Step/Compile.zig
-@@ -157,6 +157,15 @@ headerpad_max_install_names: bool = false,
+@@ -157,6 +157,11 @@ headerpad_max_install_names: bool = false,
  /// (Darwin) Remove dylibs that are unreachable by the entry point or exported symbols.
  dead_strip_dylibs: bool = false,
  
@@ -70,6 +69,40 @@ index b64ce59778f2..fc23d2da389a 100644
 +/// When enabled, outputs multiple .o files: filename.0.o, filename.1.o, etc.
 +llvm_codegen_threads: u32 = 0,
 +
+ /// (Darwin) Force load all members of static archives that implement an Objective-C class or category
+ force_load_objc: bool = false,
+ 
+@@ -1520,6 +1525,9 @@ fn getZigArgs(compile: *Compile, fuzz: bool) ![][]const u8 {
+     if (compile.link_data_sections) {
+         try zig_args.append("-fdata-sections");
+     }
++    if (compile.llvm_codegen_threads > 0) {
++        try zig_args.append(b.fmt("--llvm-codegen-threads={d}", .{compile.llvm_codegen_threads}));
++    }
+     if (compile.link_gc_sections) |x| {
+         try zig_args.append(if (x) "--gc-sections" else "--no-gc-sections");
+     }
+-- 
+2.51.0
+
+
+From 1fea4bcac71023c19d6a845bf9ee057977492561 Mon Sep 17 00:00:00 2001
+From: Elliana May <me@mause.me>
+Date: Fri, 2 Jan 2026 01:32:14 +0800
+Subject: [PATCH 3/3] add no_link_obj
+
+---
+ lib/std/Build/Step/Compile.zig | 7 +++++++
+ 1 file changed, 7 insertions(+)
+
+diff --git a/lib/std/Build/Step/Compile.zig b/lib/std/Build/Step/Compile.zig
+index 69ed5fa78b..fc23d2da38 100644
+--- a/lib/std/Build/Step/Compile.zig
++++ b/lib/std/Build/Step/Compile.zig
+@@ -162,6 +162,10 @@ dead_strip_dylibs: bool = false,
+ /// When enabled, outputs multiple .o files: filename.0.o, filename.1.o, etc.
+ llvm_codegen_threads: u32 = 0,
+ 
 +/// Skip linker step for build-obj - outputs raw LLVM object file(s).
 +/// Saves time by avoiding parse/resolve/write cycle.
 +no_link_obj: bool = false,
@@ -77,16 +110,16 @@ index b64ce59778f2..fc23d2da389a 100644
  /// (Darwin) Force load all members of static archives that implement an Objective-C class or category
  force_load_objc: bool = false,
  
-@@ -1520,6 +1529,12 @@ fn getZigArgs(compile: *Compile, fuzz: bool) ![][]const u8 {
-     if (compile.link_data_sections) {
-         try zig_args.append("-fdata-sections");
+@@ -1528,6 +1532,9 @@ fn getZigArgs(compile: *Compile, fuzz: bool) ![][]const u8 {
+     if (compile.llvm_codegen_threads > 0) {
+         try zig_args.append(b.fmt("--llvm-codegen-threads={d}", .{compile.llvm_codegen_threads}));
      }
-+    if (compile.llvm_codegen_threads > 0) {
-+        try zig_args.append(b.fmt("--llvm-codegen-threads={d}", .{compile.llvm_codegen_threads}));
-+    }
 +    if (compile.no_link_obj) {
 +        try zig_args.append("--no-link");
 +    }
      if (compile.link_gc_sections) |x| {
          try zig_args.append(if (x) "--gc-sections" else "--no-gc-sections");
      }
+-- 
+2.51.0
+
