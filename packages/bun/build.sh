@@ -14,5 +14,6 @@ set -o xtrace
 
 termux_step_pre_configure() {
 	termux_setup_zig
+	termux_setup_rust
 	termux_setup_cmake
 }
