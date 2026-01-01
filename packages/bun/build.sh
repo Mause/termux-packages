@@ -25,5 +25,5 @@ termux_step_configure() {
 }
 
 termux_step_make() {
-	bun bd
+	~/.bun/bin/bun build:ci
 }
