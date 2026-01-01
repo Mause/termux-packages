@@ -1,7 +1,7 @@
 From 854d339158974b68b6e46d4719530eb8cb959519 Mon Sep 17 00:00:00 2001
 From: Elliana May <me@mause.me>
 Date: Thu, 1 Jan 2026 20:25:41 +0800
-Subject: [PATCH 2/4] determine zig arch for android
+Subject: [PATCH 2/6] determine zig arch for android
 
 ---
  cmake/tools/SetupZig.cmake | 2 ++

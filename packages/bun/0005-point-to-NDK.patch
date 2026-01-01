@@ -1,0 +1,49 @@
+From 8ffab81f585ab7b6b6b245233c163589d7a635cf Mon Sep 17 00:00:00 2001
+From: Elliana May <me@mause.me>
+Date: Fri, 2 Jan 2026 02:12:23 +0800
+Subject: [PATCH 5/6] point to NDK
+
+---
+ cmake/tools/SetupLLVM.cmake | 12 +++++++-----
+ 1 file changed, 7 insertions(+), 5 deletions(-)
+
+diff --git a/cmake/tools/SetupLLVM.cmake b/cmake/tools/SetupLLVM.cmake
+index 3964d8a683..9bdf3ae9db 100644
+--- a/cmake/tools/SetupLLVM.cmake
++++ b/cmake/tools/SetupLLVM.cmake
+@@ -105,6 +105,8 @@ macro(find_llvm_command_no_version variable command)
+   list(APPEND CMAKE_ARGS -D${variable}=${${variable}})
+ endmacro()
+ 
++set(NDK_BIN "/home/builder/.termux-build/_cache/android-r29-api-24-v3/bin/")
++
+ if(WIN32)
+   find_llvm_command(CMAKE_C_COMPILER clang-cl)
+   find_llvm_command(CMAKE_CXX_COMPILER clang-cl)
+@@ -112,10 +114,10 @@ if(WIN32)
+   find_llvm_command_no_version(CMAKE_AR llvm-lib)
+   find_llvm_command_no_version(CMAKE_STRIP llvm-strip)
+ else()
+-  find_llvm_command(CMAKE_C_COMPILER clang)
+-  find_llvm_command(CMAKE_CXX_COMPILER clang++)
+-  find_llvm_command(CMAKE_LINKER llvm-link)
+-  find_llvm_command(CMAKE_AR llvm-ar)
++  set(CMAKE_C_COMPILER "${NDK_BIN}/aarch64-linux-android-clang")
++  set(CMAKE_CXX_COMPILER "${NDK_BIN}/aarch64-linux-android-clang++")
++  set(CMAKE_LINKER "${NDK_BIN}/llvm-link")
++  set(CMAKE_AR "${NDK_BIN}/llvm-ar")
+   if (LINUX)
+     # On Linux, strip ends up being more useful for us.
+     find_command(
+@@ -131,7 +133,7 @@ else()
+   endif()
+   find_llvm_command(CMAKE_RANLIB llvm-ranlib)
+   if(LINUX)
+-    set(LLD_PROGRAM /home/builder/.termux-build/_cache/android-r29-api-24-v3/bin/ld.lld)
++    set(LLD_PROGRAM "${NDK_BIN}/ld.lld")
+     # Ensure vendor dependencies use lld instead of ld
+     list(APPEND CMAKE_ARGS -DCMAKE_EXE_LINKER_FLAGS=--ld-path=${LLD_PROGRAM})
+     list(APPEND CMAKE_ARGS -DCMAKE_SHARED_LINKER_FLAGS=--ld-path=${LLD_PROGRAM})
+-- 
+2.51.0
+
