@@ -1,0 +1,25 @@
+From 854d339158974b68b6e46d4719530eb8cb959519 Mon Sep 17 00:00:00 2001
+From: Elliana May <me@mause.me>
+Date: Thu, 1 Jan 2026 20:25:41 +0800
+Subject: [PATCH 2/2] determine zig arch for android
+
+---
+ cmake/tools/SetupZig.cmake | 2 ++
+ 1 file changed, 2 insertions(+)
+
+diff --git a/cmake/tools/SetupZig.cmake b/cmake/tools/SetupZig.cmake
+index 320a6f4e64..95b102b006 100644
+--- a/cmake/tools/SetupZig.cmake
++++ b/cmake/tools/SetupZig.cmake
+@@ -16,6 +16,8 @@ elseif(LINUX)
+   else()
+     set(DEFAULT_ZIG_TARGET ${DEFAULT_ZIG_ARCH}-linux-gnu)
+   endif()
++elseif(ANDROID)
++  set(DEFAULT_ZIG_TARGET ${DEFAULT_ZIG_ARCH}-linux-android)
+ else()
+   unsupported(CMAKE_SYSTEM_NAME)
+ endif()
+-- 
+2.51.0
+
