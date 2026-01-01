@@ -23,8 +23,8 @@ Subject: [PATCH] reapply other changes
 
 diff --git a/lib/std/Build/Module.zig b/lib/std/Build/Module.zig
 index 6f7892483dfc..48f69223fe57 100644
---- a/zig/lib/std/Build/Module.zig
-+++ b/zig/lib/std/Build/Module.zig
+--- a/lib/std/Build/Module.zig
++++ b/lib/std/Build/Module.zig
 @@ -34,6 +34,7 @@ omit_frame_pointer: ?bool,
  error_tracing: ?bool,
  link_libc: ?bool,
@@ -59,8 +59,8 @@ index 6f7892483dfc..48f69223fe57 100644
      try addFlag(zig_args, m.no_builtin, "-fno-builtin", "-fbuiltin");
 diff --git a/lib/std/Build/Step/Compile.zig b/lib/std/Build/Step/Compile.zig
 index b64ce59778f2..fc23d2da389a 100644
---- a/zig/lib/std/Build/Step/Compile.zig
-+++ b/zig/lib/std/Build/Step/Compile.zig
+--- a/lib/std/Build/Step/Compile.zig
++++ b/lib/std/Build/Step/Compile.zig
 @@ -157,6 +157,15 @@ headerpad_max_install_names: bool = false,
  /// (Darwin) Remove dylibs that are unreachable by the entry point or exported symbols.
  dead_strip_dylibs: bool = false,
@@ -92,8 +92,8 @@ index b64ce59778f2..fc23d2da389a 100644
      }
 diff --git a/src/Compilation.zig b/src/Compilation.zig
 index c47a99f892cb..948896252871 100644
---- a/zig/src/Compilation.zig
-+++ b/zig/src/Compilation.zig
+--- a/src/Compilation.zig
++++ b/src/Compilation.zig
 @@ -264,6 +264,8 @@ link_task_wait_group: WaitGroup = .{},
  link_prog_node: std.Progress.Node = std.Progress.Node.none,
  
@@ -190,8 +190,8 @@ index c47a99f892cb..948896252871 100644
              switch (mod.optimize_mode) {
 diff --git a/src/Compilation/Config.zig b/src/Compilation/Config.zig
 index efc3fceb86f9..bff1886e4517 100644
---- a/zig/src/Compilation/Config.zig
-+++ b/zig/src/Compilation/Config.zig
+--- a/src/Compilation/Config.zig
++++ b/src/Compilation/Config.zig
 @@ -64,6 +64,7 @@ root_error_tracing: bool,
  dll_export_fns: bool,
  rdynamic: bool,
@@ -218,8 +218,8 @@ index efc3fceb86f9..bff1886e4517 100644
          .lto = lto,
 diff --git a/src/Package/Module.zig b/src/Package/Module.zig
 index 068793f0337a..5ba0ac765a17 100644
---- a/zig/src/Package/Module.zig
-+++ b/zig/src/Package/Module.zig
+--- a/src/Package/Module.zig
++++ b/src/Package/Module.zig
 @@ -35,6 +35,8 @@ cc_argv: []const []const u8,
  /// (SPIR-V) whether to generate a structured control flow graph or not
  structured_cfg: bool,
@@ -276,8 +276,8 @@ index 068793f0337a..5ba0ac765a17 100644
  }
 diff --git a/src/arch/x86_64/CodeGen.zig b/src/arch/x86_64/CodeGen.zig
 index e1ad9e3d074e..10ab8845aeb9 100644
---- a/zig/src/arch/x86_64/CodeGen.zig
-+++ b/zig/src/arch/x86_64/CodeGen.zig
+--- a/src/arch/x86_64/CodeGen.zig
++++ b/src/arch/x86_64/CodeGen.zig
 @@ -181166,7 +181166,10 @@ fn genSetReg(
          .elementwise_args,
          .reserved_frame,
@@ -329,8 +329,8 @@ index e1ad9e3d074e..10ab8845aeb9 100644
                      var len = try cg.tempInit(.usize, .{ .immediate = val_ty.abiSize(cg.pt.zcu) });
 diff --git a/src/codegen/llvm.zig b/src/codegen/llvm.zig
 index cb03f796db18..f452f8dd3967 100644
---- a/zig/src/codegen/llvm.zig
-+++ b/zig/src/codegen/llvm.zig
+--- a/src/codegen/llvm.zig
++++ b/src/codegen/llvm.zig
 @@ -755,6 +755,7 @@ pub const Object = struct {
      }
  
@@ -408,8 +408,8 @@ index cb03f796db18..f452f8dd3967 100644
                  return .none;
 diff --git a/src/codegen/llvm/bindings.zig b/src/codegen/llvm/bindings.zig
 index 06b5c72ffa53..bfbee010b50a 100644
---- a/zig/src/codegen/llvm/bindings.zig
-+++ b/zig/src/codegen/llvm/bindings.zig
+--- a/src/codegen/llvm/bindings.zig
++++ b/src/codegen/llvm/bindings.zig
 @@ -100,6 +100,10 @@ pub const TargetMachine = opaque {
          llvm_ir_filename: ?[*:0]const u8,
          bitcode_filename: ?[*:0]const u8,
@@ -423,8 +423,8 @@ index 06b5c72ffa53..bfbee010b50a 100644
              None,
 diff --git a/src/link.zig b/src/link.zig
 index 09f4d38606bc..ef9b9aaae5f6 100644
---- a/zig/src/link.zig
-+++ b/zig/src/link.zig
+--- a/src/link.zig
++++ b/src/link.zig
 @@ -389,6 +389,8 @@ pub const File = struct {
      ///
      /// To convert this to an actual path, see `Compilation.resolveEmitPath` (with `kind == .temp`).
@@ -444,8 +444,8 @@ index 09f4d38606bc..ef9b9aaae5f6 100644
          /// will be resolved to __wrap_symbol. Any undefined reference to
 diff --git a/src/link/Coff.zig b/src/link/Coff.zig
 index 62430f6c08e6..43853a2a066a 100644
---- a/zig/src/link/Coff.zig
-+++ b/zig/src/link/Coff.zig
+--- a/src/link/Coff.zig
++++ b/src/link/Coff.zig
 @@ -234,6 +234,7 @@ pub fn createEmpty(
                  try std.fmt.allocPrint(arena, "{s}_zcu.obj", .{fs.path.stem(emit.sub_path)})
              else
@@ -456,8 +456,8 @@ index 62430f6c08e6..43853a2a066a 100644
              .print_gc_sections = options.print_gc_sections,
 diff --git a/src/link/Elf.zig b/src/link/Elf.zig
 index 99d0ad71b0ef..44af8627277f 100644
---- a/zig/src/link/Elf.zig
-+++ b/zig/src/link/Elf.zig
+--- a/src/link/Elf.zig
++++ b/src/link/Elf.zig
 @@ -264,6 +264,7 @@ pub fn createEmpty(
                  try std.fmt.allocPrint(arena, "{s}_zcu.o", .{fs.path.stem(emit.sub_path)})
              else
@@ -509,8 +509,8 @@ index 99d0ad71b0ef..44af8627277f 100644
          .Obj => return relocatable.flushObject(self, comp),
 diff --git a/src/link/MachO.zig b/src/link/MachO.zig
 index 434c27bfa357..a2629d7df675 100644
---- a/zig/src/link/MachO.zig
-+++ b/zig/src/link/MachO.zig
+--- a/src/link/MachO.zig
++++ b/src/link/MachO.zig
 @@ -185,6 +185,7 @@ pub fn createEmpty(
                  try std.fmt.allocPrint(arena, "{s}_zcu.o", .{fs.path.stem(emit.sub_path)})
              else
@@ -565,8 +565,8 @@ index 434c27bfa357..a2629d7df675 100644
          try positionals.append(try link.openObjectInput(diags, comp.tsan_lib.?.full_object_path));
 diff --git a/src/main.zig b/src/main.zig
 index eef94193e62d..8769fccde93d 100644
---- a/zig/src/main.zig
-+++ b/zig/src/main.zig
+--- a/src/main.zig
++++ b/src/main.zig
 @@ -474,6 +474,8 @@ const usage_build_generic =
      \\  -fno-reference-trace      Disable reference trace
      \\  -ffunction-sections       Places each function in a separate section
@@ -654,8 +654,8 @@ index eef94193e62d..8769fccde93d 100644
          stack_check,
 diff --git a/src/zig_llvm.cpp b/src/zig_llvm.cpp
 index 9bd50a476bb0..19e24fd22dbd 100644
---- a/zig/src/zig_llvm.cpp
-+++ b/zig/src/zig_llvm.cpp
+--- a/src/zig_llvm.cpp
++++ b/src/zig_llvm.cpp
 @@ -39,6 +39,7 @@
  #include <llvm/Passes/StandardInstrumentations.h>
  #include <llvm/Object/Archive.h>
@@ -879,8 +879,8 @@ index 9bd50a476bb0..19e24fd22dbd 100644
          if (LLVMPrintModuleToFile(module_ref, options->llvm_ir_filename, error_message)) {
 diff --git a/src/zig_llvm.h b/src/zig_llvm.h
 index 65bdfa16f964..3e62e86c5a2f 100644
---- a/zig/src/zig_llvm.h
-+++ b/zig/src/zig_llvm.h
+--- a/src/zig_llvm.h
++++ b/src/zig_llvm.h
 @@ -81,6 +81,11 @@ struct ZigLLVMEmitOptions {
      const char *llvm_ir_filename;
      const char *bitcode_filename;
