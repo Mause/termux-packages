@@ -1,0 +1,57 @@
+From f8c0e27a7dc095f1be603b90bb492af5389b9530 Mon Sep 17 00:00:00 2001
+From: Elliana May <me@mause.me>
+Date: Fri, 2 Jan 2026 17:15:17 +0800
+Subject: [PATCH] Add support for android libc (bionic) in compile_target.zig
+
+---
+ src/compile_target.zig | 16 +++++++++++++---
+ 1 file changed, 13 insertions(+), 3 deletions(-)
+
+diff --git a/src/compile_target.zig b/src/compile_target.zig
+index 1c3f7d54a4e3ee..256341d6dce4a5 100644
+--- a/src/compile_target.zig
++++ b/src/compile_target.zig
+@@ -22,6 +22,8 @@ const Libc = enum {
+     default,
+     /// musl libc
+     musl,
++    /// bionic libc
++    android,
+ 
+     /// npm package name, `@oven-sh/bun-{os}-{arch}`
+     pub fn npmName(this: Libc) []const u8 {
+@@ -32,9 +34,12 @@ const Libc = enum {
+     }
+ 
+     pub fn format(self: @This(), writer: *std.Io.Writer) std.Io.Writer.Error!void {
+-        if (self == .musl) {
+-            try writer.writeAll("-musl");
+-        }
++        try writer.writeAll(switch (this) {
++            .default => "",
++            .musl => "-musl",
++            .musl => "-musl",
++            .android => "-android",
++        })
+     }
+ };
+ 
+@@ -364,6 +369,10 @@ pub fn tryFrom(input_: []const u8) ParseError!CompileTarget {
+             this.libc = .musl;
+             found_libc = true;
+             continue;
++        } else if (strings.eqlComptime(token, "android")) {
++            this.libc = .bionic;
++            found_libc = true;
++            continue;
+         } else {
+             return error.UnsupportedTarget;
+         }
+@@ -411,6 +420,7 @@ pub fn from(input_: []const u8) CompileTarget {
+                         !strings.eqlComptime(token, "modern") and
+                         !strings.eqlComptime(token, "baseline") and
+                         !strings.eqlComptime(token, "musl") and
++                        !strings.eqlComptime(token, "android") and
+                         !(strings.hasPrefixComptime(token, "v1.") or strings.hasPrefixComptime(token, "v0.")))
+                     {
+                         unsupported_token = token;
