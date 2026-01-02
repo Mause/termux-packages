@@ -19,7 +19,7 @@ index f51cb292411..7fe8311c9fb 100755
 +    os: "linux",
 +    arch: "arm64",
 +    abi: "android",
-+    avx2: false,
++    avx2: true, // not really
 +  },
    {
      os: "darwin",
