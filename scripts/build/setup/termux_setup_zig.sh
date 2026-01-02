@@ -66,6 +66,8 @@ termux_setup_zig() {
 		mkdir -p "${ZIG_FOLDER}"
 		termux_download "${ZIG_TXZ_URL}" "${ZIG_TXZ_FILE}" "${ZIG_TXZ_SHA256}"
 		tar -xf "${ZIG_TXZ_FILE}" -C "${ZIG_FOLDER}" --strip-components=1
+		echo "applying patches to $ZIG_FOLDER"
+		ls $ZIG_FOLDER
 
 		if [[ -n "$(find "${TERMUX_SCRIPTDIR}/packages/zig/${TERMUX_ZIG_VERSION}" -name 'zig-*.patch')" ]]; then
 			echo "termux_setup_zig: Applying patches from packages/zig/${TERMUX_ZIG_VERSION}"
