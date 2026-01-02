@@ -12,6 +12,8 @@ TERMUX_PKG_AUTO_UPDATE=true
 # termux-elf-cleaner causes zig Segmentation Fault
 TERMUX_PKG_NO_ELF_CLEANER=true
 
+set -o xtrace
+
 termux_step_pre_configure() {
 	termux_setup_cmake
 	termux_setup_ninja
