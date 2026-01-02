@@ -15,8 +15,8 @@ index 3964d8a683..9bdf3ae9db 100644
    list(APPEND CMAKE_ARGS -D${variable}=${${variable}})
  endmacro()
  
++if(NOT DEFINED ENV{TERMUX_STANDALONE_TOOLCHAIN}) message(error "TERMUX_STANDALONE_TOOLCHAIN not DEFINED") endif()
 +set(NDK_BIN "$ENV{TERMUX_STANDALONE_TOOLCHAIN}/bin/")
-+
  if(WIN32)
    find_llvm_command(CMAKE_C_COMPILER clang-cl)
    find_llvm_command(CMAKE_CXX_COMPILER clang-cl)
