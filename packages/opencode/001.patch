@@ -1,0 +1,26 @@
+From ddd11ec732b073b392c2aa279a101de59d12efc8 Mon Sep 17 00:00:00 2001
+From: Elliana May <me@mause.me>
+Date: Fri, 2 Jan 2026 16:49:49 +0800
+Subject: [PATCH] add android abi to build.ts
+
+---
+ packages/opencode/script/build.ts | 6 ++++++
+ 1 file changed, 6 insertions(+)
+
+diff --git a/packages/opencode/script/build.ts b/packages/opencode/script/build.ts
+index f51cb292411..7fe8311c9fb 100755
+--- a/packages/opencode/script/build.ts
++++ b/packages/opencode/script/build.ts
+@@ -54,6 +54,12 @@ const allTargets: {
+     abi: "musl",
+     avx2: false,
+   },
++  {
++    os: "linux",
++    arch: "arm64",
++    abi: "android",
++    avx2: false,
++  },
+   {
+     os: "darwin",
+     arch: "arm64",
