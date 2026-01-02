@@ -1,7 +1,7 @@
-From ab1c7ff46de68d4c6dcdfb1b39bb1dea38b253dd Mon Sep 17 00:00:00 2001
+From c03d1d499f85f06a20d01f5510aaf95c02303d02 Mon Sep 17 00:00:00 2001
 From: Elliana May <me@mause.me>
 Date: Thu, 1 Jan 2026 22:23:09 +0800
-Subject: [PATCH 4/6] linker is REQUIRED
+Subject: [PATCH 4/7] linker is REQUIRED
 
 ---
  cmake/targets/BuildBun.cmake | 2 +-
@@ -43,5 +43,5 @@ index a250342018..3964d8a683 100644
      list(APPEND CMAKE_ARGS -DCMAKE_EXE_LINKER_FLAGS=--ld-path=${LLD_PROGRAM})
      list(APPEND CMAKE_ARGS -DCMAKE_SHARED_LINKER_FLAGS=--ld-path=${LLD_PROGRAM})
 -- 
-2.51.0
+2.52.0
 
