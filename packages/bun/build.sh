@@ -19,8 +19,7 @@ termux_step_pre_configure() {
 	termux_setup_ninja
 	curl -fsSL https://bun.sh/install | bash  # need a host version of bun as well
 
-	echo 'printing-env'
-	printenv
+	export TERMUX_STANDALONE_TOOLCHAIN
 }
 
 termux_step_configure() {
