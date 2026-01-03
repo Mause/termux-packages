@@ -20,6 +20,3 @@ index bff19e1974..ce541bc5ea 100644
    endif()
  else()
    unsupported(CMAKE_SYSTEM_PROCESSOR)
--- 
-2.52.0
-
