@@ -1,7 +1,7 @@
 From bf4447c9b7387cccd06a5dfdf66f8a2204e9f2e8 Mon Sep 17 00:00:00 2001
 From: Elliana May <me@mause.me>
 Date: Sat, 3 Jan 2026 14:54:17 +0800
-Subject: [PATCH 9/9] patch pthread_setcancelstate
+Subject: [PATCH 09/10] patch pthread_setcancelstate
 
 ---
  src/bun.js/bindings/bun-spawn.cpp | 18 ++++++++++++++++++
