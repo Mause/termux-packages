@@ -1,7 +1,7 @@
 From 10581da5c510176ad11b6667aad404283bc76c3d Mon Sep 17 00:00:00 2001
 From: Elliana May <me@mause.me>
 Date: Thu, 1 Jan 2026 20:22:15 +0800
-Subject: [PATCH 1/7] add ANDROID to Options.cmake
+Subject: [PATCH 1/8] add ANDROID to Options.cmake
 
 ---
  cmake/Options.cmake | 2 ++

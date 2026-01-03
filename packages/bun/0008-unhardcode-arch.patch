@@ -1,0 +1,25 @@
+From f2a95d6f2b4374aaf64917332a095346109b68e6 Mon Sep 17 00:00:00 2001
+From: Elliana May <me@mause.me>
+Date: Sat, 3 Jan 2026 14:46:22 +0800
+Subject: [PATCH 8/8] unhardcode arch
+
+---
+ cmake/tools/SetupLLVM.cmake | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
+
+diff --git a/cmake/tools/SetupLLVM.cmake b/cmake/tools/SetupLLVM.cmake
+index a637f9a9ee..b52781af3d 100644
+--- a/cmake/tools/SetupLLVM.cmake
++++ b/cmake/tools/SetupLLVM.cmake
+@@ -116,8 +116,9 @@ if(WIN32)
+   find_llvm_command_no_version(CMAKE_AR llvm-lib)
+   find_llvm_command_no_version(CMAKE_STRIP llvm-strip)
+ else()
+-  set(CMAKE_C_COMPILER "${NDK_BIN}/aarch64-linux-android-clang")
+-  set(CMAKE_CXX_COMPILER "${NDK_BIN}/aarch64-linux-android-clang++")
++  set(TERMUX_ARCH $ENV{TERMUX_ARCH})
++  set(CMAKE_C_COMPILER "${NDK_BIN}/${TERMUX_ARCH}-linux-android-clang")
++  set(CMAKE_CXX_COMPILER "${NDK_BIN}/${TERMUX_ARCH}-linux-android-clang++")
+   set(CMAKE_LINKER "${NDK_BIN}/llvm-link")
+   set(CMAKE_AR "${NDK_BIN}/llvm-ar")
+   if (LINUX)

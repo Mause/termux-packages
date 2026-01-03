@@ -20,6 +20,7 @@ termux_step_pre_configure() {
 	curl -fsSL https://bun.sh/install | bash  # need a host version of bun as well
 
 	export TERMUX_STANDALONE_TOOLCHAIN
+	export TERMUX_ARCH
 }
 
 termux_step_configure() {
