@@ -1,3 +1,4 @@
+#!/bin/bash
 TERMUX_PKG_HOMEPAGE='https://github.com/oven-sh/bun'
 TERMUX_PKG_DESCRIPTION='Incredibly fast JavaScript runtime, bundler, test runner, and package manager – all in one'
 TERMUX_PKG_LICENSE='NAUMEN'
