@@ -1,7 +1,7 @@
 From f2a95d6f2b4374aaf64917332a095346109b68e6 Mon Sep 17 00:00:00 2001
 From: Elliana May <me@mause.me>
 Date: Sat, 3 Jan 2026 14:46:22 +0800
-Subject: [PATCH 08/10] unhardcode arch
+Subject: [PATCH 08/11] unhardcode arch
 
 ---
  cmake/tools/SetupLLVM.cmake | 5 +++--
