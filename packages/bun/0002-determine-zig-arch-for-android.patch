@@ -20,6 +20,3 @@ index 320a6f4e64..95b102b006 100644
  else()
    unsupported(CMAKE_SYSTEM_NAME)
  endif()
--- 
-2.52.0
-

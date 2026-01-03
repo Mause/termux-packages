@@ -1,4 +1,4 @@
-From b6ad3383a98da856216b569aef65e8b1882dd22d Mon Sep 17 00:00:00 2001
+From c932863353f3cdfac05a42da9cf62f6787fe69c3 Mon Sep 17 00:00:00 2001
 From: Elliana May <me@mause.me>
 Date: Fri, 2 Jan 2026 02:18:17 +0800
 Subject: [PATCH 6/7] ranlib
@@ -8,7 +8,7 @@ Subject: [PATCH 6/7] ranlib
  1 file changed, 1 insertion(+), 1 deletion(-)
 
 diff --git a/cmake/tools/SetupLLVM.cmake b/cmake/tools/SetupLLVM.cmake
-index a5e42ebb44..3d63c8eb84 100644
+index 3ae7156fdc..a637f9a9ee 100644
 --- a/cmake/tools/SetupLLVM.cmake
 +++ b/cmake/tools/SetupLLVM.cmake
 @@ -133,7 +133,7 @@ else()
@@ -20,6 +20,3 @@ index a5e42ebb44..3d63c8eb84 100644
    if(LINUX)
      set(LLD_PROGRAM "${NDK_BIN}/ld.lld")
      # Ensure vendor dependencies use lld instead of ld
--- 
-2.52.0
-

@@ -1,4 +1,4 @@
-From 9a0b083304dceb570fb72df9f2946e10924f6ffb Mon Sep 17 00:00:00 2001
+From dcf7a96ea16318edaa38ba33a4a7f0865fb1eaf0 Mon Sep 17 00:00:00 2001
 From: Elliana May <me@mause.me>
 Date: Fri, 2 Jan 2026 17:15:17 +0800
 Subject: [PATCH 7/7] Add support for android libc (bionic) in
@@ -55,6 +55,3 @@ index 1c3f7d54a4..3e40a3ebf5 100644
                          !(strings.hasPrefixComptime(token, "v1.") or strings.hasPrefixComptime(token, "v0.")))
                      {
                          unsupported_token = token;
--- 
-2.52.0
-

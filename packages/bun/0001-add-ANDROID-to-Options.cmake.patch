@@ -20,6 +20,3 @@ index e54f6db166..0c9f1fc8dc 100644
  else()
    message(FATAL_ERROR "Unsupported operating system: ${CMAKE_SYSTEM_NAME}")
  endif()
--- 
-2.52.0
-

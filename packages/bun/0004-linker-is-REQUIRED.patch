@@ -42,6 +42,3 @@ index a250342018..3964d8a683 100644
      # Ensure vendor dependencies use lld instead of ld
      list(APPEND CMAKE_ARGS -DCMAKE_EXE_LINKER_FLAGS=--ld-path=${LLD_PROGRAM})
      list(APPEND CMAKE_ARGS -DCMAKE_SHARED_LINKER_FLAGS=--ld-path=${LLD_PROGRAM})
--- 
-2.52.0
-
