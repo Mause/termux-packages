@@ -4,13 +4,13 @@ Date: Sun, 19 Oct 2025 19:28:15 +0800
 Subject: [PATCH 1/6] apply
 
 ---
- src/fs.rs | 28 +++++++++++++---------------
+ crates/prek/src/fs.rs | 28 +++++++++++++---------------
  1 file changed, 13 insertions(+), 15 deletions(-)
 
-diff --git a/src/fs.rs b/src/fs.rs
+diff --git a/crates/prek/src/fs.rs b/crates/preksrc/fs.rs
 index 5398b4ce..6f6e8f93 100644
---- a/src/fs.rs
-+++ b/src/fs.rs
+--- a/crates/prek/src/fs.rs
++++ b/crates/prek/src/fs.rs
 @@ -38,35 +38,33 @@ impl LockedFile {
      /// Inner implementation for [`LockedFile::acquire_blocking`] and [`LockedFile::acquire`].
      fn lock_file_blocking(file: fs_err::File, resource: &str) -> Result<Self, std::io::Error> {
@@ -72,8 +72,8 @@ Subject: [PATCH 2/6] Refactor acquire function and add create helper
 
 diff --git a/src/fs.rs b/src/fs.rs
 index 6f6e8f93..ef00acb2 100644
---- a/src/fs.rs
-+++ b/src/fs.rs
+--- a/crates/prek/src/fs.rs
++++ b/crates/prek/src/fs.rs
 @@ -71,14 +71,67 @@ impl LockedFile {
      }
  
@@ -155,8 +155,8 @@ Subject: [PATCH 3/6] fmt
 
 diff --git a/src/fs.rs b/src/fs.rs
 index ef00acb2..cdb754b1 100644
---- a/src/fs.rs
-+++ b/src/fs.rs
+--- a/crates/prek/src/fs.rs
++++ b/crates/prek/src/fs.rs
 @@ -81,7 +81,7 @@ impl LockedFile {
          tokio::task::spawn_blocking(move || Self::lock_file_blocking(file, &resource)).await?
      }
@@ -187,8 +187,8 @@ Subject: [PATCH 4/6] Remove conditional compilation for tokio feature
 
 diff --git a/src/fs.rs b/src/fs.rs
 index cdb754b1..190361a1 100644
---- a/src/fs.rs
-+++ b/src/fs.rs
+--- a/crates/prek/src/fs.rs
++++ b/crates/prek/src/fs.rs
 @@ -71,7 +71,6 @@ impl LockedFile {
      }
  
@@ -209,8 +209,8 @@ Subject: [PATCH 5/6] add function
 
 diff --git a/src/fs.rs b/src/fs.rs
 index 190361a1..0f1b8fd1 100644
---- a/src/fs.rs
-+++ b/src/fs.rs
+--- a/crates/prek/src/fs.rs
++++ b/crates/prek/src/fs.rs
 @@ -30,6 +30,20 @@ use anyhow::Context;
  pub static CWD: LazyLock<PathBuf> =
      LazyLock::new(|| std::env::current_dir().expect("The current directory must be exist"));
@@ -287,8 +287,8 @@ index 89b526ea..a3c83f46 100644
  http = { version = "1.1.0" }
 diff --git a/src/fs.rs b/src/fs.rs
 index 0f1b8fd1..67138d93 100644
---- a/src/fs.rs
-+++ b/src/fs.rs
+--- a/crates/prek/src/fs.rs
++++ b/crates/prek/src/fs.rs
 @@ -23,7 +23,10 @@
  use std::fmt::Display;
  use std::path::{Path, PathBuf};
