@@ -1,22 +1,22 @@
-From b15921c1ecceb6b32435ebe1371636e0a5576976 Mon Sep 17 00:00:00 2001
+From 24abdb1f32717f1f6cfd66bb4088d643efd34f0d Mon Sep 17 00:00:00 2001
 From: Elliana May <me@mause.me>
-Date: Sun, 4 Jan 2026 00:29:43 +0800
-Subject: [PATCH 11/13] invalid type
+Date: Sun, 4 Jan 2026 13:54:50 +0800
+Subject: [PATCH 13/13] vec vec?
 
 ---
  src/bun.js/bindings/highway_strings.cpp | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
 diff --git a/src/bun.js/bindings/highway_strings.cpp b/src/bun.js/bindings/highway_strings.cpp
-index 3f19ac8984..67a17188dd 100644
+index d2edca99cf..c8694eb849 100644
 --- a/src/bun.js/bindings/highway_strings.cpp
 +++ b/src/bun.js/bindings/highway_strings.cpp
 @@ -81,7 +81,7 @@ size_t IndexOfAnyCharImpl(const uint8_t* HWY_RESTRICT text, size_t text_len, con
      } else {
          ASSERT(chars_len <= 16);
          constexpr size_t kMaxPreloadedChars = 16;
--        hn::Vec<D8> char_vecs[kMaxPreloadedChars];
-+        hn::Vec<D8> char_vecs;//[kMaxPreloadedChars];
+-        std::vector<hn::Vec<D8>> char_vecs(kMaxPreloadedChars);
++        hn::Vec<hn::Vec<D8>> char_vecs(kMaxPreloadedChars);
          const size_t num_chars_to_preload = std::min(chars_len, kMaxPreloadedChars);
          for (size_t c = 0; c < num_chars_to_preload; ++c) {
              char_vecs[c] = hn::Set(d, chars[c]);

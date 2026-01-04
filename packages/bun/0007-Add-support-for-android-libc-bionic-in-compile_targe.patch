@@ -1,7 +1,7 @@
 From dcf7a96ea16318edaa38ba33a4a7f0865fb1eaf0 Mon Sep 17 00:00:00 2001
 From: Elliana May <me@mause.me>
 Date: Fri, 2 Jan 2026 17:15:17 +0800
-Subject: [PATCH 07/12] Add support for android libc (bionic) in
+Subject: [PATCH 07/13] Add support for android libc (bionic) in
  compile_target.zig
 
 ---

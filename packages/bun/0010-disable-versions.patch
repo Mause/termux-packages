@@ -1,7 +1,7 @@
 From 88f583cfd35a04bccaabbd103fb46a5a09501688 Mon Sep 17 00:00:00 2001
 From: Elliana May <me@mause.me>
 Date: Sat, 3 Jan 2026 15:27:22 +0800
-Subject: [PATCH 10/12] disable versions
+Subject: [PATCH 10/13] disable versions
 
 ---
  src/bun.js/bindings/BunProcess.cpp | 4 ++--
