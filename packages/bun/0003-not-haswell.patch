@@ -1,7 +1,7 @@
 From 84ef421a3b63404dfd027c018f34dee6d54dee1a Mon Sep 17 00:00:00 2001
 From: Elliana May <me@mause.me>
 Date: Thu, 1 Jan 2026 22:18:10 +0800
-Subject: [PATCH 03/11] not haswell
+Subject: [PATCH 03/12] not haswell
 
 ---
  cmake/CompilerFlags.cmake | 2 +-

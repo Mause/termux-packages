@@ -1,7 +1,7 @@
 From c932863353f3cdfac05a42da9cf62f6787fe69c3 Mon Sep 17 00:00:00 2001
 From: Elliana May <me@mause.me>
 Date: Fri, 2 Jan 2026 02:18:17 +0800
-Subject: [PATCH 06/11] ranlib
+Subject: [PATCH 06/12] ranlib
 
 ---
  cmake/tools/SetupLLVM.cmake | 2 +-
