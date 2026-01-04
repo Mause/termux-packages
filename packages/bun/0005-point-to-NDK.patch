@@ -1,7 +1,7 @@
 From 7cb5d1dcceaa19239aa6c97c3e8ce521c2915eea Mon Sep 17 00:00:00 2001
 From: Elliana May <me@mause.me>
 Date: Fri, 2 Jan 2026 02:12:23 +0800
-Subject: [PATCH 05/11] point to NDK
+Subject: [PATCH 05/12] point to NDK
 
 ---
  cmake/tools/SetupLLVM.cmake | 14 +++++++++-----
