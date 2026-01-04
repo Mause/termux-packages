@@ -1,14 +1,14 @@
-From 7c36bca93f4220f37e39babe2526ba24360883dc Mon Sep 17 00:00:00 2001
+From 6da6ffb442b8d5125503accfae5f8bf1b3654f8c Mon Sep 17 00:00:00 2001
 From: Elliana May <me@mause.me>
 Date: Sun, 19 Oct 2025 19:28:15 +0800
-Subject: [PATCH 1/6] apply
+Subject: [PATCH 1/8] apply
 
 ---
  crates/prek/src/fs.rs | 28 +++++++++++++---------------
  1 file changed, 13 insertions(+), 15 deletions(-)
 
-diff --git a/crates/prek/src/fs.rs b/crates/preksrc/fs.rs
-index 5398b4ce..6f6e8f93 100644
+diff --git a/crates/prek/src/fs.rs b/crates/prek/src/fs.rs
+index 2402524..5183f25 100644
 --- a/crates/prek/src/fs.rs
 +++ b/crates/prek/src/fs.rs
 @@ -38,35 +38,33 @@ impl LockedFile {
@@ -61,17 +61,17 @@ index 5398b4ce..6f6e8f93 100644
              }
          }
 
-From 814742033116877706edad3457e5a25e94cd7a69 Mon Sep 17 00:00:00 2001
+From 240c666e24a2186cab1462e226868dcee458895e Mon Sep 17 00:00:00 2001
 From: Elliana May <me@mause.me>
 Date: Sun, 19 Oct 2025 19:40:33 +0800
-Subject: [PATCH 2/6] Refactor acquire function and add create helper
+Subject: [PATCH 2/8] Refactor acquire function and add create helper
 
 ---
- src/fs.rs | 55 ++++++++++++++++++++++++++++++++++++++++++++++++++++++-
+ crates/prek/src/fs.rs | 55 ++++++++++++++++++++++++++++++++++++++++++-
  1 file changed, 54 insertions(+), 1 deletion(-)
 
-diff --git a/src/fs.rs b/src/fs.rs
-index 6f6e8f93..ef00acb2 100644
+diff --git a/crates/prek/src/fs.rs b/crates/prek/src/fs.rs
+index 5183f25..f7a35eb 100644
 --- a/crates/prek/src/fs.rs
 +++ b/crates/prek/src/fs.rs
 @@ -71,14 +71,67 @@ impl LockedFile {
@@ -144,17 +144,17 @@ index 6f6e8f93..ef00acb2 100644
  
  impl Drop for LockedFile {
 
-From e8d61f836a1dc4a36f55d13d022f2f8fdaf60f13 Mon Sep 17 00:00:00 2001
+From 2c1bf89ecfa2972aa7fd2abea2641dda789bb441 Mon Sep 17 00:00:00 2001
 From: Elliana May <me@mause.me>
 Date: Sun, 19 Oct 2025 19:41:38 +0800
-Subject: [PATCH 3/6] fmt
+Subject: [PATCH 3/8] fmt
 
 ---
- src/fs.rs | 4 ++--
+ crates/prek/src/fs.rs | 4 ++--
  1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/src/fs.rs b/src/fs.rs
-index ef00acb2..cdb754b1 100644
+diff --git a/crates/prek/src/fs.rs b/crates/prek/src/fs.rs
+index f7a35eb..f73cc8c 100644
 --- a/crates/prek/src/fs.rs
 +++ b/crates/prek/src/fs.rs
 @@ -81,7 +81,7 @@ impl LockedFile {
@@ -176,17 +176,17 @@ index ef00acb2..cdb754b1 100644
  
  impl Drop for LockedFile {
 
-From ff90082d07eee4aa55b897101569fb04116134b7 Mon Sep 17 00:00:00 2001
+From 95f77748a0e9d6f46c23720efe708ce90700ef50 Mon Sep 17 00:00:00 2001
 From: Elliana May <me@mause.me>
 Date: Sun, 19 Oct 2025 19:45:34 +0800
-Subject: [PATCH 4/6] Remove conditional compilation for tokio feature
+Subject: [PATCH 4/8] Remove conditional compilation for tokio feature
 
 ---
- src/fs.rs | 1 -
+ crates/prek/src/fs.rs | 1 -
  1 file changed, 1 deletion(-)
 
-diff --git a/src/fs.rs b/src/fs.rs
-index cdb754b1..190361a1 100644
+diff --git a/crates/prek/src/fs.rs b/crates/prek/src/fs.rs
+index f73cc8c..86c4356 100644
 --- a/crates/prek/src/fs.rs
 +++ b/crates/prek/src/fs.rs
 @@ -71,7 +71,6 @@ impl LockedFile {
@@ -198,17 +198,17 @@ index cdb754b1..190361a1 100644
          path: impl AsRef<Path>,
          resource: impl Display,
 
-From d69a1fc226949ac7c595b302f5533384cc24dc0f Mon Sep 17 00:00:00 2001
+From 725716fd7186fe826bd187482a642128b73c44ea Mon Sep 17 00:00:00 2001
 From: Elliana May <me@mause.me>
 Date: Sun, 19 Oct 2025 19:50:58 +0800
-Subject: [PATCH 5/6] add function
+Subject: [PATCH 5/8] add function
 
 ---
- src/fs.rs | 14 ++++++++++++++
+ crates/prek/src/fs.rs | 14 ++++++++++++++
  1 file changed, 14 insertions(+)
 
-diff --git a/src/fs.rs b/src/fs.rs
-index 190361a1..0f1b8fd1 100644
+diff --git a/crates/prek/src/fs.rs b/crates/prek/src/fs.rs
+index 86c4356..72d3170 100644
 --- a/crates/prek/src/fs.rs
 +++ b/crates/prek/src/fs.rs
 @@ -30,6 +30,20 @@ use anyhow::Context;
@@ -233,22 +233,22 @@ index 190361a1..0f1b8fd1 100644
  #[derive(Debug)]
  pub struct LockedFile(fs_err::File);
 
-From 3a961c7ef9d5f5e217571a3a90b268cec0f6280a Mon Sep 17 00:00:00 2001
+From 6a3249120b032a36f8f6ac6ac9f8dc6ef7b76ade Mon Sep 17 00:00:00 2001
 From: Elliana May <me@mause.me>
 Date: Sun, 19 Oct 2025 20:05:03 +0800
-Subject: [PATCH 6/6] add missing imports
+Subject: [PATCH 6/8] add missing imports
 
 ---
- Cargo.lock | 11 +++++++++++
- Cargo.toml |  1 +
- src/fs.rs  |  5 ++++-
+ Cargo.lock            | 11 +++++++++++
+ Cargo.toml            |  1 +
+ crates/prek/src/fs.rs |  5 ++++-
  3 files changed, 16 insertions(+), 1 deletion(-)
 
 diff --git a/Cargo.lock b/Cargo.lock
-index 048d3ff5..1c2888a1 100644
+index 5ce5619..ea74692 100644
 --- a/Cargo.lock
 +++ b/Cargo.lock
-@@ -749,6 +749,16 @@ dependencies = [
+@@ -811,6 +811,16 @@ dependencies = [
   "tokio",
  ]
  
@@ -265,7 +265,7 @@ index 048d3ff5..1c2888a1 100644
  [[package]]
  name = "futures"
  version = "0.3.31"
-@@ -1769,6 +1779,7 @@ dependencies = [
+@@ -1875,6 +1885,7 @@ dependencies = [
   "etcetera",
   "fancy-regex",
   "fs-err",
@@ -274,19 +274,19 @@ index 048d3ff5..1c2888a1 100644
   "hex",
   "http",
 diff --git a/Cargo.toml b/Cargo.toml
-index 89b526ea..a3c83f46 100644
+index e8ad995..77b6c6a 100644
 --- a/Cargo.toml
 +++ b/Cargo.toml
-@@ -50,6 +50,7 @@ dunce = { version = "1.0.5" }
- etcetera = { version = "0.10.0" }
- fancy-regex = { version = "0.16.0" }
+@@ -28,6 +28,7 @@ dunce = { version = "1.0.5" }
+ etcetera = { version = "0.11.0" }
+ fancy-regex = { version = "0.17.0" }
  fs-err = { version = "3.1.0", features = ["tokio"] }
 +fs2 = "0.4.3"
  futures = { version = "0.3.31" }
  hex = { version = "0.4.3" }
  http = { version = "1.1.0" }
-diff --git a/src/fs.rs b/src/fs.rs
-index 0f1b8fd1..67138d93 100644
+diff --git a/crates/prek/src/fs.rs b/crates/prek/src/fs.rs
+index 72d3170..0c3bda4 100644
 --- a/crates/prek/src/fs.rs
 +++ b/crates/prek/src/fs.rs
 @@ -23,7 +23,10 @@
@@ -301,3 +301,47 @@ index 0f1b8fd1..67138d93 100644
  
  use anyhow::Context;
  
+
+From 50c62802adeb0386828d12e14aa6e00a8da43f30 Mon Sep 17 00:00:00 2001
+From: Elliana May <me@mause.me>
+Date: Sun, 19 Oct 2025 19:40:33 +0800
+Subject: [PATCH 7/8] Refactor acquire function and add create helper
+
+---
+ crates/prek/src/fs.rs | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/crates/prek/src/fs.rs b/crates/prek/src/fs.rs
+index 0c3bda4..950f57b 100644
+--- a/crates/prek/src/fs.rs
++++ b/crates/prek/src/fs.rs
+@@ -88,6 +88,7 @@ impl LockedFile {
+     }
+ 
+     /// Acquire a cross-process lock for a resource using a file at the provided path.
++    #[cfg(feature = "tokio")]
+     pub async fn acquire(
+         path: impl AsRef<Path>,
+         resource: impl Display,
+
+From 549526f5a635ba0d3ba1eeb9179b2343f663e6e1 Mon Sep 17 00:00:00 2001
+From: Elliana May <me@mause.me>
+Date: Mon, 5 Jan 2026 00:14:14 +0800
+Subject: [PATCH 8/8] add fs2 to workspace crate
+
+---
+ crates/prek/Cargo.toml | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/crates/prek/Cargo.toml b/crates/prek/Cargo.toml
+index 6a156e4..4b4493e 100644
+--- a/crates/prek/Cargo.toml
++++ b/crates/prek/Cargo.toml
+@@ -39,6 +39,7 @@ dunce = { workspace = true }
+ etcetera = {  workspace = true }
+ fancy-regex = {  workspace = true }
+ fs-err = {  workspace = true, features = ["tokio"] }
++fs2 = { workspace = true }
+ futures = {  workspace = true }
+ hex = { workspace = true }
+ http = { workspace = true }
