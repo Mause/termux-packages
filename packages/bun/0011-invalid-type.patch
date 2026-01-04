@@ -1,7 +1,7 @@
 From b15921c1ecceb6b32435ebe1371636e0a5576976 Mon Sep 17 00:00:00 2001
 From: Elliana May <me@mause.me>
 Date: Sun, 4 Jan 2026 00:29:43 +0800
-Subject: [PATCH 11/13] invalid type
+Subject: [PATCH] invalid type
 
 ---
  src/bun.js/bindings/highway_strings.cpp | 2 +-

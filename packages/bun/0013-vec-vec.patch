@@ -1,7 +1,7 @@
 From 24abdb1f32717f1f6cfd66bb4088d643efd34f0d Mon Sep 17 00:00:00 2001
 From: Elliana May <me@mause.me>
 Date: Sun, 4 Jan 2026 13:54:50 +0800
-Subject: [PATCH 13/13] vec vec?
+Subject: [PATCH] vec vec?
 
 ---
  src/bun.js/bindings/highway_strings.cpp | 2 +-

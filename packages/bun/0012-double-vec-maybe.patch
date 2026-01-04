@@ -1,7 +1,7 @@
 From 1f8243a1d189ab533aaaa1e020ebb1d278df70f3 Mon Sep 17 00:00:00 2001
 From: Elliana May <me@mause.me>
 Date: Sun, 4 Jan 2026 13:02:41 +0800
-Subject: [PATCH 12/13] double vec maybe
+Subject: [PATCH] double vec maybe
 
 ---
  src/bun.js/bindings/highway_strings.cpp | 2 +-
