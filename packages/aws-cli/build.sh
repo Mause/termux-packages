@@ -8,6 +8,7 @@ TERMUX_PKG_BUILD_IN_SRC=true
 TERMUX_PKG_AUTO_UPDATE=true
 TERMUX_PKG_SHA256='8318ec37c35b4cac817369a4d41740f54fa83c62611d84c65eb7204e77f7dd85'
 TERMUX_PKG_DEPENDS='python'
+TERMUX_PKG_EXTRA_CONFIGURE_ARGS='--with-download-deps'
 
 termux_step_pre_configure() {
 	termux_setup_python_pip
