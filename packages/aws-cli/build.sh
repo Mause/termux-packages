@@ -12,4 +12,5 @@ TERMUX_PKG_EXTRA_CONFIGURE_ARGS='--with-download-deps'
 
 termux_step_pre_configure() {
 	termux_setup_python_pip
+	termux_setup_cmake
 }
