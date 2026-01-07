@@ -1,0 +1,13 @@
+TERMUX_PKG_HOMEPAGE='https://github.com/aws/aws-cli'
+TERMUX_PKG_DESCRIPTION='Universal Command Line Interface for Amazon Web Services'
+TERMUX_PKG_LICENSE=''
+TERMUX_PKG_MAINTAINER='@termux'
+TERMUX_PKG_VERSION='2.32.30'
+TERMUX_PKG_SRCURL=https://github.com/aws/aws-cli/archive/refs/tags/${TERMUX_PKG_VERSION}.tar.gz
+TERMUX_PKG_BUILD_IN_SRC=true
+TERMUX_PKG_AUTO_UPDATE=true
+TERMUX_PKG_SHA256='8318ec37c35b4cac817369a4d41740f54fa83c62611d84c65eb7204e77f7dd85'
+
+termux_step_pre_configure() {
+	termux_setup_python_pip
+}
