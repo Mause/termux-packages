@@ -1,6 +1,6 @@
 TERMUX_PKG_HOMEPAGE='https://github.com/aws/aws-cli'
 TERMUX_PKG_DESCRIPTION='Universal Command Line Interface for Amazon Web Services'
-TERMUX_PKG_LICENSE='Apache'
+TERMUX_PKG_LICENSE='Apache-2.0'
 TERMUX_PKG_MAINTAINER='@termux'
 TERMUX_PKG_VERSION='2.32.30'
 TERMUX_PKG_SRCURL=https://github.com/aws/aws-cli/archive/refs/tags/${TERMUX_PKG_VERSION}.tar.gz
