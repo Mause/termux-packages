@@ -7,7 +7,7 @@ TERMUX_PKG_SRCURL=git+https://github.com/awslabs/aws-crt-python
 TERMUX_PKG_GIT_BRANCH=v${TERMUX_PKG_VERSION}
 TERMUX_PKG_BUILD_IN_SRC=true
 TERMUX_PKG_AUTO_UPDATE=true
-TERMUX_PKG_DEPENDS="openssl"
+TERMUX_PKG_DEPENDS="python, openssl"
 
 set -o xtrace
 
