@@ -8,6 +8,8 @@ TERMUX_PKG_GIT_BRANCH=v${TERMUX_PKG_VERSION}
 TERMUX_PKG_BUILD_IN_SRC=true
 TERMUX_PKG_AUTO_UPDATE=true
 
+set -o xtrace
+
 termux_step_post_get_source() {
 	git fetch --unshallow
 	git submodule init

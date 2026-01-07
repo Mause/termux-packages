@@ -10,6 +10,8 @@ TERMUX_PKG_SHA256='8318ec37c35b4cac817369a4d41740f54fa83c62611d84c65eb7204e77f7d
 TERMUX_PKG_DEPENDS='python, python-ensurepip-wheels'
 TERMUX_PKG_EXTRA_CONFIGURE_ARGS='--with-download-deps'
 
+set -o xtrace
+
 termux_step_pre_configure() {
 	termux_setup_python_pip
 	termux_setup_cmake
