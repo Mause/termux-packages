@@ -9,7 +9,7 @@ TERMUX_PKG_LICENSE_FILE="LICENSE"
 TERMUX_PKG_SRCURL="git+https://github.com/microsoft/typescript-go"
 TERMUX_PKG_BUILD_IN_SRC=true
 TERMUX_PKG_AUTO_UPDATE=true
-_COMMIT="b1bf0b6e67f206883cf473802fd6ec1dacd60476"
+_COMMIT="6e1e2c29067d9dfe638301be2d6409e788df47b1"
 
 set -o xtrace
 
