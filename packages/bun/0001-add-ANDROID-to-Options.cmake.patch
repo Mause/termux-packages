@@ -1,0 +1,22 @@
+From 10581da5c510176ad11b6667aad404283bc76c3d Mon Sep 17 00:00:00 2001
+From: Elliana May <me@mause.me>
+Date: Thu, 1 Jan 2026 20:22:15 +0800
+Subject: [PATCH] add ANDROID to Options.cmake
+
+---
+ cmake/Options.cmake | 2 ++
+ 1 file changed, 2 insertions(+)
+
+diff --git a/cmake/Options.cmake b/cmake/Options.cmake
+index e54f6db166..0c9f1fc8dc 100644
+--- a/cmake/Options.cmake
++++ b/cmake/Options.cmake
+@@ -45,6 +45,8 @@ elseif(WIN32)
+   setx(OS "windows")
+ elseif(LINUX)
+   setx(OS "linux")
++elseif(ANDROID)
++  setx(OS "android")
+ else()
+   message(FATAL_ERROR "Unsupported operating system: ${CMAKE_SYSTEM_NAME}")
+ endif()

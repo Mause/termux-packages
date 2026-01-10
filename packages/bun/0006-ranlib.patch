@@ -1,0 +1,22 @@
+From c932863353f3cdfac05a42da9cf62f6787fe69c3 Mon Sep 17 00:00:00 2001
+From: Elliana May <me@mause.me>
+Date: Fri, 2 Jan 2026 02:18:17 +0800
+Subject: [PATCH] ranlib
+
+---
+ cmake/tools/SetupLLVM.cmake | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/cmake/tools/SetupLLVM.cmake b/cmake/tools/SetupLLVM.cmake
+index 3ae7156fdc..a637f9a9ee 100644
+--- a/cmake/tools/SetupLLVM.cmake
++++ b/cmake/tools/SetupLLVM.cmake
+@@ -133,7 +133,7 @@ else()
+   else()
+     find_llvm_command(CMAKE_STRIP llvm-strip)
+   endif()
+-  find_llvm_command(CMAKE_RANLIB llvm-ranlib)
++  set(CMAKE_RANLIB "${NDK_BIN}/llvm-ranlib")
+   if(LINUX)
+     set(LLD_PROGRAM "${NDK_BIN}/ld.lld")
+     # Ensure vendor dependencies use lld instead of ld
