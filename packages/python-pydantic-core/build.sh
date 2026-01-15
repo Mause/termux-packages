@@ -20,7 +20,7 @@ termux_step_configure() {
 termux_step_make() {
 	. "$HOME/.cargo/env"
 	export LD_LIBRARY_PATH="${TERMUX_PREFIX}/lib/"
-	export ANDROID_API_LEVEL=$TERMUX_API_LEVEL
+	export ANDROID_API_LEVEL=$TERMUX_PKG_API_LEVEL
 	echo "Building with CARGO_TARGET_NAME=${CARGO_TARGET_NAME} LD_LIBRARY_PATH=$LD_LIBRARY_PATH"
 	maturin build --release --target ${CARGO_TARGET_NAME} --skip-auditwheel -vv
 }
