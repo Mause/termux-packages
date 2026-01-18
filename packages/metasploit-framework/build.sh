@@ -7,3 +7,8 @@ TERMUX_PKG_SRCURL=https://github.com/rapid7/metasploit-framework/archive/refs/ta
 TERMUX_PKG_BUILD_IN_SRC=true
 TERMUX_PKG_AUTO_UPDATE=true
 TERMUX_PKG_SHA256='409600db0fb2903cb7f029a9fbddee984373e9cef7b451526bf79e7d3b2fba36'
+TERMUX_PKG_DEPENDS='ruby'
+
+termux_step_make() {
+	bundle install --jobs 4 --retry 3
+}
