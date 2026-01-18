@@ -10,5 +10,5 @@ TERMUX_PKG_SHA256='409600db0fb2903cb7f029a9fbddee984373e9cef7b451526bf79e7d3b2fb
 TERMUX_PKG_DEPENDS='ruby, libpcap, postgresql, zlib, libsqlite'
 
 termux_step_make() {
-	$TERMUX_PRRFIX/bin/bundler install --jobs 4 --retry 3
+	$TERMUX_PREFIX/bin/bundler install --jobs 4 --retry 3
 }
