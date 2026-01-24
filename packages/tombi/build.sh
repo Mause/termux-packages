@@ -30,7 +30,7 @@ termux_step_pre_configure() {
 termux_step_make() {
 	cd "$TERMUX_PKG_SRCDIR"
 
-	TOMBI_VERSION=v$TERMUX_PKG_VERSION \
+	TOMBI_VERSION=$TERMUX_PKG_VERSION \
 	cargo run --bin xtask -- set-version
 
 	PKG_CONFIG_PATH="/usr/lib/x86_64-linux-gnu/pkgconfig/" \
