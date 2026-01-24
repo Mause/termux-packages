@@ -30,10 +30,12 @@ termux_step_pre_configure() {
 termux_step_make() {
 	cd "$TERMUX_PKG_SRCDIR"
 
+	TOMBI_VERSION=v$TERMUX_PKG_VERSION \
+	cargo run --bin xtask -- set-version
+
 	PKG_CONFIG_PATH="/usr/lib/x86_64-linux-gnu/pkgconfig/" \
 	PKG_CONFIG_ALL_DYNAMIC=1 \
 	ZSTD_SYS_USE_PKG_CONFIG=1 \
-	TOMBI_VERSION=v$TERMUX_PKG_VERSION \
 	cargo build --jobs "${TERMUX_PKG_MAKE_PROCESSES}" --target "${CARGO_TARGET_NAME}" --release --verbose --bin tombi
 }
 
