@@ -1,0 +1,325 @@
+From 6da6ffb442b8d5125503accfae5f8bf1b3654f8c Mon Sep 17 00:00:00 2001
+From: Elliana May <me@mause.me>
+Date: Sun, 19 Oct 2025 19:28:15 +0800
+Subject: [PATCH 1/7] apply
+
+---
+ crates/prek/src/fs.rs | 28 +++++++++++++---------------
+ 1 file changed, 13 insertions(+), 15 deletions(-)
+
+diff --git a/crates/prek/src/fs.rs b/crates/prek/src/fs.rs
+index 2402524..5183f25 100644
+--- a/crates/prek/src/fs.rs
++++ b/crates/prek/src/fs.rs
+@@ -38,35 +38,33 @@ impl LockedFile {
+     /// Inner implementation for [`LockedFile::acquire_blocking`] and [`LockedFile::acquire`].
+     fn lock_file_blocking(file: fs_err::File, resource: &str) -> Result<Self, std::io::Error> {
+         trace!(
+-            resource,
+-            path = %file.path().display(),
+-            "Checking lock",
++            "Checking lock for `{resource}` at `{}`",
++            file.path().user_display()
+         );
+-        match file.try_lock() {
++        match file.file().try_lock_exclusive() {
+             Ok(()) => {
+-                debug!(resource, "Acquired lock");
++                debug!("Acquired lock for `{resource}`");
+                 Ok(Self(file))
+             }
+             Err(err) => {
+-                // Log error code and enum kind to help debugging more exotic failures
+-                if !matches!(err, std::fs::TryLockError::WouldBlock) {
+-                    trace!(error = ?err, "Try lock error");
++                // Log error code and enum kind to help debugging more exotic failures.
++                if !is_known_already_locked_error(&err) {
++                    debug!("Try lock error: {err:?}");
+                 }
+                 info!(
+-                    resource,
+-                    path = %file.path().display(),
+-                    "Waiting to acquire lock",
++                    "Waiting to acquire lock for `{resource}` at `{}`",
++                    file.path().user_display(),
+                 );
+-                file.lock().map_err(|err| {
+-                    // Not a fs_err method, we need to build our own path context
++                file.file().lock_exclusive().map_err(|err| {
++                    // Not an fs_err method, we need to build our own path context
+                     std::io::Error::other(format!(
+                         "Could not acquire lock for `{resource}` at `{}`: {}",
+-                        file.path().display(),
++                        file.path().user_display(),
+                         err
+                     ))
+                 })?;
+ 
+-                trace!(resource, "Acquired lock");
++                debug!("Acquired lock for `{resource}`");
+                 Ok(Self(file))
+             }
+         }
+
+From 240c666e24a2186cab1462e226868dcee458895e Mon Sep 17 00:00:00 2001
+From: Elliana May <me@mause.me>
+Date: Sun, 19 Oct 2025 19:40:33 +0800
+Subject: [PATCH 2/7] Refactor acquire function and add create helper
+
+---
+ crates/prek/src/fs.rs | 55 ++++++++++++++++++++++++++++++++++++++++++-
+ 1 file changed, 54 insertions(+), 1 deletion(-)
+
+diff --git a/crates/prek/src/fs.rs b/crates/prek/src/fs.rs
+index 5183f25..f7a35eb 100644
+--- a/crates/prek/src/fs.rs
++++ b/crates/prek/src/fs.rs
+@@ -71,14 +71,67 @@ impl LockedFile {
+     }
+ 
+     /// Acquire a cross-process lock for a resource using a file at the provided path.
++    #[cfg(feature = "tokio")]
+     pub async fn acquire(
+         path: impl AsRef<Path>,
+         resource: impl Display,
+     ) -> Result<Self, std::io::Error> {
+-        let file = fs_err::File::create(path.as_ref())?;
++        let file = Self::create(path)?;
+         let resource = resource.to_string();
+         tokio::task::spawn_blocking(move || Self::lock_file_blocking(file, &resource)).await?
+     }
++
++        #[cfg(unix)]
++    fn create(path: impl AsRef<Path>) -> Result<fs_err::File, std::io::Error> {
++        use std::os::unix::fs::PermissionsExt;
++
++        // If path already exists, return it.
++        if let Ok(file) = fs_err::OpenOptions::new()
++            .read(true)
++            .write(true)
++            .open(path.as_ref())
++        {
++            return Ok(file);
++        }
++
++        // Otherwise, create a temporary file with 777 permissions. We must set
++        // permissions _after_ creating the file, to override the `umask`.
++        let file = if let Some(parent) = path.as_ref().parent() {
++            NamedTempFile::new_in(parent)?
++        } else {
++            NamedTempFile::new()?
++        };
++        if let Err(err) = file
++            .as_file()
++            .set_permissions(std::fs::Permissions::from_mode(0o777))
++        {
++            warn!("Failed to set permissions on temporary file: {err}");
++        }
++
++        // Try to move the file to path, but if path exists now, just open path
++        match file.persist_noclobber(path.as_ref()) {
++            Ok(file) => Ok(fs_err::File::from_parts(file, path.as_ref())),
++            Err(err) => {
++                if err.error.kind() == std::io::ErrorKind::AlreadyExists {
++                    fs_err::OpenOptions::new()
++                        .read(true)
++                        .write(true)
++                        .open(path.as_ref())
++                } else {
++                    Err(err.error)
++                }
++            }
++        }
++    }
++
++    #[cfg(not(unix))]
++    fn create(path: impl AsRef<Path>) -> std::io::Result<fs_err::File> {
++        fs_err::OpenOptions::new()
++            .read(true)
++            .write(true)
++            .create(true)
++            .open(path.as_ref())
++                }
+ }
+ 
+ impl Drop for LockedFile {
+
+From 2c1bf89ecfa2972aa7fd2abea2641dda789bb441 Mon Sep 17 00:00:00 2001
+From: Elliana May <me@mause.me>
+Date: Sun, 19 Oct 2025 19:41:38 +0800
+Subject: [PATCH 3/7] fmt
+
+---
+ crates/prek/src/fs.rs | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/crates/prek/src/fs.rs b/crates/prek/src/fs.rs
+index f7a35eb..f73cc8c 100644
+--- a/crates/prek/src/fs.rs
++++ b/crates/prek/src/fs.rs
+@@ -81,7 +81,7 @@ impl LockedFile {
+         tokio::task::spawn_blocking(move || Self::lock_file_blocking(file, &resource)).await?
+     }
+ 
+-        #[cfg(unix)]
++    #[cfg(unix)]
+     fn create(path: impl AsRef<Path>) -> Result<fs_err::File, std::io::Error> {
+         use std::os::unix::fs::PermissionsExt;
+ 
+@@ -131,7 +131,7 @@ impl LockedFile {
+             .write(true)
+             .create(true)
+             .open(path.as_ref())
+-                }
++    }
+ }
+ 
+ impl Drop for LockedFile {
+
+From 95f77748a0e9d6f46c23720efe708ce90700ef50 Mon Sep 17 00:00:00 2001
+From: Elliana May <me@mause.me>
+Date: Sun, 19 Oct 2025 19:45:34 +0800
+Subject: [PATCH 4/7] Remove conditional compilation for tokio feature
+
+---
+ crates/prek/src/fs.rs | 1 -
+ 1 file changed, 1 deletion(-)
+
+diff --git a/crates/prek/src/fs.rs b/crates/prek/src/fs.rs
+index f73cc8c..86c4356 100644
+--- a/crates/prek/src/fs.rs
++++ b/crates/prek/src/fs.rs
+@@ -71,7 +71,6 @@ impl LockedFile {
+     }
+ 
+     /// Acquire a cross-process lock for a resource using a file at the provided path.
+-    #[cfg(feature = "tokio")]
+     pub async fn acquire(
+         path: impl AsRef<Path>,
+         resource: impl Display,
+
+From 725716fd7186fe826bd187482a642128b73c44ea Mon Sep 17 00:00:00 2001
+From: Elliana May <me@mause.me>
+Date: Sun, 19 Oct 2025 19:50:58 +0800
+Subject: [PATCH 5/7] add function
+
+---
+ crates/prek/src/fs.rs | 14 ++++++++++++++
+ 1 file changed, 14 insertions(+)
+
+diff --git a/crates/prek/src/fs.rs b/crates/prek/src/fs.rs
+index 86c4356..72d3170 100644
+--- a/crates/prek/src/fs.rs
++++ b/crates/prek/src/fs.rs
+@@ -30,6 +30,20 @@ use anyhow::Context;
+ pub static CWD: LazyLock<PathBuf> =
+     LazyLock::new(|| std::env::current_dir().expect("The current directory must be exist"));
+ 
++/// Whether the error is due to a lock being held.
++fn is_known_already_locked_error(err: &std::io::Error) -> bool {
++    if matches!(err.kind(), std::io::ErrorKind::WouldBlock) {
++        return true;
++    }
++
++    // On Windows, we've seen: Os { code: 33, kind: Uncategorized, message: "The process cannot access the file because another process has locked a portion of the file." }
++    if cfg!(windows) && err.raw_os_error() == Some(33) {
++        return true;
++    }
++
++    false
++}
++
+ /// A file lock that is automatically released when dropped.
+ #[derive(Debug)]
+ pub struct LockedFile(fs_err::File);
+
+From 6a3249120b032a36f8f6ac6ac9f8dc6ef7b76ade Mon Sep 17 00:00:00 2001
+From: Elliana May <me@mause.me>
+Date: Sun, 19 Oct 2025 20:05:03 +0800
+Subject: [PATCH 6/7] add missing imports
+
+---
+ Cargo.lock            | 11 +++++++++++
+ Cargo.toml            |  1 +
+ crates/prek/src/fs.rs |  5 ++++-
+ 3 files changed, 16 insertions(+), 1 deletion(-)
+
+diff --git a/Cargo.lock b/Cargo.lock
+index 5ce5619..ea74692 100644
+--- a/Cargo.lock
++++ b/Cargo.lock
+@@ -811,6 +811,16 @@ dependencies = [
+  "tokio",
+ ]
+ 
++[[package]]
++name = "fs2"
++version = "0.4.3"
++source = "registry+https://github.com/rust-lang/crates.io-index"
++checksum = "9564fc758e15025b46aa6643b1b77d047d1a56a1aea6e01002ac0c7026876213"
++dependencies = [
++ "libc",
++ "winapi",
++]
++
+ [[package]]
+ name = "futures"
+ version = "0.3.31"
+@@ -1875,6 +1885,7 @@ dependencies = [
+  "etcetera",
+  "fancy-regex",
+  "fs-err",
++ "fs2",
+  "futures",
+  "hex",
+  "http",
+diff --git a/Cargo.toml b/Cargo.toml
+index e8ad995..77b6c6a 100644
+--- a/Cargo.toml
++++ b/Cargo.toml
+@@ -28,6 +28,7 @@ dunce = { version = "1.0.5" }
+ etcetera = { version = "0.11.0" }
+ fancy-regex = { version = "0.17.0" }
+ fs-err = { version = "3.1.0", features = ["tokio"] }
++fs2 = "0.4.3"
+ futures = { version = "0.3.31" }
+ hex = { version = "0.4.3" }
+ http = { version = "1.1.0" }
+diff --git a/crates/prek/src/fs.rs b/crates/prek/src/fs.rs
+index 72d3170..0c3bda4 100644
+--- a/crates/prek/src/fs.rs
++++ b/crates/prek/src/fs.rs
+@@ -23,7 +23,10 @@
+ use std::fmt::Display;
+ use std::path::{Path, PathBuf};
+ use std::sync::LazyLock;
+-use tracing::{debug, error, info, trace};
++use tracing::{debug, error, info, trace, warn};
++
++use fs2::FileExt;
++use tempfile::NamedTempFile;
+ 
+ use anyhow::Context;
+ 
+
+From 2feba847e7826dd8f9ae11d4f63974d42573e04e Mon Sep 17 00:00:00 2001
+From: Elliana May <me@mause.me>
+Date: Mon, 5 Jan 2026 00:14:14 +0800
+Subject: [PATCH 7/7] add fs2 to workspace crate
+
+---
+ crates/prek/Cargo.toml | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/crates/prek/Cargo.toml b/crates/prek/Cargo.toml
+index 6a156e4..4b4493e 100644
+--- a/crates/prek/Cargo.toml
++++ b/crates/prek/Cargo.toml
+@@ -39,6 +39,7 @@ dunce = { workspace = true }
+ etcetera = {  workspace = true }
+ fancy-regex = {  workspace = true }
+ fs-err = {  workspace = true, features = ["tokio"] }
++fs2 = { workspace = true }
+ futures = {  workspace = true }
+ hex = { workspace = true }
+ http = { workspace = true }
