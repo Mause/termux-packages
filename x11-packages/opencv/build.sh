@@ -4,8 +4,8 @@ TERMUX_PKG_LICENSE="Apache-2.0"
 TERMUX_PKG_MAINTAINER="@termux"
 TERMUX_PKG_VERSION="4.13.0"
 TERMUX_PKG_SRCURL=(
-	https://github.com/opencv/opencv/archive/${TERMUX_PKG_VERSION}/opencv-${TERMUX_PKG_VERSION}.tar.gz
-	https://github.com/opencv/opencv_contrib/archive/${TERMUX_PKG_VERSION}/opencv_contrib-${TERMUX_PKG_VERSION}.tar.gz
+	https://github.com/opencv/opencv/archive/refs/tags/${TERMUX_PKG_VERSION}/opencv-${TERMUX_PKG_VERSION}.tar.gz
+	https://github.com/opencv/opencv_contrib/archive/refs/tags/${TERMUX_PKG_VERSION}/opencv_contrib-${TERMUX_PKG_VERSION}.tar.gz
 )
 TERMUX_PKG_SHA256=(
 	1d40ca017ea51c533cf9fd5cbde5b5fe7ae248291ddf2af99d4c17cf8e13017d
@@ -14,7 +14,7 @@ TERMUX_PKG_SHA256=(
 TERMUX_PKG_AUTO_UPDATE=true
 TERMUX_PKG_DEPENDS="abseil-cpp, ffmpeg, libc++, libjpeg-turbo, libopenblas, libpng, libprotobuf, libtiff, libwebp, openjpeg, openjpeg-tools, qt6-qtbase, qt6-qt5compat, zlib"
 TERMUX_PKG_BUILD_DEPENDS="python-numpy-static"
-TERMUX_PKG_PYTHON_COMMON_DEPS="Cython, wheel"
+TERMUX_PKG_PYTHON_COMMON_BUILD_DEPS="Cython, wheel"
 TERMUX_PKG_EXTRA_CONFIGURE_ARGS="
 -DCMAKE_INSTALL_LIBDIR=$TERMUX__PREFIX__LIB_SUBDIR
 -DCMAKE_INSTALL_INCLUDEDIR=$TERMUX__PREFIX__INCLUDE_SUBDIR
