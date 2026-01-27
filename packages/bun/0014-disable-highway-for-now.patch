@@ -1,0 +1,77 @@
+From 95e12c046e55db0dc4907de1a7fb9a92033d2435 Mon Sep 17 00:00:00 2001
+From: Elliana May <me@mause.me>
+Date: Sun, 4 Jan 2026 14:43:50 +0800
+Subject: [PATCH] disable highway for now
+
+---
+ src/bun.js/bindings/highway_strings.cpp | 56 ++++++++++++-------------
+ 1 file changed, 28 insertions(+), 28 deletions(-)
+
+diff --git a/src/bun.js/bindings/highway_strings.cpp b/src/bun.js/bindings/highway_strings.cpp
+index c8694eb849..c19e2d0a04 100644
+--- a/src/bun.js/bindings/highway_strings.cpp
++++ b/src/bun.js/bindings/highway_strings.cpp
+@@ -80,35 +80,35 @@ size_t IndexOfAnyCharImpl(const uint8_t* HWY_RESTRICT text, size_t text_len, con
+         return text_len;
+     } else {
+         ASSERT(chars_len <= 16);
+-        constexpr size_t kMaxPreloadedChars = 16;
+-        hn::Vec<hn::Vec<D8>> char_vecs(kMaxPreloadedChars);
+-        const size_t num_chars_to_preload = std::min(chars_len, kMaxPreloadedChars);
+-        for (size_t c = 0; c < num_chars_to_preload; ++c) {
+-            char_vecs[c] = hn::Set(d, chars[c]);
+-        }
+-
+-        const size_t simd_text_len = text_len - (text_len % N);
++        // constexpr size_t kMaxPreloadedChars = 16;
++        // std::vector<D8> char_vecs[kMaxPreloadedChars];
++        // const size_t num_chars_to_preload = std::min(chars_len, kMaxPreloadedChars);
++        // for (size_t c = 0; c < num_chars_to_preload; ++c) {
++        //     char_vecs[c] = chars[c];
++        // }
++        //
++        // const size_t simd_text_len = text_len - (text_len % N);
+         size_t i = 0;
+-
+-        for (; i < simd_text_len; i += N) {
+-            const auto text_vec = hn::LoadN(d, text + i, N);
+-            auto found_mask = hn::MaskFalse(d);
+-
+-            for (size_t c = 0; c < num_chars_to_preload; ++c) {
+-                found_mask = hn::Or(found_mask, hn::Eq(text_vec, char_vecs[c]));
+-            }
+-            if (chars_len > num_chars_to_preload) {
+-                for (size_t c = num_chars_to_preload; c < chars_len; ++c) {
+-                    found_mask = hn::Or(found_mask, hn::Eq(text_vec, hn::Set(d, chars[c])));
+-                }
+-            }
+-
+-            const intptr_t pos = hn::FindFirstTrue(d, found_mask);
+-            if (pos >= 0) {
+-                return i + pos;
+-            }
+-        }
+-
++        //
++        // for (; i < simd_text_len; i += N) {
++        //     const auto text_vec = hn::LoadN(d, text + i, N);
++        //     auto found_mask = hn::MaskFalse(d);
++        //
++        //     for (size_t c = 0; c < num_chars_to_preload; ++c) {
++        //         found_mask = hn::Or(found_mask, (text_vec == char_vecs[c]));
++        //     }
++        //     if (chars_len > num_chars_to_preload) {
++        //         for (size_t c = num_chars_to_preload; c < chars_len; ++c) {
++        //             found_mask = hn::Or(found_mask, hn::Eq(text_vec, hn::Set(d, chars[c])));
++        //         }
++        //     }
++        //
++        //     const intptr_t pos = hn::FindFirstTrue(d, found_mask);
++        //     if (pos >= 0) {
++        //         return i + pos;
++        //     }
++        // }
++        //
+         for (; i < text_len; ++i) {
+             const uint8_t text_char = text[i];
+             for (size_t c = 0; c < chars_len; ++c) {

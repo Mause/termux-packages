@@ -1,0 +1,22 @@
+From 84ef421a3b63404dfd027c018f34dee6d54dee1a Mon Sep 17 00:00:00 2001
+From: Elliana May <me@mause.me>
+Date: Thu, 1 Jan 2026 22:18:10 +0800
+Subject: [PATCH] not haswell
+
+---
+ cmake/CompilerFlags.cmake | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/cmake/CompilerFlags.cmake b/cmake/CompilerFlags.cmake
+index bff19e1974..ce541bc5ea 100644
+--- a/cmake/CompilerFlags.cmake
++++ b/cmake/CompilerFlags.cmake
+@@ -28,7 +28,7 @@ elseif(CMAKE_SYSTEM_PROCESSOR MATCHES "x86_64|X86_64|x64|X64|amd64|AMD64")
+   if(ENABLE_BASELINE)
+     register_compiler_flags(-march=nehalem)
+   else()
+-    register_compiler_flags(-march=haswell)
++    # register_compiler_flags(-march=haswell)
+   endif()
+ else()
+   unsupported(CMAKE_SYSTEM_PROCESSOR)
