@@ -15,6 +15,9 @@
 /scripts/ @Grimler91 @thunder-coding
 /repo.json @Grimler91 @thunder-coding
 
+# Build script linter
+/scripts/lint-packages.sh @TomJo2000
+
 # Repository Health Check
 /scripts/check-repository-health.js @thunder-coding
 /scripts/generate-apt-packages-list.sh @thunder-coding
@@ -154,5 +157,5 @@
 /x11-packages/chromium-host-tools/ @licy183
 /x11-packages/electron-for-code-oss @licy183
 /x11-packages/electron-host-tools-for-code-oss @licy183
-/x11-packages/otter-browser/ @licy183
 /x11-packages/qt5-qtwebengine/ @licy183
+/x11-packages/qt6-qtwebengine/ @licy183

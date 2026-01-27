@@ -16,9 +16,10 @@ _termux_should_cleanup() {
 }
 
 termux_pkg_upgrade_version() {
-	if [[ "$#" -lt 1 ]]; then
+	if (( $# < 1 )); then
 		termux_error_exit <<-EndUsage
 			Usage: ${FUNCNAME[0]} LATEST_VERSION [--skip-version-check]
+			Also reports the fully parsed LATEST_VERSION on file descriptor 3
 		EndUsage
 	fi
 
@@ -36,30 +37,34 @@ termux_pkg_upgrade_version() {
 	# If needed, filter version numbers using grep regexp.
 	if [[ -n "${TERMUX_PKG_UPDATE_VERSION_REGEXP:-}" ]]; then
 		# Extract version numbers.
-		local OLD_LATEST_VERSION="${LATEST_VERSION}"
-		LATEST_VERSION="$(grep -oP "${TERMUX_PKG_UPDATE_VERSION_REGEXP}" <<< "${LATEST_VERSION}" || true)"
+		local ORIGINAL_LATEST_VERSION="${LATEST_VERSION}"
+		LATEST_VERSION="$(grep --max-count=1 -oP "${TERMUX_PKG_UPDATE_VERSION_REGEXP}" <<< "${LATEST_VERSION}" || :)"
 		if [[ -z "${LATEST_VERSION:-}" ]]; then
 			termux_error_exit <<-EndOfError
-				ERROR: failed to filter version numbers using regexp '${TERMUX_PKG_UPDATE_VERSION_REGEXP}'.
-				Ensure that it works correctly with ${OLD_LATEST_VERSION}.
+				ERROR: Failed to filter version numbers for '${TERMUX_PKG_NAME}'.
+				Ensure that '${TERMUX_PKG_UPDATE_VERSION_REGEXP}' works correctly to match '${ORIGINAL_LATEST_VERSION}'.
 			EndOfError
 		fi
-		unset OLD_LATEST_VERSION
+		unset ORIGINAL_LATEST_VERSION
 	fi
 
 	# If needed, filter version numbers using sed regexp.
 	if [[ -n "${TERMUX_PKG_UPDATE_VERSION_SED_REGEXP:-}" ]]; then
 		# Extract version numbers.
-		local OLD_LATEST_VERSION="${LATEST_VERSION}"
-		LATEST_VERSION="$(sed "${TERMUX_PKG_UPDATE_VERSION_SED_REGEXP}" <<< "${LATEST_VERSION}" || true)"
+		local ORIGINAL_LATEST_VERSION="${LATEST_VERSION}"
+		LATEST_VERSION="$(sed -E "${TERMUX_PKG_UPDATE_VERSION_SED_REGEXP}" <<< "${LATEST_VERSION}" || :)"
 		if [[ -z "${LATEST_VERSION:-}" ]]; then
 			termux_error_exit <<-EndOfError
-				ERROR: failed to filter version numbers using regexp '${TERMUX_PKG_UPDATE_VERSION_SED_REGEXP}'.
-				Ensure that it works correctly with ${OLD_LATEST_VERSION}.
+				ERROR: Failed to filter version numbers for '${TERMUX_PKG_NAME}'.
+				Ensure that '${TERMUX_PKG_UPDATE_VERSION_SED_REGEXP}' works correctly to match '${ORIGINAL_LATEST_VERSION}'.
 			EndOfError
 		fi
-		unset OLD_LATEST_VERSION
+		unset ORIGINAL_LATEST_VERSION
 	fi
+
+	# Remove any leading non-digits as that would not be a valid version.
+	# shellcheck disable=SC2001 # This is something parameter expansion can't handle well, so we use sed.
+	LATEST_VERSION="$(sed -e "s/^[^0-9]*//" <<< "$LATEST_VERSION")"
 
 	# Translate "_" into ".": some packages use underscores to separate
 	# version numbers, but we require them to be separated by dots.
@@ -67,9 +72,14 @@ termux_pkg_upgrade_version() {
 
 	# Translate "-suffix" into "~suffix": "X.Y.Z-suffix" is considered later
 	# than X.Y.Z. for it to be considered earlier use "X.Y.Z~suffix".
-	LATEST_VERSION="${LATEST_VERSION//-rc/~rc}"
-	LATEST_VERSION="${LATEST_VERSION//-alpha/~alpha}"
-	LATEST_VERSION="${LATEST_VERSION//-beta/~beta}"
+	for suffix in "rc" "alpha" "beta"; do
+		LATEST_VERSION="$(sed -E "s/[-.]?(${suffix}[0-9]*)/~\1/ig" <<< "$LATEST_VERSION")"
+	done
+
+	# If FD 3 is open, use it for reporting the fully parsed $LATEST_VERSION
+	# If it's not open use the brace group to be able to
+	# discard the `3: Bad file descriptor` error silently.
+	{ echo "$LATEST_VERSION" >&3; } 2> /dev/null
 
 	if [[ "${SKIP_VERSION_CHECK}" != "--skip-version-check" ]]; then
 		if ! termux_pkg_is_update_needed \
@@ -96,20 +106,20 @@ termux_pkg_upgrade_version() {
 		-i "${TERMUX_PKG_BUILDER_DIR}/build.sh"
 
 	# Update checksum
-	if [[ "${TERMUX_PKG_SHA256[*]}" != "SKIP_CHECKSUM" ]] && [[ "${TERMUX_PKG_SRCURL:0:4}" != "git+" ]]; then
+	if [[ "${TERMUX_PKG_SHA256[*]}" != "SKIP_CHECKSUM" && "${TERMUX_PKG_SRCURL:0:4}" != "git+" ]]; then
 		echo n | "${TERMUX_SCRIPTDIR}/scripts/bin/update-checksum" "${TERMUX_PKG_NAME}" || {
-			git checkout -- "${TERMUX_PKG_BUILDER_DIR}"
+			git checkout -- "${TERMUX_SCRIPTDIR}"
 			git pull --rebase --autostash
-			termux_error_exit "ERROR: failed to update checksum."
+			termux_error_exit "failed to update checksum."
 		}
 	fi
 
 	echo "INFO: Trying to build package."
 
-	for repo_path in $(jq --raw-output 'del(.pkg_format) | keys | .[]' ${TERMUX_SCRIPTDIR}/repo.json); do
+	for repo_path in $(jq --raw-output 'del(.pkg_format) | keys | .[]' "${TERMUX_SCRIPTDIR}/repo.json"); do
 		_buildsh_path="${TERMUX_SCRIPTDIR}/${repo_path}/${TERMUX_PKG_NAME}/build.sh"
-		repo=$(jq --raw-output ".\"${repo_path}\".name" ${TERMUX_SCRIPTDIR}/repo.json)
-		repo=${repo#"termux-"}
+		repo="$(jq --raw-output ".\"${repo_path}\".name" "${TERMUX_SCRIPTDIR}/repo.json")"
+		repo="${repo#"termux-"}"
 
 		if [[ -f "${_buildsh_path}" ]]; then
 			echo "INFO: Package ${TERMUX_PKG_NAME} exists in ${repo} repo."
@@ -118,8 +128,7 @@ termux_pkg_upgrade_version() {
 		fi
 	done
 
-	local force_cleanup="false"
-
+	# check cleanup conditions
 	local big_package=false
 	while IFS= read -r p; do
 		if [[ "${p}" == "${TERMUX_PKG_NAME}" ]]; then
@@ -132,8 +141,8 @@ termux_pkg_upgrade_version() {
 
 	if ! "${TERMUX_SCRIPTDIR}/scripts/run-docker.sh" ./build-package.sh -C -a "${TERMUX_ARCH}" -i "${TERMUX_PKG_NAME}"; then
 		_termux_should_cleanup "${big_package}" && "${TERMUX_SCRIPTDIR}/scripts/run-docker.sh" ./clean.sh
-		git checkout -- "${TERMUX_PKG_BUILDER_DIR}"
-		termux_error_exit "ERROR: failed to build."
+		git checkout -- "${TERMUX_SCRIPTDIR}"
+		termux_error_exit "failed to build."
 	fi
 
 	_termux_should_cleanup "${big_package}" && "${TERMUX_SCRIPTDIR}/scripts/run-docker.sh" ./clean.sh

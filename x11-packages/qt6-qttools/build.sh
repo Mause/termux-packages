@@ -2,9 +2,10 @@ TERMUX_PKG_HOMEPAGE=https://www.qt.io/
 TERMUX_PKG_DESCRIPTION="Qt Development Tools (Linguist, Assistant, Designer, etc.)"
 TERMUX_PKG_LICENSE="GPL-3.0"
 TERMUX_PKG_MAINTAINER="@termux"
-TERMUX_PKG_VERSION="6.9.3"
+TERMUX_PKG_VERSION="6.10.1"
+TERMUX_PKG_REVISION=1
 TERMUX_PKG_SRCURL="https://download.qt.io/official_releases/qt/${TERMUX_PKG_VERSION%.*}/${TERMUX_PKG_VERSION}/submodules/qttools-everywhere-src-${TERMUX_PKG_VERSION}.tar.xz"
-TERMUX_PKG_SHA256=0cf7ab0e975fc57f5ce1375576a0a76e9ede25e6b01db3cf2339cd4d9750b4e9
+TERMUX_PKG_SHA256=8148408380ffea03101a26305c812b612ea30dbc07121e58707601522404d49b
 TERMUX_PKG_DEPENDS="libc++, qt6-qtbase (>= ${TERMUX_PKG_VERSION}), zstd"
 TERMUX_PKG_BUILD_DEPENDS="qt6-qtdeclarative (>= ${TERMUX_PKG_VERSION})"
 TERMUX_PKG_RECOMMENDS="qt6-qtdeclarative"
@@ -45,7 +46,7 @@ termux_step_host_build() {
 		-exec sed -e "s|^${TERMUX_PREFIX}/opt/qt6/cross|..|g" -i "{}" \;
 
 	while read -r target link; do
-		ln -sv "$target" "$TERMUX_PREFIX/opt/qt6/cross/$link"
+		ln -sfv "$target" "$TERMUX_PREFIX/opt/qt6/cross/$link"
 	done < "$PWD/user_facing_tool_links.txt"
 }
 
@@ -67,6 +68,6 @@ termux_step_post_make_install() {
 		-exec cat "{}" \;
 
 	while read -r target link; do
-		ln -sv "$target" "$TERMUX_PREFIX/$link"
+		ln -sfv "$target" "$TERMUX_PREFIX/$link"
 	done < "$PWD/user_facing_tool_links.txt"
 }

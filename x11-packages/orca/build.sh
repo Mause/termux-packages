@@ -2,9 +2,10 @@ TERMUX_PKG_HOMEPAGE=https://orca.gnome.org/
 TERMUX_PKG_DESCRIPTION="A free, open source, flexible, and extensible screen reader"
 TERMUX_PKG_LICENSE="LGPL-2.1"
 TERMUX_PKG_MAINTAINER="@termux"
-TERMUX_PKG_VERSION="49.1"
+TERMUX_PKG_VERSION="49.5"
+TERMUX_PKG_REVISION=1
 TERMUX_PKG_SRCURL=https://download.gnome.org/sources/orca/${TERMUX_PKG_VERSION%.*}/orca-${TERMUX_PKG_VERSION}.tar.xz
-TERMUX_PKG_SHA256=65329686cd15f62ab4e4c0d00ceb984d499b28ec2c5117508c3b82890d62e7e3
+TERMUX_PKG_SHA256=53df41558319e97c1e84ad604989957a02b5d0ff531419190f0587ea6b256034
 TERMUX_PKG_AUTO_UPDATE=true
 TERMUX_PKG_DEPENDS="at-spi2-core, glib, gsettings-desktop-schemas, gst-python, gstreamer, gtk3, libwnck, pango, pyatspi, pygobject, python, python-pip, speechd, xorg-xkbcomp"
 TERMUX_PKG_SETUP_PYTHON=true
@@ -40,12 +41,4 @@ termux_step_configure() {
 	fi
 
 	termux_step_configure_meson
-}
-
-termux_step_create_debscripts() {
-	cat <<- EOF > ./postinst
-	#!$TERMUX_PREFIX/bin/sh
-	echo "Installing dependencies through pip..."
-	pip3 install ${TERMUX_PKG_PYTHON_TARGET_DEPS//, / }
-	EOF
 }
