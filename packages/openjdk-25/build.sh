@@ -2,11 +2,11 @@ TERMUX_PKG_HOMEPAGE=https://openjdk.java.net
 TERMUX_PKG_DESCRIPTION="Java development kit and runtime"
 TERMUX_PKG_LICENSE="GPL-2.0"
 TERMUX_PKG_MAINTAINER="@termux"
-TERMUX_PKG_VERSION="25.0.1"
-TERMUX_PKG_REVISION=1
+TERMUX_PKG_VERSION="25.0.2"
 TERMUX_PKG_SRCURL=https://github.com/openjdk/jdk25u/archive/refs/tags/jdk-${TERMUX_PKG_VERSION}-ga.tar.gz
-TERMUX_PKG_SHA256=99864b94b65a9d8e180ec55b8e53a9ab39b0eaebd3ba4438388bf7ea7d5e079a
+TERMUX_PKG_SHA256=e4b935e999a28ee732dfb932dcef4a8591b42f6fcd182099319db68e9d8017ff
 TERMUX_PKG_AUTO_UPDATE=true
+TERMUX_PKG_UPDATE_VERSION_REGEXP='25\.\d+\.\d+(?=-ga)'
 TERMUX_PKG_DEPENDS="libandroid-shmem, libandroid-spawn, libiconv, libjpeg-turbo, zlib, littlecms, alsa-plugins"
 TERMUX_PKG_BUILD_DEPENDS="cups, fontconfig, libxrandr, libxt, xorgproto, alsa-lib"
 # openjdk-25-x is recommended because X11 separation is still very experimental.
@@ -24,38 +24,6 @@ TERMUX_PKG_HAS_DEBUG=false
 TERMUX_PKG_HOSTBUILD=true
 # enable lto
 __jvm_features="link-time-opt"
-
-termux_pkg_auto_update() {
-	# based on `termux_github_api_get_tag.sh`
-	# fetch newest tags
-	local newest_tags newest_tag
-	newest_tags="$(curl -d "$(cat <<-EOF | tr '\n' ' '
-	{
-		"query": "query {
-			repository(owner: \"openjdk\", name: \"jdk25u\") {
-				refs(refPrefix: \"refs/tags/\", first: 20, orderBy: {
-					field: TAG_COMMIT_DATE, direction: DESC
-				})
-				{ edges { node { name } } }
-			}
-		}"
-	}
-	EOF
-	)" \
-		-H "Authorization: token ${GITHUB_TOKEN}" \
-		-H "Accept: application/vnd.github.v3+json" \
-		--silent \
-		--location \
-		--retry 10 \
-		--retry-delay 1 \
-		https://api.github.com/graphql \
-		| jq '.data.repository.refs.edges[].node.name')"
-	# filter only tags having "-ga" and extract only raw version.
-	read -r newest_tag < <(echo "$newest_tags" | grep -Po '25.*?(?=-ga)' | sort -Vr)
-
-	[[ -z "${newest_tag}" ]] && termux_error_exit "ERROR: Unable to get tag from ${TERMUX_PKG_SRCURL}"
-	termux_pkg_upgrade_version "${newest_tag}"
-}
 
 termux_step_host_build() {
 	# precompiled JDK release for GNU/Linux to use as host JDK for bootstrapping

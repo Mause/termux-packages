@@ -2,8 +2,7 @@ TERMUX_PKG_HOMEPAGE=https://emscripten.org
 TERMUX_PKG_DESCRIPTION="Emscripten: An LLVM-to-WebAssembly Compiler"
 TERMUX_PKG_LICENSE="MIT"
 TERMUX_PKG_MAINTAINER="@termux"
-TERMUX_PKG_VERSION="4.0.21"
-TERMUX_PKG_REVISION=1
+TERMUX_PKG_VERSION="5.0.0"
 TERMUX_PKG_SRCURL=git+https://github.com/emscripten-core/emscripten
 TERMUX_PKG_GIT_BRANCH=${TERMUX_PKG_VERSION}
 TERMUX_PKG_DEPENDS="nodejs-lts | nodejs, python"
@@ -56,13 +55,13 @@ opt/emscripten/LICENSE
 
 # https://github.com/emscripten-core/emscripten/issues/11362
 # can switch to stable LLVM to save space once above is fixed
-_LLVM_COMMIT=d20d84fec5945fcc16aa6f63879e1458d4af9ea6
-_LLVM_TGZ_SHA256=3a946ae7bfe1c820bc9bf8e693ce3d6379eb921933d0612cb365af673df98bca
+_LLVM_COMMIT=358db292cc6a9a8a5448a296f643312289f328d7
+_LLVM_TGZ_SHA256=02537ec36569a2dfe2ecca8a907f78056b58ec223edfc5943ffc66a71f677b20
 
 # https://github.com/emscripten-core/emscripten/issues/12252
 # upstream says better bundle the right binaryen revision for now
-_BINARYEN_COMMIT=5efa50595eb36a46aff9e15151a25d858ca0acf0
-_BINARYEN_TGZ_SHA256=9182edd2a63ab307b8016571d77c4f29f61bf381fa3183105c17bf315db6ed91
+_BINARYEN_COMMIT=6c29e8513c256fb3d8f280aca78acbdbaeae307d
+_BINARYEN_TGZ_SHA256=241341de508e4d3040a0afc06e0de74f4303b3364fbc196d627c438319fa8d67
 
 # https://github.com/emscripten-core/emsdk/blob/main/emsdk.py
 # https://chromium.googlesource.com/emscripten-releases/+/refs/heads/main/src/build.py
@@ -111,7 +110,7 @@ _BINARYEN_BUILD_ARGS="
 # based on scripts/updates/internal/termux_github_auto_update.sh
 termux_pkg_auto_update() {
 	local latest_tag
-	latest_tag=$(termux_github_api_get_tag "${TERMUX_PKG_SRCURL}" "${TERMUX_PKG_UPDATE_TAG_TYPE}")
+	latest_tag=$(termux_github_api_get_tag)
 
 	if [[ -z "${latest_tag}" ]]; then
 		termux_error_exit "Unable to get tag from ${TERMUX_PKG_SRCURL}"
@@ -143,6 +142,11 @@ termux_pkg_auto_update() {
 	_LLVM_COMMIT     ${llvm_commit} = ${llvm_tgz_sha256}
 	_BINARYEN_COMMIT ${binaryen_commit} = ${binaryen_tgz_sha256}
 	EOL
+
+	if [[ "${BUILD_PACKAGES}" == "false" ]]; then
+		echo "INFO: package needs to be updated to ${latest_tag}."
+		return
+	fi
 
 	sed \
 		-e "s|^_LLVM_COMMIT=.*|_LLVM_COMMIT=${llvm_commit}|" \

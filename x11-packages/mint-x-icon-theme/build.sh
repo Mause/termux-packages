@@ -10,21 +10,6 @@ TERMUX_PKG_UPDATE_VERSION_REGEXP="\d+\.\d+\.\d+"
 TERMUX_PKG_DEPENDS="hicolor-icon-theme, adwaita-icon-theme, adwaita-icon-theme-legacy, gtk-update-icon-cache"
 TERMUX_PKG_PLATFORM_INDEPENDENT=true
 
-termux_pkg_auto_update() {
-	local latest_release
-	latest_release="$(git ls-remote --tags "$TERMUX_PKG_HOMEPAGE.git" \
-		| grep -oP "refs/tags/\K${TERMUX_PKG_UPDATE_VERSION_REGEXP}$" \
-		| sort -V \
-		| tail -n1)"
-
-	if [[ "${latest_release}" == "${TERMUX_PKG_VERSION}" ]]; then
-		echo "INFO: No update needed. Already at version '${TERMUX_PKG_VERSION}'."
-		return
-	fi
-
-	termux_pkg_upgrade_version "${latest_release}"
-}
-
 termux_step_make_install() {
 	cp -r $TERMUX_PKG_SRCDIR/usr/* $TERMUX_PREFIX/
 }
