@@ -8,6 +8,9 @@ TERMUX_PKG_BUILD_IN_SRC=true
 TERMUX_PKG_AUTO_UPDATE=true
 TERMUX_PKG_SHA256='4edf379859d0126ed860c1f1905da304ce4aea37f3ad58ede294a3920cb9e3aa'
 
-termux_step_pre_configure() {
+termux_step_configure() {
 	termux_setup_rust
+	export CARGO_BUILD_TARGET="${CARGO_TARGET_NAME}"
+	export PYO3_CROSS_LIB_DIR="${TERMUX_PREFIX}/lib"
+	export ANDROID_API_LEVEL="${TERMUX_PKG_API_LEVEL}"
 }
