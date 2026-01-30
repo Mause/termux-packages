@@ -7,6 +7,7 @@ TERMUX_PKG_SRCURL=https://github.com/crate-py/rpds/archive/refs/tags/v${TERMUX_P
 TERMUX_PKG_BUILD_IN_SRC=true
 TERMUX_PKG_AUTO_UPDATE=true
 TERMUX_PKG_SHA256='527f22aee8792edfceb4199a77347f32355b713c005d2e45c673705201448ad4'
+TERMUX_PKG_DEPENDS="python"
 
 termux_step_pre_configure() {
 	termux_setup_rust
