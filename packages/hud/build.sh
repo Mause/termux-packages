@@ -7,6 +7,7 @@ TERMUX_PKG_SRCURL=https://github.com/cong-or/hud/archive/refs/tags/v${TERMUX_PKG
 TERMUX_PKG_BUILD_IN_SRC=true
 TERMUX_PKG_AUTO_UPDATE=true
 TERMUX_PKG_SHA256='2439b46c10ee84d12f852d0c6fef5d1b5d36d99bcc987cae7ef9926a17e0c5bf'
+TERMUX_PKG_EXTRA_CONFIGURE_ARGS=hud
 
 termux_step_pre_configure() {
 	termux_setup_rust
