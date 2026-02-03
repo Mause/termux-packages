@@ -14,6 +14,7 @@ termux_step_pre_configure() {
 
 
 termux_step_make_install() {
+	rustup component add rust-src --toolchain nightly-x86_64-unknown-linux-gnu
 	cargo xtask build-ebpf --target $CARGO_TARGET_NAME
 	cargo install \
 		--jobs $TERMUX_PKG_MAKE_PROCESSES \
