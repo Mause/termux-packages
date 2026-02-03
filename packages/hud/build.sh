@@ -14,7 +14,7 @@ termux_step_pre_configure() {
 
 
 termux_step_make_install() {
-	cargo run --bin xtask build-ebpf --target $CARGO_TARGET_NAME
+	cargo xtask build-ebpf --target $CARGO_TARGET_NAME
 	cargo install \
 		--jobs $TERMUX_PKG_MAKE_PROCESSES \
 		--path ./hud \
