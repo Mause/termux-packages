@@ -10,4 +10,5 @@ TERMUX_PKG_SHA256='f19408483548ff353395ad7008e2c1747665930909d7179549663cbd8e859
 
 termux_step_pre_configure() {
 	termux_setup_rust
+	TERMUX_PKG_SRCDIR+=/crates/tirith
 }
