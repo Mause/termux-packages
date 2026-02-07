@@ -1,0 +1,123 @@
+From edf91c5b01039ca5745a07dba1cb2d80bba5e3a9 Mon Sep 17 00:00:00 2001
+From: Elliana May <me@mause.me>
+Date: Mon, 3 Nov 2025 08:21:06 +0800
+Subject: [PATCH 1/4] build for android
+
+---
+ Herebyfile.mjs | 10 ++--------
+ 1 file changed, 2 insertions(+), 8 deletions(-)
+
+diff --git a/Herebyfile.mjs b/Herebyfile.mjs
+index b1b7e03b91..6c9debdb31 100644
+--- a/Herebyfile.mjs
++++ b/Herebyfile.mjs
+@@ -984,14 +984,7 @@ void 0;
+ const nativePreviewPlatforms = memoize(() => {
+     /** @type {[os: OS, arch: Arch, cert: Cert, alpine?: boolean][]} */
+     let supportedPlatforms = [
+-        ["win32", "x64", "Microsoft400"],
+-        ["win32", "arm64", "Microsoft400"],
+-        ["linux", "x64", "LinuxSign", true],
+-        ["linux", "arm", "LinuxSign"],
+-        ["linux", "arm64", "LinuxSign", true],
+-        ["darwin", "x64", "MacDeveloperHarden"],
+-        ["darwin", "arm64", "MacDeveloperHarden"],
+-        // Wasm?
++        ["android", "arm64", "LinuxSign"],
+     ];
+ 
+     if (!options.forRelease) {
+@@ -1410,3 +1403,4 @@ export const installExtension = task({
+         console.log(pc.whiteBright(`    "typescript.native-preview.tsdk": "${path.join(__dirname, "built", "local")}"\n`));
+     },
+ });
++
+
+From 461a430cd0c9c2a6dccc2dd36e3c9484836427e1 Mon Sep 17 00:00:00 2001
+From: Elliana May <me@mause.me>
+Date: Mon, 3 Nov 2025 08:52:44 +0800
+Subject: [PATCH 2/4] remove dud assert
+
+---
+ Herebyfile.mjs | 6 +-----
+ 1 file changed, 1 insertion(+), 5 deletions(-)
+
+diff --git a/Herebyfile.mjs b/Herebyfile.mjs
+index 6c9debdb31..e7146be822 100644
+--- a/Herebyfile.mjs
++++ b/Herebyfile.mjs
+@@ -987,11 +987,6 @@ const nativePreviewPlatforms = memoize(() => {
+         ["android", "arm64", "LinuxSign"],
+     ];
+ 
+-    if (!options.forRelease) {
+-        supportedPlatforms = supportedPlatforms.filter(([os, arch]) => os === process.platform && arch === process.arch);
+-        assert.equal(supportedPlatforms.length, 1, "No supported platforms found");
+-    }
+-
+     return supportedPlatforms.map(([os, arch, cert, alpine]) => {
+         const npmDirName = `native-preview-${os}-${arch}`;
+         const npmDir = path.join(builtNpm, npmDirName);
+@@ -1404,3 +1399,4 @@ export const installExtension = task({
+     },
+ });
+ 
++
+
+From 5fe28066cb8138b47b1ce9e5b385f6fb9c9d76d3 Mon Sep 17 00:00:00 2001
+From: Elliana May <me@mause.me>
+Date: Mon, 3 Nov 2025 08:59:38 +0800
+Subject: [PATCH 3/4] add android to mapping
+
+---
+ Herebyfile.mjs | 3 +++
+ 1 file changed, 3 insertions(+)
+
+diff --git a/Herebyfile.mjs b/Herebyfile.mjs
+index e7146be822..7e8b79107a 100644
+--- a/Herebyfile.mjs
++++ b/Herebyfile.mjs
+@@ -1039,6 +1039,8 @@ const nativePreviewPlatforms = memoize(() => {
+                 return "linux";
+             case "win32":
+                 return "windows";
++            case "android":
++                return "android";
+             default:
+                 throw new Error(`Unsupported OS: ${os}`);
+         }
+@@ -1400,3 +1402,4 @@ export const installExtension = task({
+ });
+ 
+ 
++
+
+From 99975f0f60166849714bc1ee6ccfc765252dbcef Mon Sep 17 00:00:00 2001
+From: Elliana May <me@mause.me>
+Date: Mon, 3 Nov 2025 09:16:51 +0800
+Subject: [PATCH 4/4] remove specifiers
+
+---
+ Herebyfile.mjs | 5 -----
+ 1 file changed, 5 deletions(-)
+
+diff --git a/Herebyfile.mjs b/Herebyfile.mjs
+index 7e8b79107a..6316ac72d5 100644
+--- a/Herebyfile.mjs
++++ b/Herebyfile.mjs
+@@ -1111,8 +1111,6 @@ export const buildNativePreviewPackages = task({
+                 bin: undefined,
+                 imports: undefined,
+                 name: npmPackageName,
+-                os: [nodeOs],
+-                cpu: [nodeArch],
+                 exports: {
+                     "./package.json": "./package.json",
+                 },
+@@ -1400,6 +1398,3 @@ export const installExtension = task({
+         console.log(pc.whiteBright(`    "typescript.native-preview.tsdk": "${path.join(__dirname, "built", "local")}"\n`));
+     },
+ });
+-
+-
+-
