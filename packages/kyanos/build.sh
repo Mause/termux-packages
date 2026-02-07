@@ -1,0 +1,13 @@
+TERMUX_PKG_HOMEPAGE='https://github.com/hengyoush/kyanos'
+TERMUX_PKG_DESCRIPTION='Kyanos is a networking analysis tool using eBPF. It can visualize the time packets spend in the kernel, capture requests/responses, makes troubleshooting more efficient.'
+TERMUX_PKG_LICENSE='Apache-2.0'
+TERMUX_PKG_MAINTAINER='@termux'
+TERMUX_PKG_VERSION='1.5.0'
+TERMUX_PKG_SRCURL=https://github.com/hengyoush/kyanos/archive/refs/tags/v${TERMUX_PKG_VERSION}.tar.gz
+TERMUX_PKG_SHA256='e262ea0b5f529601edf83ff969a91abdfc3362231b027b6dce72e3fbf127ca76'
+TERMUX_PKG_BUILD_IN_SRC=true
+TERMUX_PKG_AUTO_UPDATE=true
+
+termux_step_pre_configure() {
+	termux_setup_golang
+}
