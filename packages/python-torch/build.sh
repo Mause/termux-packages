@@ -3,7 +3,7 @@ TERMUX_PKG_DESCRIPTION="Tensors and Dynamic neural networks in Python"
 TERMUX_PKG_LICENSE="BSD 3-Clause"
 TERMUX_PKG_MAINTAINER="@termux"
 TERMUX_PKG_VERSION="2.9.1"
-TERMUX_PKG_REVISION=1
+TERMUX_PKG_REVISION=2
 TERMUX_PKG_SRCURL=git+https://github.com/pytorch/pytorch
 TERMUX_PKG_UPDATE_TAG_TYPE="latest-release-tag"
 TERMUX_PKG_DEPENDS="abseil-cpp, libc++, libopenblas, libprotobuf, python, python-numpy, python-pip"
@@ -86,6 +86,6 @@ termux_step_pre_configure() {
 termux_step_make_install() {
 	export PYTORCH_BUILD_VERSION=${TERMUX_PKG_VERSION}
 	export PYTORCH_BUILD_NUMBER=0
-	pip -v install --no-deps --no-build-isolation --prefix $TERMUX_PREFIX "$TERMUX_PKG_SRCDIR"
+	pip -v wheel --no-deps --no-build-isolation --wheel-dir $TERMUX_PREFIX "$TERMUX_PKG_SRCDIR"
 	ln -sfr ${TERMUX_PYTHON_HOME}/site-packages/torch/lib/*.so ${TERMUX_PREFIX}/lib
 }
