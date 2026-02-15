@@ -27,5 +27,5 @@ termux_step_make_install() {
 	pip install -r install_requirements.txt
 	pip wheel .
 	deactivate
-	pip install dist/*.whl
+	pip install dist/*.whl --no-deps --prefix $TERMUX_PREFIX
 }
