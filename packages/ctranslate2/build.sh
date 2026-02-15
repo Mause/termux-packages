@@ -25,7 +25,7 @@ termux_step_make_install() {
 	python3 -m venv .venv
 	source .venv/bin/activate
 	pip install -r install_requirements.txt
-	python setup.py bdist_wheel
+	pip wheel .
 	deactivate
 	pip install dist/*.whl
 }
