@@ -7,6 +7,8 @@ TERMUX_PKG_SRCURL=git+https://github.com/OpenNMT/CTranslate2
 TERMUX_PKG_BUILD_IN_SRC=true
 TERMUX_PKG_AUTO_UPDATE=true
 TERMUX_PKG_SHA256='64beb499c1e33500a691dfbe10cc5def7b914413c7f7c2830b0e0d8d544a9f7e'
+TERMUX_PKG_DEPENDS="libopenblas"
+TERMUX_PKG_EXTRA_CONFIGURE_ARGS="-DWITH_MKL=OFF -DWITH_CUDA=OFF -DOPENMP_RUNTIME=NONE -DWITH_RUY=ON -DWITH_OPENBLAS=ON"
 
 termux_step_post_get_source() {
 	git submodule update --init --recursive --depth=1
