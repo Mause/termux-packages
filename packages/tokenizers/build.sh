@@ -12,7 +12,7 @@ TERMUX_PKG_SHA256='05bffc70e12de04d4c060f9ecd404519aa069e93151c5642e7d731298d927
 termux_step_pre_configure() {
 	termux_setup_python_pip
 	termux_setup_rust
-	TERMUX_PKG_SRCDIR+="bindings/python"
+	TERMUX_PKG_SRCDIR+="/bindings/python"
 }
 
 termux_step_make() {
