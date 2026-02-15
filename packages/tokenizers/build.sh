@@ -14,3 +14,8 @@ termux_step_pre_configure() {
 	termux_setup_rust
 	TERMUX_PKG_SRCDIR+="bindings/python"
 }
+
+termux_step_make() {
+	cd $TERMUX_PKG_SRCDIR
+	pip build .
+}
