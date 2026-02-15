@@ -1,4 +1,4 @@
-TERMUX_PKG_HOMEPAGE='https://github.com/OpenNMT/CTranslate2.git'
+TERMUX_PKG_HOMEPAGE='https://github.com/OpenNMT/CTranslate2'
 TERMUX_PKG_DESCRIPTION='Fast inference engine for Transformer models'
 TERMUX_PKG_LICENSE='MIT'
 TERMUX_PKG_MAINTAINER='@termux'
