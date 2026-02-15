@@ -17,5 +17,5 @@ termux_step_pre_configure() {
 
 termux_step_make() {
 	cd $TERMUX_PKG_SRCDIR
-	pip build .
+	pip install .
 }
