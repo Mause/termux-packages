@@ -8,6 +8,8 @@ TERMUX_PKG_BUILD_IN_SRC=true
 TERMUX_PKG_AUTO_UPDATE=true
 TERMUX_PKG_SHA256='27682f8f9b0ed3fe34b2224ec64774ba54017a071171e76a2379e9b5c89aa207'
 
+set -o xtrace
+
 termux_step_pre_configure() {
 	termux_setup_rust
 }
