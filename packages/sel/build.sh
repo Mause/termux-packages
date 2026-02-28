@@ -16,5 +16,5 @@ termux_step_post_get_source() {
 
 termux_step_pre_configure() {
 	curl -O https://beta.quicklisp.org/quicklisp.lisp
-	sbcl --load quicklisp.lisp --eval '(progn (quicklisp-quickstart:install) (ql-util:without-prompting (ql:add-to-init-file)))'
+	$TERMIX_PREFIX/bin/sbcl --load quicklisp.lisp --eval '(progn (quicklisp-quickstart:install) (ql-util:without-prompting (ql:add-to-init-file)))'
 }
