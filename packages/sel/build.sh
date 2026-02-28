@@ -26,7 +26,7 @@ termux_step_pre_configure() {
 }
 
 termux_step_make() {
-	echo 20 > /proc/sys/vm/nr_hugepages
+	ulimit -a
 	LISP_HEAP=4000 LISP=./sbcl-$_SBCL-x86-linux/run-sbcl.sh make bin/tree-sitter-interface
 }
 
