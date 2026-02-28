@@ -1,0 +1,9 @@
+TERMUX_PKG_HOMEPAGE='https://github.com/GrammaTech/sel'
+TERMUX_PKG_DESCRIPTION='Programmatic modification and evaluation of software'
+TERMUX_PKG_LICENSE='NUnit-2.6.3'
+TERMUX_PKG_MAINTAINER='@termux'
+TERMUX_PKG_VERSION='2024.09.30'
+TERMUX_PKG_SRCURL=https://github.com/GrammaTech/sel/archive/refs/tags/r${TERMUX_PKG_VERSION}.tar.gz
+TERMUX_PKG_BUILD_IN_SRC=true
+TERMUX_PKG_AUTO_UPDATE=true
+TERMUX_PKG_SHA256='66dc947984ab0866189b92ea2d5807a8056636c04be5250fbc771f810782926b'
