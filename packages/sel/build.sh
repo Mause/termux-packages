@@ -8,7 +8,13 @@ TERMUX_PKG_GIT_BRANCH=r$TERMUX_PKG_VERSION
 TERMUX_PKG_BUILD_IN_SRC=true
 TERMUX_PKG_AUTO_UPDATE=true
 TERMUX_PKG_SHA256='66dc947984ab0866189b92ea2d5807a8056636c04be5250fbc771f810782926b'
+TERMUX_PKG_DEPENDS='sbcl'
 
 termux_step_post_get_source() {
 	git submodule update --init --recursive
+}
+
+termux_step_pre_configure() {
+	curl -O https://beta.quicklisp.org/quicklisp.lisp
+	sbcl --load quicklisp.lisp --eval '(progn (quicklisp-quickstart:install) (ql-util:without-prompting (ql:add-to-init-file)))'
 }
