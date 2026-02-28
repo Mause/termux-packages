@@ -23,3 +23,11 @@ termux_step_pre_configure() {
 	curl -O https://beta.quicklisp.org/quicklisp.lisp
 	"./sbcl-$SBCL-x86-linux/run-sbcl.sh" --load quicklisp.lisp --eval '(quicklisp-quickstart:install)'
 }
+
+termux_step_make() {
+	make bin/tree-sitter-interface
+}
+
+termux_step_make_install() {
+	install -Dm755 -t "${TERMUX_PREFIX}"/bin "${TERMUX_PKG_SRCDIR}"/bin/tree-sitter-interface
+}
