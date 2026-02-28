@@ -1,6 +1,6 @@
 TERMUX_PKG_HOMEPAGE='https://github.com/GrammaTech/sel'
 TERMUX_PKG_DESCRIPTION='Programmatic modification and evaluation of software'
-TERMUX_PKG_LICENSE='NUnit-2.6.3'
+TERMUX_PKG_LICENSE='GPL-3.0'
 TERMUX_PKG_MAINTAINER='@termux'
 TERMUX_PKG_VERSION='2024.09.30'
 TERMUX_PKG_SRCURL=git+https://github.com/GrammaTech/sel
