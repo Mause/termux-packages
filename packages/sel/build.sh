@@ -25,7 +25,7 @@ termux_step_pre_configure() {
 }
 
 termux_step_make() {
-	LISP=./sbcl-$_SBCL-x86-linux/run-sbcl.sh make bin/tree-sitter-interface
+	LISP_HEAP=16000 LISP=./sbcl-$_SBCL-x86-linux/run-sbcl.sh make bin/tree-sitter-interface
 }
 
 termux_step_make_install() {
