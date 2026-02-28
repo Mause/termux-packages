@@ -21,7 +21,7 @@ termux_step_pre_configure() {
 	bzip2 -cd sbcl-1.4.3-x86-linux-binary.tar.bz2 | tar xvf -
 	ls
 	pushd sbcl-1.4.3-x86-linux
-	./install.sh
+	sh -o xtrace ./install.sh
 	popd
 	curl -O https://beta.quicklisp.org/quicklisp.lisp
 	./bin/sbcl --load quicklisp.lisp --eval '(progn (quicklisp-quickstart:install) (ql-util:without-prompting (ql:add-to-init-file)))'
