@@ -9,6 +9,7 @@ TERMUX_PKG_BUILD_IN_SRC=true
 TERMUX_PKG_AUTO_UPDATE=true
 TERMUX_PKG_SHA256='66dc947984ab0866189b92ea2d5807a8056636c04be5250fbc771f810782926b'
 TERMUX_PKG_DEPENDS='sbcl'
+_SBCL=1.4.3
 
 set -o xtrace
 
@@ -17,15 +18,14 @@ termux_step_post_get_source() {
 }
 
 termux_step_pre_configure() {
-	SBCL=1.4.3
-	wget http://prdownloads.sourceforge.net/sbcl/sbcl-$SBCL-x86-linux-binary.tar.bz2
-	bzip2 -cd sbcl-$SBCL-x86-linux-binary.tar.bz2 | tar xvf -
+	wget http://prdownloads.sourceforge.net/sbcl/sbcl-$_SBCL-x86-linux-binary.tar.bz2
+	bzip2 -cd sbcl-$_SBCL-x86-linux-binary.tar.bz2 | tar xvf -
 	curl -O https://beta.quicklisp.org/quicklisp.lisp
-	"./sbcl-$SBCL-x86-linux/run-sbcl.sh" --load quicklisp.lisp --eval '(quicklisp-quickstart:install)'
+	"./sbcl-$_SBCL-x86-linux/run-sbcl.sh" --load quicklisp.lisp --eval '(quicklisp-quickstart:install)'
 }
 
 termux_step_make() {
-	make bin/tree-sitter-interface
+	LISP_HOME=./sbcl-$_SBCL-x86-linux/run-sbcl.sh make bin/tree-sitter-interface
 }
 
 termux_step_make_install() {
