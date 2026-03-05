@@ -8,7 +8,7 @@ TERMUX_PKG_SHA256=872f700f7e42723e17cec5291d00677d790c14768030f4f37e7de72c2935d7
 TERMUX_PKG_AUTO_UPDATE=true
 TERMUX_PKG_DEPENDS="python, python-pip"
 TERMUX_PKG_BUILD_IN_SRC=true
-TERMUX_PKG_PYTHON_COMMON_DEPS="setuptools>=60, setuptools_rust, wheel, typing_extensions, maturin"
+TERMUX_PKG_PYTHON_COMMON_BUILD_DEPS="setuptools>=60, setuptools_rust, wheel, typing_extensions, maturin"
 
 termux_step_configure() {
 	termux_setup_rust
