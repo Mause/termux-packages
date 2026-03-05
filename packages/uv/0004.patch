@@ -1,0 +1,13 @@
+diff --git a/crates/uv-interpreter/src/interpreter.rs b/crates/uv-interpreter/src/interpreter.rs
+index 1331d60b1..b2274bdde 100644
+--- a/crates/uv-interpreter/src/interpreter.rs
++++ b/crates/uv-interpreter/src/interpreter.rs
+@@ -410,7 +410,7 @@ enum InterpreterInfoResult {
+ pub enum InterpreterInfoError {
+     #[error("Could not detect a glibc or a musl libc (while running on Linux)")]
+     LibcNotFound,
+-    #[error("Unknown operation system: `{operating_system}`")]
++    #[error("uv-interpreter Unknown operation system: `{operating_system}`")]
+     UnknownOperatingSystem { operating_system: String },
+     #[error("Python {python_version} is not supported. Please use Python 3.8 or newer.")]
+     UnsupportedPythonVersion { python_version: String },
