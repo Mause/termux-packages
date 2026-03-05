@@ -1,14 +1,5 @@
-From 8a1ba0832ea7c952743a3ee2c734fc8cb6b14cf2 Mon Sep 17 00:00:00 2001
-From: Elliana May <me@mause.me>
-Date: Thu, 5 Mar 2026 09:37:25 +1100
-Subject: [PATCH] Update error message for UnknownOs variant
-
----
- crates/uv-platform/src/lib.rs | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
 diff --git a/crates/uv-platform/src/lib.rs b/crates/uv-platform/src/lib.rs
-index e3055ea8e4fc4..42744c3f477b2 100644
+index d0e6fdd4b..e5403204b 100644
 --- a/crates/uv-platform/src/lib.rs
 +++ b/crates/uv-platform/src/lib.rs
 @@ -18,7 +18,7 @@ mod os;
@@ -20,3 +11,46 @@ index e3055ea8e4fc4..42744c3f477b2 100644
      UnknownOs(String),
      #[error("Unknown architecture: {0}")]
      UnknownArch(String),
+diff --git a/crates/uv-python/src/discovery.rs b/crates/uv-python/src/discovery.rs
+index 29659116c..2e1cf76ad 100644
+--- a/crates/uv-python/src/discovery.rs
++++ b/crates/uv-python/src/discovery.rs
+@@ -1011,14 +1011,14 @@ impl Error {
+                 InterpreterError::UnexpectedResponse(UnexpectedResponseError { path, .. })
+                 | InterpreterError::StatusCode(StatusCodeError { path, .. }) => {
+                     debug!(
+-                        "Skipping bad interpreter at {} from {source}: {err}",
++                        "StatusCode Skipping bad interpreter at {} from {source}: {err}",
+                         path.display()
+                     );
+                     false
+                 }
+                 InterpreterError::QueryScript { path, err } => {
+                     debug!(
+-                        "Skipping bad interpreter at {} from {source}: {err}",
++                        "QueryScript Skipping bad interpreter at {} from {source}: {err}",
+                         path.display()
+                     );
+                     false
+@@ -1026,7 +1026,7 @@ impl Error {
+                 #[cfg(windows)]
+                 InterpreterError::CorruptWindowsPackage { path, err } => {
+                     debug!(
+-                        "Skipping bad interpreter at {} from {source}: {err}",
++                        "CorruptWindowsPackage Skipping bad interpreter at {} from {source}: {err}",
+                         path.display()
+                     );
+                     false
+diff --git a/crates/uv-python/src/interpreter.rs b/crates/uv-python/src/interpreter.rs
+index 6bde8ddad..36345cca8 100644
+--- a/crates/uv-python/src/interpreter.rs
++++ b/crates/uv-python/src/interpreter.rs
+@@ -888,7 +888,7 @@ pub enum InterpreterInfoError {
+         "Broken Python installation, `platform.mac_ver()` returned an empty value, please reinstall Python"
+     )]
+     BrokenMacVer,
+-    #[error("Unknown operating system: `{operating_system}`")]
++    #[error("uv-python Unknown operating system: `{operating_system}`")]
+     UnknownOperatingSystem { operating_system: String },
+     #[error("Python {python_version} is not supported. Please use Python 3.8 or newer.")]
+     UnsupportedPythonVersion { python_version: String },
