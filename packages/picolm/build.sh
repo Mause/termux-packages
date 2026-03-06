@@ -19,7 +19,7 @@ termux_step_post_get_source() {
 
 termux_step_make() {
 	cd picolm
-	make LD_FLAGS="-L/data/data/com.termux/files/usr/opt/ndk-multilib/aarch64-linux-android/lib" CC=$CC picolm
-	make PREFIX=$TERMUX_PREFIX install
-	make MODEL_DIR=$TERMUX_PREFIX/opt/picolm/models model
+	make -d LD_FLAGS="-L/data/data/com.termux/files/usr/opt/ndk-multilib/aarch64-linux-android/lib" CC=$CC picolm
+	make -d PREFIX=$TERMUX_PREFIX install
+	make -d MODEL_DIR=$TERMUX_PREFIX/opt/picolm/models model
 }
