@@ -8,6 +8,7 @@ TERMUX_PKG_BUILD_IN_SRC=true
 TERMUX_PKG_AUTO_UPDATE=true
 _COMMIT='20910bcd8694a470c5aebbb1df82434bc00794dc'
 TERMUX_PKG_GIT_BRANCH='main'
+TERMUX_PKG_DEPENDS="libandroid-support"
 
 set -o xtrace
 
