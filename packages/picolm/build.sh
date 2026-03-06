@@ -18,7 +18,7 @@ termux_step_post_get_source() {
 
 termux_step_make() {
 	cd picolm
-	make PREFIX=$TERMUX_PREFIX CC=$CC native
+	make PREFIX=$TERMUX_PREFIX CC=$CC picolm # native
 	make PREFIX=$TERMUX_PREFIX install
 	make MODEL_DIR=$TERMUX_PREFIX/opt/picolm/models model
 }
