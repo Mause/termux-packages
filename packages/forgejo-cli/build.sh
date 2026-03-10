@@ -11,4 +11,5 @@ TERMUX_PKG_DEPENDS='openssl'
 
 termux_step_pre_configure() {
 	termux_setup_rust
+	export LD_LIBRARY_PATH="${HOSTBUILD_ROOTFS}/usr/lib/x86_64-linux-gnu"
 }
