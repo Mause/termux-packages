@@ -28,6 +28,6 @@ termux_step_make() {
 termux_step_make_install() {
 	local _pyv="${TERMUX_PYTHON_VERSION/./}"
 	local _whl="pydantic_core-$TERMUX_PKG_VERSION-cp$_pyv-cp$_pyv-android_24_arm64_v8a.whl" # TODO: unhardcode
-	pip install --no-deps --prefix=$TERMUX_PREFIX --force-reinstall $TERMUX_PKG_SRCDIR/target/wheels/$_whl
+	# pip install --no-deps --prefix=$TERMUX_PREFIX --force-reinstall $TERMUX_PKG_SRCDIR/target/wheels/$_whl
 	cp $TERMUX_PKG_SRCDIR/target/wheels/$_whl $TERMUX_PREFIX
 }
