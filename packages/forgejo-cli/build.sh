@@ -7,6 +7,7 @@ TERMUX_PKG_SRCURL=https://codeberg.org/forgejo-contrib/forgejo-cli/archive/v${TE
 TERMUX_PKG_BUILD_IN_SRC=true
 TERMUX_PKG_AUTO_UPDATE=true
 TERMUX_PKG_SHA256='3dd84c58c8c5d5fc22b8456d9a4f35323e0386547743c6b24295a3dbc6a56fb7'
+TERMUX_PKG_DEPENDS='openssl'
 
 termux_step_pre_configure() {
 	termux_setup_rust
