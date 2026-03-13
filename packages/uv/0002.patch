@@ -1,18 +1,25 @@
 diff --git a/crates/uv-distribution-types/src/installed.rs b/crates/uv-distribution-types/src/installed.rs
-index 4c291013c..e436fef46 100644
+index 1f6a0f9d0..f84ff107b 100644
 --- a/crates/uv-distribution-types/src/installed.rs
 +++ b/crates/uv-distribution-types/src/installed.rs
-@@ -504,7 +504,7 @@ impl InstalledDist {
+@@ -504,7 +504,14 @@ impl InstalledDist {
  
          // Parse the tags.
          let tags = if let Some(tags) = wheel_file.tags() {
 -            Some(ExpandedTags::parse(tags.iter().map(String::as_str))?)
-+            Some(ExpandedTags::parse(vec!["android_24_arm64_v8a", "android_24_aarch64"])?)
++            warn!(
++                "Using tags: {tags:?} from WHEEL file at `{path}`. This is not guaranteed to be correct, and may be missing or inaccurate. Consider reinstalling the package with a modern installer that records accurate tags in the WHEEL file."
++            );
++            Some(ExpandedTags::parse(vec![
++                "android_24_arm64_v8a",
++                "android_24_aarch64",
++                "android_35_arm64_v8a",
++            ])?)
          } else {
              None
          };
 diff --git a/crates/uv-installer/src/satisfies.rs b/crates/uv-installer/src/satisfies.rs
-index 9808bbdc4..7e8b0e7d5 100644
+index a3d8c0c62..8efe9ca1f 100644
 --- a/crates/uv-installer/src/satisfies.rs
 +++ b/crates/uv-installer/src/satisfies.rs
 @@ -5,6 +5,7 @@ use same_file::is_same_file;
@@ -23,7 +30,7 @@ index 9808bbdc4..7e8b0e7d5 100644
  use uv_cache_info::CacheInfo;
  use uv_cache_key::{CanonicalUrl, RepositoryUrl};
  use uv_distribution_filename::ExpandedTags;
-@@ -337,6 +338,7 @@ impl RequirementSatisfaction {
+@@ -350,6 +351,7 @@ impl RequirementSatisfaction {
  
          // If the distribution isn't compatible with the current platform, it is a mismatch.
          if let Ok(Some(wheel_tags)) = distribution.read_tags() {
