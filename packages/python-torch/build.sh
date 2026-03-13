@@ -86,6 +86,6 @@ termux_step_pre_configure() {
 termux_step_make_install() {
 	export PYTORCH_BUILD_VERSION=${TERMUX_PKG_VERSION}
 	export PYTORCH_BUILD_NUMBER=0
-	pip -v install --no-deps --no-build-isolation --prefix $TERMUX_PREFIX "$TERMUX_PKG_SRCDIR"
+	pip -v wheel --no-deps --no-build-isolation --wheel-dir $TERMUX_PREFIX "$TERMUX_PKG_SRCDIR"
 	ln -sfr ${TERMUX_PYTHON_HOME}/site-packages/torch/lib/*.so ${TERMUX_PREFIX}/lib
 }
