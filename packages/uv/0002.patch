@@ -1,3 +1,18 @@
+diff --git a/crates/uv-distribution-filename/src/wheel.rs b/crates/uv-distribution-filename/src/wheel.rs
+index c256931e4..61554287b 100644
+--- a/crates/uv-distribution-filename/src/wheel.rs
++++ b/crates/uv-distribution-filename/src/wheel.rs
+@@ -87,6 +87,10 @@ impl WheelFilename {
+ 
+     /// Returns `true` if the wheel is compatible with the given tags.
+     pub fn is_compatible(&self, compatible_tags: &Tags) -> bool {
++        println!("platform_tags: {:?}", self.platform_tags());
++        println!("compatible_tags: {:?}", compatible_tags);
++        println!("python_tags: {:?}", self.python_tags());
++        println!("abi_tags: {:?}", self.abi_tags());
+         compatible_tags.is_compatible(self.python_tags(), self.abi_tags(), self.platform_tags())
+     }
+ 
 diff --git a/crates/uv-distribution-types/src/installed.rs b/crates/uv-distribution-types/src/installed.rs
 index 1f6a0f9d0..ac0a78f80 100644
 --- a/crates/uv-distribution-types/src/installed.rs
