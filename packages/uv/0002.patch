@@ -7,7 +7,7 @@ index 4c291013c..e436fef46 100644
          // Parse the tags.
          let tags = if let Some(tags) = wheel_file.tags() {
 -            Some(ExpandedTags::parse(tags.iter().map(String::as_str))?)
-+            Some(ExpandedTags::parse(vec!["android_24_arm64_v8a"])?)
++            Some(ExpandedTags::parse(vec!["android_24_arm64_v8a", "android_24_aarch64"])?)
          } else {
              None
          };
