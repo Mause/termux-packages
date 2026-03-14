@@ -8,6 +8,8 @@ TERMUX_PKG_BUILD_IN_SRC=true
 TERMUX_PKG_AUTO_UPDATE=true
 TERMUX_PKG_SHA256='9542f8de994766b2d646566bb788b74a27d6d1f5cd9acb32f10e0a284403cfe1'
 
+set -o xtrace
+
 termux_step_post_get_source() {
 	git clone https://github.com/vitejs/vite rolldown-vite
 	pushd rolldown-vite; git checkout b565af6f1123a62b3058253b2147574b8515e89f; popd
