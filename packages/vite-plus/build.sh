@@ -10,6 +10,7 @@ TERMUX_PKG_SHA256='9542f8de994766b2d646566bb788b74a27d6d1f5cd9acb32f10e0a284403c
 
 termux_step_pre_configure() {
 	termux_setup_rust
+	termux_setup_nodejs
 }
 
 termux_step_make() {
