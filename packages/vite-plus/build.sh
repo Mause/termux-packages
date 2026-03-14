@@ -9,8 +9,11 @@ TERMUX_PKG_AUTO_UPDATE=true
 TERMUX_PKG_SHA256='9542f8de994766b2d646566bb788b74a27d6d1f5cd9acb32f10e0a284403cfe1'
 
 termux_step_post_get_source() {
-	git clone https://github.com/vitejs/vite --revision b565af6f1123a62b3058253b2147574b8515e89f rolldown-vite
-	git clone https://github.com/rolldown/rolldown --revision 00f9fa1d47335aacbb9becc527fd920169bdf0cf
+	git clone https://github.com/vitejs/vite rolldown-vite
+	pushd rolldown-vite; git checkout b565af6f1123a62b3058253b2147574b8515e89f; popd
+
+	git clone https://github.com/rolldown/rolldown
+	pushd rolldown; git checkout 00f9fa1d47335aacbb9becc527fd920169bdf0cf; popd
 }
 
 termux_step_pre_configure() {
