@@ -1,0 +1,24 @@
+TERMUX_PKG_HOMEPAGE='https://github.com/arman-bd/httpmorph'
+TERMUX_PKG_DESCRIPTION="httpmorph is a drop-in replacement for Python's requests library that uses a custom C implementation with BoringSSL instead of Python's standard HTTP stack."
+TERMUX_PKG_LICENSE='MIT'
+TERMUX_PKG_MAINTAINER='@termux'
+TERMUX_PKG_VERSION='0.2.4'
+TERMUX_PKG_SRCURL=https://github.com/arman-bd/httpmorph/archive/refs/tags/v${TERMUX_PKG_VERSION}.tar.gz
+TERMUX_PKG_SHA256='64f506b0393315faa49b97390f76fd05844424fbb21c0d40a196841e82f4faab'
+TERMUX_PKG_BUILD_IN_SRC=true
+TERMUX_PKG_AUTO_UPDATE=true
+TERMUX_PKG_BUILD_DEPENDS="aosp-libs"
+TERMUX_PKG_DEPENDS="python"
+
+termux_step_pre_configure() {
+	termux_setup_python_pip
+	termux_setup_cmake
+	termux_setup_golang
+}
+
+# termux_step_post_configure() {
+# 	pwd
+# 	ls
+
+# 	make setup
+# }
