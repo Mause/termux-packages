@@ -26,6 +26,5 @@ termux_step_pre_configure() {
 termux_step_make() {
 	corepack enable
 	pnpm install
-	cd packages/cli/
-	pnpm run build-native
+	pnpm run build
 }
