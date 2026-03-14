@@ -26,5 +26,6 @@ termux_step_pre_configure() {
 termux_step_make() {
 	corepack enable
 	pnpm install
-	pnpm run build
+	pnpm --filter=vite-plus build-native --target $CARGO_TARGET_NAME
+	pnpm bootstrap-cli:ci
 }
