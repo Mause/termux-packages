@@ -14,7 +14,7 @@ index a1ab5c6..38a9203 100644
  clap = { version = "4.5", features = ["derive"] }
 -jsonschema = { version = "0.45.0", path = "../jsonschema/" }
 +jsonschema = { path = "../jsonschema/", version = "0.45.0", default-features = false, features = [
-+  "resolve-http", "resolve-file", "tls-ring"
++  "resolve-http", "resolve-file", "tls-ring", "resolve-async"
 +] }
  percent-encoding = "2.3"
  referencing = { version = "0.45.0", path = "../jsonschema-referencing" }
