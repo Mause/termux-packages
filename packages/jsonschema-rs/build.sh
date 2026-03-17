@@ -10,4 +10,6 @@ TERMUX_PKG_SHA256='b46b13a469184964c7126b6a67a6bafdfd57bfbd2466a02013d7c968731c1
 
 termux_step_pre_configure() {
 	termux_setup_rust
+	TERMUX_PKG_BUILDDIR+="/crates/jsonschema-cli"
+	export TERMUX_PKG_BUILDDIR
 }
