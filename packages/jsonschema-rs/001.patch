@@ -1,0 +1,21 @@
+commit 7ec51e721400d23976ffb64abc87f7bebe12cd14
+Author: Elliana May <me@mause.me>
+Date:   Tue Mar 17 16:33:08 2026 +0800
+
+    patch off aws tls
+
+diff --git a/crates/jsonschema-cli/Cargo.toml b/crates/jsonschema-cli/Cargo.toml
+index a1ab5c6..38a9203 100644
+--- a/crates/jsonschema-cli/Cargo.toml
++++ b/crates/jsonschema-cli/Cargo.toml
+@@ -17,7 +17,9 @@ path = "src/main.rs"
+ 
+ [dependencies]
+ clap = { version = "4.5", features = ["derive"] }
+-jsonschema = { version = "0.45.0", path = "../jsonschema/" }
++jsonschema = { path = "../jsonschema/", version = "0.45.0", default-features = false, features = [
++  "tls-ring"
++] }
+ percent-encoding = "2.3"
+ referencing = { version = "0.45.0", path = "../jsonschema-referencing" }
+ serde-saphyr = { version = "0.0.21", default-features = false }
