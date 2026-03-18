@@ -16,7 +16,7 @@ termux_step_pre_configure() {
 }
 
 termux_step_make() {
-	dotnet publish src/Jackett.Server \
+	dotnet publish ICSharpCode.Decompiler \
 	--framework "net${TERMUX_DOTNET_VERSION}" \
 	--no-self-contained \
 	--runtime "$DOTNET_TARGET_NAME" \
