@@ -7,7 +7,7 @@ TERMUX_PKG_SRCURL=git+https://github.com/icsharpcode/ILSpy
 TERMUX_PKG_BUILD_IN_SRC=true
 TERMUX_PKG_AUTO_UPDATE=true
 TERMUX_PKG_SHA256='1e69ecea8c4495f6b8ac76162c86ca47b682a70af657a4b24b04bde1430d8ea5'
-TERMUX_PKG_DEPENDS="dotnet-host, dotnet-runtime-10.0"
+TERMUX_PKG_DEPENDS="dotnet-host, dotnet-sdk-10.0, dotnet-runtime-10.0"
 
 set -o xtrace
 
