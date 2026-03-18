@@ -13,8 +13,7 @@ set -o xtrace
 
 termux_step_pre_configure() {
 	termux_setup_dotnet
-	sudo apt install --yes https://packages.microsoft.com/ubuntu/25.10/prod/pool/main/p/packages-microsoft-prod/packages-microsoft-prod_1.1-ubuntu25.10_all.deb
-	sudo apt install --yes powershell
+	dotnet tool install --global PowerShell
 }
 
 termux_step_make() {
