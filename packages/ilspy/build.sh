@@ -13,7 +13,7 @@ set -o xtrace
 
 termux_step_pre_configure() {
 	termux_setup_dotnet
-	dotnet tool install --global PowerShell --version 9.0.11
+	dotnet tool install --global powershell --version 7.5.5
 }
 
 termux_step_make() {
