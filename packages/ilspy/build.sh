@@ -16,7 +16,7 @@ termux_step_pre_configure() {
 	termux_setup_dotnet
 
 	curl -L -o /tmp/powershell.tar.gz https://github.com/PowerShell/PowerShell/releases/download/v7.5.5/powershell-7.5.5-linux-x64.tar.gz
-	mkdir -p /opt/microsoft/powershell/7
+	mkdir -p powershell
 	tar zxf /tmp/powershell.tar.gz -C powershell
 	chmod +x powershell/pwsh
 	PATH="$PATH:$(pwd)/powershell"
