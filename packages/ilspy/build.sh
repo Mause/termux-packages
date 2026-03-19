@@ -10,6 +10,10 @@ TERMUX_PKG_DEPENDS="dotnet-host, dotnet-runtime-10.0, dotnet-sdk-10.0"
 
 set -o xtrace
 
+termux_step_post_get_source() {
+	cat ICSharpCode.ILSpyCmd/ICSharpCode.ILSpyCmd.csproj
+}
+
 termux_step_pre_configure() {
 	TERMUX_DOTNET_VERSION=10.0
 	termux_setup_dotnet
