@@ -14,8 +14,15 @@ set -o xtrace
 termux_step_pre_configure() {
 	TERMUX_DOTNET_VERSION=10.0
 	termux_setup_dotnet
-	dotnet restore ICSharpCode.Decompiler
-	dotnet tool install --global powershell
+
+	curl -L -o /tmp/powershell.tar.gz https://github.com/PowerShell/PowerShell/releases/download/v7.5.5/powershell-7.5.5-linux-x64.tar.gz
+	mkdir -p /opt/microsoft/powershell/7
+	tar zxf /tmp/powershell.tar.gz -C powershell
+	chmod +x powershell/pwsh
+	PATH="$PATH:$(pwd)/powershell"
+	export PATH
+
+	pwsh --version
 }
 
 termux_step_make() {
