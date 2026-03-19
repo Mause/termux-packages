@@ -12,3 +12,7 @@ TERMUX_PKG_DEPENDS='dotnet-host, dotnet-runtime-10.0, dotnet-sdk-10.0'
 termux_step_pre_configure() {
 	termux_setup_dotnet
 }
+
+termux_step_make_install() {
+	dotnet publish -c Release -o "${TERMUX_PREFIX}"/opt/powershell --self-contained --runtime=linux-arm64
+}
