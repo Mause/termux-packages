@@ -26,7 +26,7 @@ termux_step_pre_configure() {
 }
 
 termux_step_make() {
-	dotnet publish ICSharpCode.Decompiler \
+	dotnet publish ICSharpCode.ILSpyCmd \
 	--framework "net${TERMUX_DOTNET_VERSION}" \
 	--no-self-contained \
 	--runtime "$DOTNET_TARGET_NAME" \
