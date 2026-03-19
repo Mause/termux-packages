@@ -10,6 +10,7 @@ TERMUX_PKG_SHA256='9970c95bea498a6d30587c2df4885e22f6dbbdf974d57e644046e088434a1
 TERMUX_PKG_DEPENDS='dotnet-host, dotnet-runtime-10.0, dotnet-sdk-10.0'
 
 termux_step_pre_configure() {
+	TERMUX_DOTNET_VERSION=10.0
 	termux_setup_dotnet
 }
 
