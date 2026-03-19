@@ -14,5 +14,15 @@ termux_step_pre_configure() {
 }
 
 termux_step_make_install() {
-	dotnet publish -c Release -o "${TERMUX_PREFIX}"/opt/powershell --self-contained --runtime=linux-arm64
+	dotnet publish \
+	--framework "net${TERMUX_DOTNET_VERSION}" \
+	--no-self-contained \
+	--runtime "$DOTNET_TARGET_NAME" \
+	--configuration Release \
+	--output build/ \
+	/p:AssemblyVersion="${TERMUX_PKG_VERSION}" \
+	/p:FileVersion="${TERMUX_PKG_VERSION}" \
+	/p:InformationalVersion="${TERMUX_PKG_VERSION}" \
+	/p:Version="${TERMUX_PKG_VERSION}"
+	dotnet build-server shutdown
 }
