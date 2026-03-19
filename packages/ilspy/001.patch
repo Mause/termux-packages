@@ -1,0 +1,41 @@
+commit ce2a7f2502a1ecdfad32bbec8575a5b8a4b1863d
+Author: Elliana May <me@mause.me>
+Date:   Thu Mar 19 15:14:43 2026 +0800
+
+    rid fix
+    
+    diff --git a/ICSharpCode.ILSpyCmd/ICSharpCode.ILSpyCmd.csproj b/ICSharpCode.ILSpyCmd/ICSharpCode.ILSpyCmd.csproj
+    index e7389be69..54c097322 100644
+    --- a/ICSharpCode.ILSpyCmd/ICSharpCode.ILSpyCmd.csproj
+    +++ b/ICSharpCode.ILSpyCmd/ICSharpCode.ILSpyCmd.csproj
+    @@ -71,4 +71,12 @@
+         </ReadLinesFromFile>
+       </Target>
+    
+    +  <Target Name="_RemoveLinuxFrameworkReferences"
+    +      AfterTargets="ProcessFrameworkReferences">
+    +    <ItemGroup>
+    +      <_ProblematicRIDs Include="linux-bionic-arm;linux-bionic-arm64;linux-bionic-x86;linux-bionic-arm64" />
+    +      <PackageDownload Remove="Microsoft.NETCore.App.Runtime.%(_ProblematicRIDs.Identity)" />
+    +    </ItemGroup>
+    +  </Target>
+    +
+     </Project>
+
+diff --git a/ICSharpCode.ILSpyCmd/ICSharpCode.ILSpyCmd.csproj b/ICSharpCode.ILSpyCmd/ICSharpCode.ILSpyCmd.csproj
+index e7389be69..54c097322 100644
+--- a/ICSharpCode.ILSpyCmd/ICSharpCode.ILSpyCmd.csproj
++++ b/ICSharpCode.ILSpyCmd/ICSharpCode.ILSpyCmd.csproj
+@@ -71,4 +71,12 @@
+     </ReadLinesFromFile>
+   </Target>
+ 
++  <Target Name="_RemoveLinuxFrameworkReferences"
++      AfterTargets="ProcessFrameworkReferences">
++    <ItemGroup>
++      <_ProblematicRIDs Include="linux-bionic-arm;linux-bionic-arm64;linux-bionic-x86;linux-bionic-arm64" />
++      <PackageDownload Remove="Microsoft.NETCore.App.Runtime.%(_ProblematicRIDs.Identity)" />
++    </ItemGroup>
++  </Target>
++
+ </Project>
