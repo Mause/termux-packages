@@ -23,6 +23,8 @@ termux_step_pre_configure() {
 	export PATH
 
 	pwsh --version
+
+	dotnet restore ICSharpCode.ILSpyCmd
 }
 
 termux_step_make() {
