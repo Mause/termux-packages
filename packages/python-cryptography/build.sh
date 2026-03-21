@@ -31,7 +31,7 @@ termux_step_make_install() {
 	# --no-build-isolation is needed to ensure that maturin is not built for
 	# cross-python and picked up for execution instead of maturin built for
 	# build-python
-	cross-pip install --no-build-isolation --no-deps . --prefix $TERMUX_PREFIX
+	cross-pip wheel --no-build-isolation --no-deps . --wheel-dir $TERMUX_PREFIX
 }
 
 termux_step_post_make_install() {
