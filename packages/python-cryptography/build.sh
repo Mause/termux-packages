@@ -6,6 +6,7 @@ TERMUX_PKG_MAINTAINER="@termux"
 TERMUX_PKG_VERSION="49.0.0"
 TERMUX_PKG_SRCURL="https://github.com/pyca/cryptography/archive/refs/tags/${TERMUX_PKG_VERSION}.tar.gz"
 TERMUX_PKG_SHA256=a533606510cdea9e0f0616c61b18dbe3cfa5a2bbfbf48344a159d6ddc207ae13
+TERMUX_PKG_REVISION=1
 TERMUX_PKG_AUTO_UPDATE=true
 TERMUX_PKG_DEPENDS="openssl, python, python-pip"
 TERMUX_PKG_BUILD_IN_SRC=true
