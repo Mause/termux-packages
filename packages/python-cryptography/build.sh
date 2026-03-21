@@ -3,7 +3,8 @@ TERMUX_PKG_DESCRIPTION="Provides cryptographic recipes and primitives to Python 
 TERMUX_PKG_LICENSE="Apache-2.0, BSD 3-Clause"
 TERMUX_PKG_LICENSE_FILE="LICENSE, LICENSE.APACHE, LICENSE.BSD"
 TERMUX_PKG_MAINTAINER="@termux"
-TERMUX_PKG_VERSION="47.0.0"
+TERMUX_PKG_VERSION="46.0.6"
+TERMUX_PKG_REVISION=1
 TERMUX_PKG_SRCURL=https://github.com/pyca/cryptography/archive/refs/tags/${TERMUX_PKG_VERSION}.tar.gz
 TERMUX_PKG_SHA256=e24d3e87bb025a102671003e7bd32c29439bba9b1896198c7c7ee29e323da87a
 TERMUX_PKG_AUTO_UPDATE=true
@@ -30,5 +31,5 @@ termux_step_make_install() {
 	# --no-build-isolation is needed to ensure that maturin is not built for
 	# cross-python and picked up for execution instead of maturin built for
 	# build-python
-	cross-pip install --no-build-isolation --no-deps . --prefix $TERMUX_PREFIX
+	cross-pip wheel --no-build-isolation --no-deps . --wheel-dir $TERMUX_PREFIX
 }
