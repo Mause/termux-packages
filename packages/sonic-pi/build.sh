@@ -8,6 +8,8 @@ TERMUX_PKG_BUILD_IN_SRC=true
 TERMUX_PKG_AUTO_UPDATE=true
 TERMUX_PKG_SHA256='364b037ab62015d75b8d8cefd99369c6936e1ebe8cece3db541ceac4622f06a5'
 
+set -o xtrace
+
 termux_step_pre_configure() {
 	termux_setup_cmake
 	TERMUX_PKG_BUILDDIR+="/app"
