@@ -4,7 +4,6 @@ TERMUX_PKG_LICENSE='MIT'
 TERMUX_PKG_MAINTAINER='@termux'
 TERMUX_PKG_VERSION='4.6.0'
 TERMUX_PKG_SRCURL=https://github.com/samaaron/sonic-pi/archive/refs/tags/v${TERMUX_PKG_VERSION}.tar.gz
-TERMUX_PKG_BUILD_IN_SRC=true
 TERMUX_PKG_AUTO_UPDATE=true
 TERMUX_PKG_DEPENDS="aubio"
 TERMUX_PKG_SHA256='364b037ab62015d75b8d8cefd99369c6936e1ebe8cece3db541ceac4622f06a5'
@@ -13,6 +12,21 @@ set -o xtrace
 
 termux_step_pre_configure() {
 	termux_setup_cmake
-	TERMUX_PKG_BUILDDIR+="/app"
-	export TERMUX_PKG_BUILDDIR
+	TERMUX_PKG_SRCDIR+="/app"
+	export TERMUX_PKG_SRCDIR
+}
+
+termux_step_configure() {
+	cd "$TERMUX_PKG_BUILDDIR"
+
+	cmake \
+		-DCMAKE_BUILD_TYPE=Release \
+		-DCMAKE_INSTALL_PREFIX="$TERMUX_PREFIX" \
+		"$TERMUX_PKG_SRCDIR"
+}
+
+termux_step_make() {
+	cd "$TERMUX_PKG_BUILDDIR"
+
+	cmake --build . --target install
 }
