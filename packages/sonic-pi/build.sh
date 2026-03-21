@@ -10,5 +10,6 @@ TERMUX_PKG_SHA256='364b037ab62015d75b8d8cefd99369c6936e1ebe8cece3db541ceac4622f0
 
 termux_step_pre_configure() {
 	termux_setup_cmake
-	cd "${TERMUX_PKG_SRCDIR}/app"
+	TERMUX_PKG_BUILDDIR+="/app"
+	export TERMUX_PKG_BUILDDIR
 }
