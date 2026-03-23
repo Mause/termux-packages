@@ -53,3 +53,35 @@ index 1ad5a6e..9bfbb75 100644
  	golang.org/x/sys v0.5.0 // indirect
  	golang.org/x/term v0.5.0 // indirect
  	golang.org/x/text v0.8.0 // indirect
+
+From c703825ba96fb6e5e87da816ac2e9fd73ad1cb7d Mon Sep 17 00:00:00 2001
+From: Elliana May <me@mause.me>
+Date: Tue, 24 Mar 2026 02:50:46 +0800
+Subject: [PATCH] fix temp
+
+---
+ core/lstream_client.go | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/core/lstream_client.go b/core/lstream_client.go
+index 4ac9fe5..1350dc9 100644
+--- a/core/lstream_client.go
++++ b/core/lstream_client.go
+@@ -1204,7 +1204,7 @@ func roundUpToNextSecond(t time.Time) time.Time {
+ // for the particular log stream.
+ func (lsc *LStreamClient) getLStreamNerdlogAgentPath() string {
+ 	return fmt.Sprintf(
+-		"/tmp/nerdlog_agent_%s_%s.sh",
++		"$TERMUX_TMP/nerdlog_agent_%s_%s.sh",
+ 		lsc.params.ClientID,
+ 		filepathToId(lsc.params.LogStream.LogFileLast()),
+ 	)
+@@ -1214,7 +1214,7 @@ func (lsc *LStreamClient) getLStreamNerdlogAgentPath() string {
+ // the particular log stream.
+ func (lsc *LStreamClient) getLStreamIndexFilePath() string {
+ 	return fmt.Sprintf(
+-		"/tmp/nerdlog_agent_index_%s_%s",
++		"$TERMUX_TMP/tmp/nerdlog_agent_index_%s_%s",
+ 		lsc.params.ClientID,
+ 		filepathToId(lsc.params.LogStream.LogFileLast()),
+ 	)
