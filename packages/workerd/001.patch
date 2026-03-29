@@ -130,3 +130,72 @@ index 4e4506dad..2e1c23f48 100644
  ]
  
  # rules_rust
+
+From 023362365b66ba66a30e8d662d9f5f8c0c2aca94 Mon Sep 17 00:00:00 2001
+From: Elliana May <me@mause.me>
+Date: Sun, 29 Mar 2026 22:57:29 +0800
+Subject: [PATCH] add patch
+
+---
+ build/deps/deps.jsonc             |  5 ++++-
+ build/deps/gen/deps.MODULE.bazel  |  1 +
+ patches/zlib/0002-Add-dummy.patch | 22 ++++++++++++++++++++++
+ 3 files changed, 27 insertions(+), 1 deletion(-)
+ create mode 100644 patches/zlib/0002-Add-dummy.patch
+
+diff --git a/build/deps/deps.jsonc b/build/deps/deps.jsonc
+index 73b37cec3..dbd4cfcab 100644
+--- a/build/deps/deps.jsonc
++++ b/build/deps/deps.jsonc
+@@ -124,7 +124,10 @@
+       "url": "https://chromium.googlesource.com/chromium/src/third_party/zlib.git",
+       "branch": "main",
+       "build_file": "//:build/BUILD.zlib",
+-      "patches": ["//:patches/zlib/0001-Add-dummy-MODULE.bazel.patch"]
++      "patches": [
++        "//:patches/zlib/0001-Add-dummy-MODULE.bazel.patch",
++        "//:patches/zlib/0002-Add-dummy.patch"
++      ]
+     },
+     {
+       "name": "workerd-cxx",
+diff --git a/build/deps/gen/deps.MODULE.bazel b/build/deps/gen/deps.MODULE.bazel
+index de267adad..69075b7cd 100644
+--- a/build/deps/gen/deps.MODULE.bazel
++++ b/build/deps/gen/deps.MODULE.bazel
+@@ -152,6 +152,7 @@ git_override(
+     patch_strip = 1,
+     patches = [
+         "//:patches/zlib/0001-Add-dummy-MODULE.bazel.patch",
++        "//:patches/zlib/0002-Add-dummy.patch",
+     ],
+     remote = "https://chromium.googlesource.com/chromium/src/third_party/zlib.git",
+ )
+diff --git a/patches/zlib/0002-Add-dummy.patch b/patches/zlib/0002-Add-dummy.patch
+new file mode 100644
+index 000000000..f8d3f302e
+--- /dev/null
++++ b/patches/zlib/0002-Add-dummy.patch
+@@ -0,0 +1,22 @@
++From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
++From: Felix Hanau <felix@cloudflare.com>
++Date: Sun, 8 Jun 2025 15:55:56 -0400
++Subject: Add dummy MODULE.bazel
++
++
++diff --git a/MODULE.bazel b/MODULE.bazel
++new file mode 100644
++index 0000000000000000000000000000000000000000..3611da399064ef179d4924a67c3bbdda5a765d15
++--- /dev/null
+++++ b/MODULE.bazel
++@@ -0,0 +1,10 @@
+++# dummy file used to support bzlmod
+++module(
+++    name = "zlib",
+++    version = "0.0.0",
+++    compatibility_level = 1,
+++)
+++
+++bazel_dep(name = "platforms", version = "1.0.0")
+++bazel_dep(name = "rules_cc", version = "0.1.1")
+++bazel_dep(name = "bazel_skylib", version = "1.7.1")
