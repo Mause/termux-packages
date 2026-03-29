@@ -235,26 +235,3 @@ index 60dcf8f59..e77933ccd 100644
  
  android_ndk_repository_extension = use_extension(
      "@rules_android_ndk//:extension.bzl",
-
-From 93a764fe9b2753a16dcd35487becd8b965639601 Mon Sep 17 00:00:00 2001
-From: Elliana May <me@mause.me>
-Date: Mon, 30 Mar 2026 03:40:46 +0800
-Subject: [PATCH] add other deps
-
----
- MODULE.bazel | 2 ++
- 1 file changed, 2 insertions(+)
-
-diff --git a/MODULE.bazel b/MODULE.bazel
-index e77933ccd..2dbd807dd 100644
---- a/MODULE.bazel
-+++ b/MODULE.bazel
-@@ -50,6 +50,8 @@ use_repo(cc_configure, "local_config_cc")
- # Configure the Android NDK toolchain for NDK builds. Don't register that here so it's not required
- # for builds that don't need it. Those configs can register those in --extra_toolchains.
- bazel_dep(name = "rules_android_ndk", version = "0.1.5")
-+bazel_dep(name = "platforms", version = "0.0.10")
-+bazel_dep(name = "rules_cc", version = "0.0.17")
- 
- android_ndk_repository_extension = use_extension(
-     "@rules_android_ndk//:extension.bzl",
