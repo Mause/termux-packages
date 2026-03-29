@@ -1,0 +1,27 @@
+From c39e610eeae8146f8c440ef26cbfe82eac6c4121 Mon Sep 17 00:00:00 2001
+From: Elliana May <me@mause.me>
+Date: Sun, 29 Mar 2026 17:55:30 +0800
+Subject: [PATCH] add android platform
+
+---
+ BUILD.bazel | 7 +++++++
+ 1 file changed, 7 insertions(+)
+
+diff --git a/BUILD.bazel b/BUILD.bazel
+index f9f8c1a37..a88b8c5de 100644
+--- a/BUILD.bazel
++++ b/BUILD.bazel
+@@ -63,6 +63,13 @@ platform(
+ )
+ 
+ # Used for cross-compilation
++platform(
++    name = "android_arm64",
++    constraint_values = [
++        "@platforms//os:android",
++        "@platforms//cpu:arm64",
++    ],
++)
+ platform(
+     name = "macOS_x86",
+     constraint_values = [
