@@ -9,6 +9,8 @@ TERMUX_PKG_AUTO_UPDATE=true
 TERMUX_PKG_SHA256='17f4279b53eea4508d6b7dfd9033e0665b8f512b4d30c609d81248c99e11e623'
 TERMUX_PKG_DEPENDS='nodejs'
 
+set -o xtrace
+
 termux_step_pre_configure() {
 	termux_setup_rust
 	termux_setup_nodejs
