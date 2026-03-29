@@ -62,7 +62,7 @@ index a88b8c5de..9efddf8d7 100644
 +)
 +
 +platform(
-+    name = "android-aarch64",
++    name = "android-arm64",
 +    constraint_values = [
          "@platforms//cpu:arm64",
 +        "@platforms//os:android",
@@ -199,3 +199,26 @@ index 000000000..f8d3f302e
 ++bazel_dep(name = "platforms", version = "1.0.0")
 ++bazel_dep(name = "rules_cc", version = "0.1.1")
 ++bazel_dep(name = "bazel_skylib", version = "1.7.1")
+
+From 56952df45997f5bd0718768249193a431f84b250 Mon Sep 17 00:00:00 2001
+From: Elliana May <me@mause.me>
+Date: Sun, 29 Mar 2026 23:06:32 +0800
+Subject: [PATCH] tweak platform name
+
+---
+ BUILD.bazel | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/BUILD.bazel b/BUILD.bazel
+index 9efddf8d7..bbf4ebf90 100644
+--- a/BUILD.bazel
++++ b/BUILD.bazel
+@@ -81,7 +81,7 @@ platform(
+ )
+ 
+ platform(
+-    name = "android-arm64",
++    name = "android-aarch64",
+     constraint_values = [
+         "@platforms//cpu:arm64",
+         "@platforms//os:android",
