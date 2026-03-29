@@ -1,4 +1,4 @@
-From c39e610eeae8146f8c440ef26cbfe82eac6c4121 Mon Sep 17 00:00:00 2001
+From eb62372b895c5d4599b39b707784be724fdbd601 Mon Sep 17 00:00:00 2001
 From: Elliana May <me@mause.me>
 Date: Sun, 29 Mar 2026 17:55:30 +0800
 Subject: [PATCH] add android platform
@@ -26,18 +26,18 @@ index f9f8c1a37..a88b8c5de 100644
      name = "macOS_x86",
      constraint_values = [
 
-From 81459cb42cef8bc8947b5eaf292c5e9cdc4d44bb Mon Sep 17 00:00:00 2001
+From f9abe47733ae1c3b0d1b41c0c7a6ebc6246befd2 Mon Sep 17 00:00:00 2001
 From: Elliana May <me@mause.me>
 Date: Sun, 29 Mar 2026 18:19:49 +0800
 Subject: [PATCH] steal some config from ink
 
 ---
- BUILD.bazel  | 32 +++++++++++++++++++++++++++++---
+ BUILD.bazel  | 34 ++++++++++++++++++++++++++++++----
  MODULE.bazel | 13 +++++++++++++
- 2 files changed, 42 insertions(+), 3 deletions(-)
+ 2 files changed, 43 insertions(+), 4 deletions(-)
 
 diff --git a/BUILD.bazel b/BUILD.bazel
-index a88b8c5de..9efddf8d7 100644
+index a88b8c5de..c5328ae84 100644
 --- a/BUILD.bazel
 +++ b/BUILD.bazel
 @@ -64,17 +64,43 @@ platform(
@@ -58,20 +58,20 @@ index a88b8c5de..9efddf8d7 100644
      constraint_values = [
 +        "@platforms//cpu:armv7",
          "@platforms//os:android",
-+    ],
-+)
-+
-+platform(
-+    name = "android-arm64",
-+    constraint_values = [
 -        "@platforms//cpu:arm64",
-+        "@platforms//cpu:aarch64",
-+        "@platforms//os:android",
      ],
  )
 +
  platform(
 -    name = "macOS_x86",
++    name = "android-aarch64",
++    constraint_values = [
++        "@platforms//cpu:aarch64",
++        "@platforms//os:android",
++    ],
++)
++
++platform(
 +    name = "android-x86",
 +    constraint_values = [
 +        "@platforms//cpu:x86_32",
@@ -110,7 +110,7 @@ index 396a7dc41..4e24b26e4 100644
 +bazel_dep(name = "rules_android", version = "0.6.0")
 +bazel_dep(name = "rules_go", version = "0.60.0")
 
-From 66f12be10bed1fa00ee68d98db7e81a8b50b381a Mon Sep 17 00:00:00 2001
+From f181a7595a4d125464d69eec8d324bb35b3cd067 Mon Sep 17 00:00:00 2001
 From: Elliana May <me@mause.me>
 Date: Sun, 29 Mar 2026 22:18:32 +0800
 Subject: [PATCH] add android target triple
@@ -132,30 +132,7 @@ index 4e4506dad..2e1c23f48 100644
  
  # rules_rust
 
-From 56952df45997f5bd0718768249193a431f84b250 Mon Sep 17 00:00:00 2001
-From: Elliana May <me@mause.me>
-Date: Sun, 29 Mar 2026 23:06:32 +0800
-Subject: [PATCH] tweak platform name
-
----
- BUILD.bazel | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/BUILD.bazel b/BUILD.bazel
-index 9efddf8d7..bbf4ebf90 100644
---- a/BUILD.bazel
-+++ b/BUILD.bazel
-@@ -81,7 +81,7 @@ platform(
- )
- 
- platform(
--    name = "android-arm64",
-+    name = "android-aarch64",
-     constraint_values = [
-         "@platforms//cpu:aarch64",
-         "@platforms//os:android",
-
-From e2799fefea6d717626c3219837a7371e15af3c30 Mon Sep 17 00:00:00 2001
+From 4a4befe4d88fedaeedf1ac86412b41ba84974f38 Mon Sep 17 00:00:00 2001
 From: Elliana May <me@mause.me>
 Date: Mon, 30 Mar 2026 00:48:41 +0800
 Subject: [PATCH] Add config setting group for arm64 Android
@@ -166,7 +143,7 @@ patches
  1 file changed, 9 insertions(+)
 
 diff --git a/build/BUILD.zlib b/build/BUILD.zlib
-index 65b292eb76e..77596d1d2dd 100644
+index 65b292eb7..77596d1d2 100644
 --- a/build/BUILD.zlib
 +++ b/build/BUILD.zlib
 @@ -44,6 +44,14 @@ selects.config_setting_group(
