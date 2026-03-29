@@ -20,5 +20,5 @@ termux_step_pre_configure() {
 }
 
 termux_step_make() {
-	./bazelisk-linux-amd64 build //src/workerd/server:workerd --platforms=//:android_amd64
+	./bazelisk-linux-amd64 build //src/workerd/server:workerd --platforms=//:android-arm64 --extra_toolchains=@androidndk//all
 }
