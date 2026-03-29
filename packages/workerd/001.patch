@@ -154,3 +154,41 @@ index 9efddf8d7..bbf4ebf90 100644
      constraint_values = [
          "@platforms//cpu:aarch64",
          "@platforms//os:android",
+
+From e2799fefea6d717626c3219837a7371e15af3c30 Mon Sep 17 00:00:00 2001
+From: Elliana May <me@mause.me>
+Date: Mon, 30 Mar 2026 00:48:41 +0800
+Subject: [PATCH] Add config setting group for arm64 Android
+
+patches
+---
+ build/BUILD.zlib | 9 +++++++++
+ 1 file changed, 9 insertions(+)
+
+diff --git a/build/BUILD.zlib b/build/BUILD.zlib
+index 65b292eb76e..77596d1d2dd 100644
+--- a/build/BUILD.zlib
++++ b/build/BUILD.zlib
+@@ -44,6 +44,14 @@ selects.config_setting_group(
+     ],
+ )
+ 
++selects.config_setting_group(
++    name = "arm64_android",
++    match_all = [
++        "@platforms//cpu:aarch64",
++        "@platforms//os:android",
++    ],
++)
++
+ selects.config_setting_group(
+     name = "arm64_macos",
+     match_all = [
+@@ -247,6 +255,7 @@ cc_library(
+         ":x86_macos": ["X86_NOT_WINDOWS"],
+         ":x86_windows": ["X86_WINDOWS"],
+         ":arm64_linux": ["ARMV8_OS_LINUX"],
++        "arm64_android": ["ARMV8_OS_ANDROID"],
+         "arm64_macos": ["ARMV8_OS_MACOS"],
+         "arm64_windows": ["ARMV8_OS_WINDOWS"],
+         "//conditions:default": [],
