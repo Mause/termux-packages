@@ -13,4 +13,5 @@ termux_step_pre_configure() {
 	termux_setup_rust
 	termux_setup_python_pip
 	CPPFLAGS+=" -D_GNU_SOURCE" # for preadv and pwritev
+	TERMUX_PKG_BUILDDIR+="/bindings/javascript"
 }
