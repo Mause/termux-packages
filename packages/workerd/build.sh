@@ -24,6 +24,6 @@ termux_step_make() {
 	export ANDROID_NDK_HOME="$NDK"
 	rustup target add $CARGO_TARGET_NAME --toolchain nightly
 	./bazelisk-linux-amd64 build //src/workerd/server:workerd \
-		--platforms=//:android-arm64 \
+		--platforms=//:android-$TERMUX_ARCH \
 		--extra_toolchains=@androidndk//:all || ./bazelisk-linux-amd64 query --output=build 363e63f
 }

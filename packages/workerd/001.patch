@@ -62,7 +62,7 @@ index a88b8c5de..9efddf8d7 100644
 +)
 +
 +platform(
-+    name = "android-arm64",
++    name = "android-aarch64",
 +    constraint_values = [
          "@platforms//cpu:arm64",
 +        "@platforms//os:android",
