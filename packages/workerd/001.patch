@@ -169,3 +169,25 @@ index 65b292eb7..77596d1d2 100644
          "arm64_macos": ["ARMV8_OS_MACOS"],
          "arm64_windows": ["ARMV8_OS_WINDOWS"],
          "//conditions:default": [],
+
+From 2e828625dfcadae76f75ec5b211414064af65847 Mon Sep 17 00:00:00 2001
+From: Elliana May <me@mause.me>
+Date: Mon, 30 Mar 2026 01:20:33 +0800
+Subject: [PATCH] add another android case
+
+---
+ build/BUILD.zlib | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/build/BUILD.zlib b/build/BUILD.zlib
+index 77596d1d2..7f5be931e 100644
+--- a/build/BUILD.zlib
++++ b/build/BUILD.zlib
+@@ -126,6 +126,7 @@ cc_library(
+         "CRC32_ARMV8_CRC32",
+         "ZLIB_IMPLEMENTATION",
+     ] + select({
++        "@platforms//os:android": ["ARMV8_OS_ANDROID"],
+         "@platforms//os:linux": ["ARMV8_OS_LINUX"],
+         "@platforms//os:macos": ["ARMV8_OS_MACOS"],
+         "@platforms//os:windows": ["ARMV8_OS_WINDOWS"],
