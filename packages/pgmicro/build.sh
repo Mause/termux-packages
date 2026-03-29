@@ -7,11 +7,11 @@ TERMUX_PKG_SRCURL=https://github.com/glommer/pgmicro/archive/refs/tags/pgmicro-v
 TERMUX_PKG_BUILD_IN_SRC=true
 TERMUX_PKG_AUTO_UPDATE=true
 TERMUX_PKG_SHA256='17f4279b53eea4508d6b7dfd9033e0665b8f512b4d30c609d81248c99e11e623'
-TERMUX_PKG_DEPENDS='python'
+TERMUX_PKG_DEPENDS='node'
 
 termux_step_pre_configure() {
 	termux_setup_rust
-	termux_setup_python_pip
+	termux_setup_nodejs
 	CPPFLAGS+=" -D_GNU_SOURCE" # for preadv and pwritev
 	TERMUX_PKG_BUILDDIR+="/bindings/javascript"
 }
