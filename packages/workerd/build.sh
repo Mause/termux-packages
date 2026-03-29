@@ -14,9 +14,9 @@ set -o xtrace
 
 termux_step_pre_configure() {
 	termux_setup_nodejs
+	wget https://github.com/bazelbuild/bazelisk/releases/download/v1.28.1/bazelisk-linux-amd64
 }
 
 termux_step_make() {
-	ls $TERMUX_PREFIX/bin
-	$TERMUX_PREFIX/bin/bazel build //src/workerd/server:workerd
+	./bazelisk-linux-amd64 build //src/workerd/server:workerd
 }
