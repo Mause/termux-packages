@@ -17,3 +17,7 @@ termux_step_pre_configure() {
 	CPPFLAGS+=" -D_GNU_SOURCE" # for preadv and pwritev
 	TERMUX_PKG_BUILDDIR+="/bindings/javascript"
 }
+
+termux_step_make() {
+	cargo build --release --target "$CARGO_TARGET_NAME"
+}
