@@ -15,6 +15,8 @@ set -o xtrace
 termux_step_pre_configure() {
 	termux_setup_nodejs
 	wget https://github.com/bazelbuild/bazelisk/releases/download/v1.28.1/bazelisk-linux-amd64
+	chmod +x bazelisk-linux-amd64
+	./bazelisk-linux-amd64 version
 }
 
 termux_step_make() {
