@@ -9,6 +9,8 @@ TERMUX_PKG_AUTO_UPDATE=true
 TERMUX_PKG_SHA256='409600db0fb2903cb7f029a9fbddee984373e9cef7b451526bf79e7d3b2fba36'
 TERMUX_PKG_DEPENDS='ruby, libpcap, postgresql, zlib, libsqlite, libxml2, libxslt'
 
+set -o xtrace
+
 termux_step_make() {
 	ruby $TERMUX_PREFIX/bin/bundler config set --local path 'vendor/bundle'
 	NOKOGIRI_VERSION=$(cat Gemfile.lock | grep -i nokogiri | sed 's/nokogiri [\(\)]/(/g' | cut -d ' ' -f 5 | grep -oP "(.).[[:digit:]][\w+]?[.].")
