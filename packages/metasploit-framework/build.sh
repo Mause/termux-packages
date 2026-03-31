@@ -21,7 +21,7 @@ termux_step_make() {
 
 	export GEM_HOME=./bundle
 
-	gem install nokogiri -v $NOKOGIRI_VERSION -- --with-cflags="-Wno-implicit-function-declaration -Wno-deprecated-declarations -Wno-incompatible-function-pointer-types" --use-system-libraries --enable-cross-build --with-rubyhdrdir=${TERMUX_PREFIX}/lib/ruby/include/ruby-3.4.1 --with-ruby-archhdrdir=${TERMUX_PREFIX}/lib/ruby/include/ruby-3.4.1/${TERMUX_ARCH}
+	gem install nokogiri -v $NOKOGIRI_VERSION -- --with-cflags="-Wno-implicit-function-declaration -Wno-deprecated-declarations -Wno-incompatible-function-pointer-types -I$TERMUX_PREFIX/include/ruby-3.4.0 -I$TERMUX_PREFIX/include/ruby-3.4.0/$TERMUX_ARCH-linux-android" --use-system-libraries --enable-cross-build
 
 	bundle install
 	gem install actionpack
