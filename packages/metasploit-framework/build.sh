@@ -21,7 +21,7 @@ termux_step_make() {
 
 	export GEM_HOME=./bundle
 
-	gem install nokogiri -v $NOKOGIRI_VERSION -- --with-cflags="-Wno-implicit-function-declaration -Wno-deprecated-declarations -Wno-incompatible-function-pointer-types" --use-system-libraries
+	gem install nokogiri -v $NOKOGIRI_VERSION -- --with-cflags="-Wno-implicit-function-declaration -Wno-deprecated-declarations -Wno-incompatible-function-pointer-types" --use-system-libraries --enable-cross-build
 
 	bundle install
 	gem install actionpack
