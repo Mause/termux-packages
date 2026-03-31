@@ -25,5 +25,5 @@ termux_step_make() {
 	rustup target add $CARGO_TARGET_NAME --toolchain nightly
 	./bazelisk-linux-amd64 build //src/workerd/server:workerd \
 		--platforms=//:android-$TERMUX_ARCH \
-		--extra_toolchains=@androidndk//:all || cat /home/builder/.cache/bazel/_bazel_builder/21a687d3b4f8f38f44885631ccd7e248/external/zlib+/BUILD.bazel
+		--extra_toolchains=@androidndk//:all
 }
