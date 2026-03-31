@@ -12,8 +12,8 @@ TERMUX_PKG_DEPENDS='ruby, libpcap, postgresql, zlib, libsqlite, libxml2, libxslt
 set -o xtrace
 
 termux_step_make() {
-	bundle config set --local path 'vendor/bundle'
-	bundle config set --local build.nokogiri --use-system-libraries
+	ruby $TERMUX_PREFIX/bin/bundler config set --local path 'vendor/bundle'
+	ruby $TERMUX_PREFIX/bin/bundler config set --local build.nokogiri --use-system-libraries
 	NOKOGIRI_VERSION=$(cat Gemfile.lock | grep -i nokogiri | sed 's/nokogiri [\(\)]/(/g' | cut -d ' ' -f 5 | grep -oP "(.).[[:digit:]][\w+]?[.].")
 	# by overriding cflags nokogiri will install or you can simply declare a void function
 	#  you might have seen this error while installing nokogiri `xmlSetStructuredErrorFunc((void *)rb_error_list, Nokogiri_error_array_pusher);`
