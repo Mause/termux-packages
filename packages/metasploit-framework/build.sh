@@ -21,7 +21,7 @@ termux_step_make() {
 	#  for sake of simplicity tweaking cflags is better than declaring a void function for every c file
 
 
-	bundle install
+	ruby $TERMUX_PREFIX/bin/bundler install
 	gem install actionpack
 	bundle update activesupport
 	bundle update --bundler
