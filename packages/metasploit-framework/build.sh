@@ -19,7 +19,7 @@ termux_step_make() {
 	#  solution : void xmlSetStructuredErrorFunc(void *rb_error_list, void *Nokogiri_error_array_pusher); you can set any parameter name
 	#  for sake of simplicity tweaking cflags is better than declaring a void function for every c file
 
-	gem install nokogiri -v $NOKOGIRI_VERSION -- --with-cflags="-Wno-implicit-function-declaration -Wno-deprecated-declarations -Wno-incompatible-function-pointer-types" --use-system-libraries
+	gem install nokogiri -v $NOKOGIRI_VERSION -- --with-cflags="-Wno-implicit-function-declaration -Wno-deprecated-declarations -Wno-incompatible-function-pointer-types" --use-system-libraries --install-dir ./bundle
 	bundle install
 	gem install actionpack
 	bundle update activesupport
