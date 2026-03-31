@@ -11,10 +11,6 @@ TERMUX_PKG_DEPENDS='ruby, libpcap, postgresql, zlib, libsqlite, libxml2, libxslt
 
 set -o xtrace
 
-termux_step_pre_configure() {
-	sed -i 's/FOUND_RUBY = 1/FOUND_RUBY = 0/g' Makefile.cfg
-}
-
 termux_step_make() {
 	ruby $TERMUX_PREFIX/bin/bundler config set --local path 'vendor/bundle'
 	NOKOGIRI_VERSION=$(cat Gemfile.lock | grep -i nokogiri | sed 's/nokogiri [\(\)]/(/g' | cut -d ' ' -f 5 | grep -oP "(.).[[:digit:]][\w+]?[.].")
