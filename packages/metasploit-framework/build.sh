@@ -12,15 +12,14 @@ TERMUX_PKG_DEPENDS='ruby, libpcap, postgresql, zlib, libsqlite, libxml2, libxslt
 set -o xtrace
 
 termux_step_make() {
-	ruby $TERMUX_PREFIX/bin/bundler config set --local path 'vendor/bundle'
+	bundle config set --local path 'vendor/bundle'
+	bundle config set --local build.nokogiri --use-system-libraries
 	NOKOGIRI_VERSION=$(cat Gemfile.lock | grep -i nokogiri | sed 's/nokogiri [\(\)]/(/g' | cut -d ' ' -f 5 | grep -oP "(.).[[:digit:]][\w+]?[.].")
 	# by overriding cflags nokogiri will install or you can simply declare a void function
 	#  you might have seen this error while installing nokogiri `xmlSetStructuredErrorFunc((void *)rb_error_list, Nokogiri_error_array_pusher);`
 	#  solution : void xmlSetStructuredErrorFunc(void *rb_error_list, void *Nokogiri_error_array_pusher); you can set any parameter name
 	#  for sake of simplicity tweaking cflags is better than declaring a void function for every c file
 
-	export GEM_HOME=./bundle
-	gem install nokogiri --platform=ruby -v $NOKOGIRI_VERSION -- --with-cflags="-Wno-implicit-function-declaration -Wno-deprecated-declarations -Wno-incompatible-function-pointer-types" --use-system-libraries --enable-cross-build
 
 	bundle install
 	gem install actionpack
