@@ -20,8 +20,9 @@ termux_step_make() {
 	#  for sake of simplicity tweaking cflags is better than declaring a void function for every c file
 
 	export GEM_HOME=./bundle
-
-	gem install nokogiri -v $NOKOGIRI_VERSION -- --with-cflags="-Wno-implicit-function-declaration -Wno-deprecated-declarations -Wno-incompatible-function-pointer-types -I$TERMUX_PREFIX/include/ruby-3.4.0 -I$TERMUX_PREFIX/include/ruby-3.4.0/$TERMUX_ARCH-linux-android" --use-system-libraries --enable-cross-build
+	export RUBYHDRDIR="$TERMUX_PREFIX/include/ruby-3.4.0"
+	export RUBYARCHDIR="$TERMUX_PREFIX/include/ruby-3.4.0/$TERMUX_ARCH-linux-android"
+	gem install nokogiri -v $NOKOGIRI_VERSION -- --with-cflags="-Wno-implicit-function-declaration -Wno-deprecated-declarations -Wno-incompatible-function-pointer-types" --use-system-libraries --enable-cross-build
 
 	bundle install
 	gem install actionpack
