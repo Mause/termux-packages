@@ -1,4 +1,4 @@
-From 498358e03800db0067b63618111457169249dfc5 Mon Sep 17 00:00:00 2001
+From 220dad0ccced8f70480ed4a13e0fe7fea3eec258 Mon Sep 17 00:00:00 2001
 From: Elliana May <me@mause.me>
 Date: Wed, 1 Apr 2026 14:50:37 +0800
 Subject: [PATCH] override rubyhdrdir
@@ -20,7 +20,7 @@ index 04ffc9fa..34e6ef00 100644
  require "mkmf"
  require "rbconfig"
 
-From 61f024767a8ea87acc2b4a0416e359600cd7173f Mon Sep 17 00:00:00 2001
+From be4b346980dccf544b934c25d94d6bc900387bb1 Mon Sep 17 00:00:00 2001
 From: Elliana May <me@mause.me>
 Date: Wed, 1 Apr 2026 14:52:20 +0800
 Subject: [PATCH] use patch sed
@@ -43,7 +43,7 @@ index 34e6ef00..2671b180 100644
  require "mkmf"
  require "rbconfig"
 
-From 79bd6871fba50185952fb2e9249f421215413e4c Mon Sep 17 00:00:00 2001
+From 92a24fdffc8b127b64cb842bb20e03010363ecdf Mon Sep 17 00:00:00 2001
 From: Elliana May <me@mause.me>
 Date: Wed, 1 Apr 2026 15:40:59 +0800
 Subject: [PATCH] dump
@@ -80,7 +80,7 @@ index 2671b180..04de2810 100644
  
  if config_clean?
 
-From 388be4b9cb17ed524117a1a8e5f3b05e7fe08b34 Mon Sep 17 00:00:00 2001
+From 97e87dc2379145faf55a9b71a1b729ccba01ded0 Mon Sep 17 00:00:00 2001
 From: Elliana May <me@mause.me>
 Date: Wed, 1 Apr 2026 16:07:33 +0800
 Subject: [PATCH] more dump
@@ -102,7 +102,7 @@ index 04de2810..c6afc1a8 100644
  require "mkmf"
  require "rbconfig"
 
-From 2c1efbc8c86275cc4f9d3d5057f0810268ad85e1 Mon Sep 17 00:00:00 2001
+From d0c66fd7f53b08e9a5b6037c573387b9a8e41552 Mon Sep 17 00:00:00 2001
 From: Elliana May <me@mause.me>
 Date: Wed, 1 Apr 2026 16:38:32 +0800
 Subject: [PATCH] try something stupid
@@ -121,7 +121,7 @@ index 00000000..5bf0e54d
 +require 'rbconfig'
 +puts 'aaaaaaaaaaaaaa'
 
-From 35313324489e60c6afaf2d21d4a41fdd3cde3e11 Mon Sep 17 00:00:00 2001
+From 0fabb41a0d1cbd6b5adf08ffa68c197f03f0df79 Mon Sep 17 00:00:00 2001
 From: Elliana May <me@mause.me>
 Date: Wed, 1 Apr 2026 16:49:51 +0800
 Subject: [PATCH] intercept
@@ -152,7 +152,7 @@ index 5bf0e54d..00000000
 -require 'rbconfig'
 -puts 'aaaaaaaaaaaaaa'
 
-From f020fd1ac30905cc273c30e9b181e69d1c5f63f0 Mon Sep 17 00:00:00 2001
+From 6d30aa4f32845698eee18a1c55e5234e3cd84976 Mon Sep 17 00:00:00 2001
 From: Elliana May <me@mause.me>
 Date: Wed, 1 Apr 2026 17:01:05 +0800
 Subject: [PATCH] sanity
@@ -173,7 +173,7 @@ index 0a4d372d..ade6cc7c 100644
 +  abort "#{hdrdir}/ruby/ruby.h does not exist"
 +end
 
-From b24e066ffadfc326fbf3618f9b815dae5c07dba6 Mon Sep 17 00:00:00 2001
+From 75a4a8f9bc46fe2f3a80819a58b682ed8b217eb5 Mon Sep 17 00:00:00 2001
 From: Elliana May <me@mause.me>
 Date: Wed, 1 Apr 2026 17:10:37 +0800
 Subject: [PATCH] fix var ref
@@ -199,7 +199,7 @@ index ade6cc7c..75956833 100644
 +  abort "#{$hdrdir}/ruby/ruby.h does not exist"
  end
 
-From 9b3d145c7bded545c3e2007ca0e5b473cc60c3f6 Mon Sep 17 00:00:00 2001
+From a3ce5660519c4af2b8d4b3afd49e3580af794b61 Mon Sep 17 00:00:00 2001
 From: Elliana May <me@mause.me>
 Date: Wed, 1 Apr 2026 17:16:51 +0800
 Subject: [PATCH] OG
@@ -221,7 +221,7 @@ index 75956833..89afd486 100644
  $hdrdir = RbConfig::CONFIG["rubyhdrdir"]
  puts "Using rubyhdrdir=#{$hdrdir}"
 
-From 618e43f8876dbf3c97a9fe98f8cdbd6f3004278b Mon Sep 17 00:00:00 2001
+From 5d620e2c8347e986e7b3ddd5169643f169ca565e Mon Sep 17 00:00:00 2001
 From: Elliana May <me@mause.me>
 Date: Wed, 1 Apr 2026 17:23:43 +0800
 Subject: [PATCH] retarget
@@ -245,7 +245,7 @@ index 89afd486..ec94694d 100644
 +  abort "#{$hdrdir}/ruby.h does not exist"
  end
 
-From 2414a82b3385df172959176641683952ad4d9d97 Mon Sep 17 00:00:00 2001
+From 3faa157152df0507cf1e741252ac447b325ebbef Mon Sep 17 00:00:00 2001
 From: Elliana May <me@mause.me>
 Date: Wed, 1 Apr 2026 17:23:52 +0800
 Subject: [PATCH] ls children
@@ -267,7 +267,7 @@ index ec94694d..93623f0c 100644
  $hdrdir = RbConfig::CONFIG["rubyhdrdir"]
  puts "Using rubyhdrdir=#{$hdrdir}"
 
-From 54a0892c2220ac0916e0fda99da3da671a5e94a6 Mon Sep 17 00:00:00 2001
+From bc6c5f20111d6add3e1eebdd120bc48382b73a93 Mon Sep 17 00:00:00 2001
 From: Elliana May <me@mause.me>
 Date: Wed, 1 Apr 2026 17:27:12 +0800
 Subject: [PATCH] dir hdrdir
@@ -292,3 +292,25 @@ index 93623f0c..1662a543 100644
  $target = $hdrdir + "/ruby.h"
  if not File.exist?($hdrdir + "/ruby.h")
    abort "#{$hdrdir}/ruby.h does not exist"
+
+From 0e3f79ceb40634b22ceef7532577015b05233e5d Mon Sep 17 00:00:00 2001
+From: Elliana May <me@mause.me>
+Date: Wed, 1 Apr 2026 17:30:16 +0800
+Subject: [PATCH] dir include
+
+---
+ rbconfig-patch.rb | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/rbconfig-patch.rb b/rbconfig-patch.rb
+index 1662a543..bcd36834 100644
+--- a/rbconfig-patch.rb
++++ b/rbconfig-patch.rb
+@@ -5,6 +5,7 @@ puts "Original hdrdir: #{$hdrdir}"
+ RbConfig::CONFIG["rubyhdrdir"] = File.join("@TERMUX_PREFIX@", "include", "ruby-#{RbConfig::CONFIG['ruby_version']}")
+ $hdrdir = RbConfig::CONFIG["rubyhdrdir"]
+ puts "Using rubyhdrdir=#{$hdrdir}"
++puts Dir.children(File.join("@TERMUX_PREFIX@", "include"))
+ puts Dir.children($hdrdir)
+ $target = $hdrdir + "/ruby.h"
+ if not File.exist?($hdrdir + "/ruby.h")
