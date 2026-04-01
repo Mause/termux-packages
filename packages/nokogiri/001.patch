@@ -266,3 +266,29 @@ index ec94694d..93623f0c 100644
  RbConfig::CONFIG["rubyhdrdir"] = File.join("@TERMUX_PREFIX@", "include", "ruby-#{RbConfig::CONFIG['ruby_version']}")
  $hdrdir = RbConfig::CONFIG["rubyhdrdir"]
  puts "Using rubyhdrdir=#{$hdrdir}"
+
+From 54a0892c2220ac0916e0fda99da3da671a5e94a6 Mon Sep 17 00:00:00 2001
+From: Elliana May <me@mause.me>
+Date: Wed, 1 Apr 2026 17:27:12 +0800
+Subject: [PATCH] dir hdrdir
+
+---
+ rbconfig-patch.rb | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/rbconfig-patch.rb b/rbconfig-patch.rb
+index 93623f0c..1662a543 100644
+--- a/rbconfig-patch.rb
++++ b/rbconfig-patch.rb
+@@ -2,10 +2,10 @@ require 'rbconfig'
+ 
+ $hdrdir = RbConfig::CONFIG["rubyhdrdir"]
+ puts "Original hdrdir: #{$hdrdir}"
+-puts Dir.children("@TERMUX_PREFIX@")
+ RbConfig::CONFIG["rubyhdrdir"] = File.join("@TERMUX_PREFIX@", "include", "ruby-#{RbConfig::CONFIG['ruby_version']}")
+ $hdrdir = RbConfig::CONFIG["rubyhdrdir"]
+ puts "Using rubyhdrdir=#{$hdrdir}"
++puts Dir.children($hdrdir)
+ $target = $hdrdir + "/ruby.h"
+ if not File.exist?($hdrdir + "/ruby.h")
+   abort "#{$hdrdir}/ruby.h does not exist"
