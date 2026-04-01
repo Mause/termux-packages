@@ -15,4 +15,3 @@ termux_step_make() {
 	bundle config set path "${TERMUX_PREFIX}"/lib/ruby/gems/nokogiri-"${TERMUX_PKG_VERSION}"
 	bundle install --jobs "${TERMUX_PKG_MAKE_PROCESSES}" --platform=ruby -- --use-system-libraries
 }
-
