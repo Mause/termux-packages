@@ -120,3 +120,34 @@ index 00000000..5bf0e54d
 @@ -0,0 +1,2 @@
 +require 'rbconfig'
 +puts 'aaaaaaaaaaaaaa'
+
+From 3ed311ce2b2cde80442745777feb15343cc91bff Mon Sep 17 00:00:00 2001
+From: Elliana May <me@mause.me>
+Date: Wed, 1 Apr 2026 16:49:51 +0800
+Subject: [PATCH] intercept
+
+---
+ rbconfig-patch.rb | 4 ++++
+ rbconfig.rb       | 2 --
+ 2 files changed, 4 insertions(+), 2 deletions(-)
+ create mode 100644 rbconfig-patch.rb
+ delete mode 100644 rbconfig.rb
+
+diff --git a/rbconfig-patch.rb b/rbconfig-patch.rb
+new file mode 100644
+index 00000000..0a4d372d
+--- /dev/null
++++ b/rbconfig-patch.rb
+@@ -0,0 +1,4 @@
++require 'rbconfig'
++
++RbConfig::CONFIG["rubyhdrdir"] = File.join("@TERMUX_PREFIX@", "include", "ruby-#{RbConfig::CONFIG['ruby_version']}")
++puts "Using rubyhdrdir=#{RbConfig::CONFIG['rubyhdrdir']}"
+diff --git a/rbconfig.rb b/rbconfig.rb
+deleted file mode 100644
+index 5bf0e54d..00000000
+--- a/rbconfig.rb
++++ /dev/null
+@@ -1,2 +0,0 @@
+-require 'rbconfig'
+-puts 'aaaaaaaaaaaaaa'
