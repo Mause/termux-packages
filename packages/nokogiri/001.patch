@@ -383,6 +383,7 @@ index c6afc1a8..0b1e0ad3 100644
  ENV["RC_ARCHS"] = "" if RUBY_PLATFORM.include?("darwin")
 -RbConfig::CONFIG["rubyhdrdir"] = File.join("@TERMUX_PREFIX@", "include", "ruby-#{RbConfig::CONFIG['ruby_version']}")
 +RbConfig::CONFIG["rubyhdrdir"] = File.join("@TERMUX_PREFIX@", "include", "ruby-3.4.0")
++RbConfig::CONFIG["rubyarchhdrdir"] = File.join("@TERMUX_PREFIX@", "include", "ruby-3.4.0", "aarch64-linux-android")
  puts "Using rubyhdrdir=#{RbConfig::CONFIG['rubyhdrdir']}"
  
  require "mkmf"
