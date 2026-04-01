@@ -12,6 +12,7 @@ TERMUX_PKG_DEPENDS='ruby, libxslt'
 set -o xtrace
 
 termux_step_make() {
+	export GEM_HOME="${TERMUX_PREFIX}/lib/ruby/gems"
 	gem install bundler
 	bundle config set deployment 'true'
 	bundle config set path "${TERMUX_PREFIX}"/lib/ruby/gems/nokogiri-"${TERMUX_PKG_VERSION}"
