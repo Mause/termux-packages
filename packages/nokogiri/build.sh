@@ -23,10 +23,9 @@ termux_step_make_install() {
 	$GEM_HOME/bin/rake -T
 	ls rbconfig-patch.rb
 	ruby -r ./rbconfig-patch.rb $GEM_HOME/bin/rake compile --trace -- --use-system-libraries || echo failed
-	ls "$GEM_HOME/"
-	ls "$GEM_HOME/gems"
-	ls "$GEM_HOME/nokogiri-$TERMUX_PKG_VERSION"
-	cat "$GEM_HOME/nokogiri-$TERMUX_PKG_VERSION/ext/mkmf.log"
+	ls
+	find . | grep mkmf
+	cat "tmp/x86_64-linux-gnu/nokogiri/3.2.3/ext/mkmf.log"
 	$BUNDLE config build.nokogiri --use-system-libraries
 	$BUNDLE install --jobs "${TERMUX_PKG_MAKE_PROCESSES}"
 }
