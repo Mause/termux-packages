@@ -79,3 +79,25 @@ index 2671b180..04de2810 100644
  create_makefile("nokogiri/nokogiri")
  
  if config_clean?
+
+From dc0d87384b2061a6cbcf0883c2ec3520d4293352 Mon Sep 17 00:00:00 2001
+From: Elliana May <me@mause.me>
+Date: Wed, 1 Apr 2026 16:07:33 +0800
+Subject: [PATCH] more dump
+
+---
+ ext/nokogiri/extconf.rb | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/ext/nokogiri/extconf.rb b/ext/nokogiri/extconf.rb
+index 04de2810..c6afc1a8 100644
+--- a/ext/nokogiri/extconf.rb
++++ b/ext/nokogiri/extconf.rb
+@@ -4,6 +4,7 @@
+ 
+ ENV["RC_ARCHS"] = "" if RUBY_PLATFORM.include?("darwin")
+ RbConfig::CONFIG["rubyhdrdir"] = File.join("@TERMUX_PREFIX@", "include", "ruby-#{RbConfig::CONFIG['ruby_version']}")
++puts "Using rubyhdrdir=#{RbConfig::CONFIG['rubyhdrdir']}"
+ 
+ require "mkmf"
+ require "rbconfig"
