@@ -172,3 +172,29 @@ index 0a4d372d..ade6cc7c 100644
 +if not File.exist?(($hdrdir = RbConfig::CONFIG["rubyhdrdir"]) + "/ruby/ruby.h")
 +  abort "#{hdrdir}/ruby/ruby.h does not exist"
 +end
+
+From b24e066ffadfc326fbf3618f9b815dae5c07dba6 Mon Sep 17 00:00:00 2001
+From: Elliana May <me@mause.me>
+Date: Wed, 1 Apr 2026 17:10:37 +0800
+Subject: [PATCH] fix var ref
+
+---
+ rbconfig-patch.rb | 7 ++++---
+ 1 file changed, 4 insertions(+), 3 deletions(-)
+
+diff --git a/rbconfig-patch.rb b/rbconfig-patch.rb
+index ade6cc7c..75956833 100644
+--- a/rbconfig-patch.rb
++++ b/rbconfig-patch.rb
+@@ -1,7 +1,8 @@
+ require 'rbconfig'
+ 
+ RbConfig::CONFIG["rubyhdrdir"] = File.join("@TERMUX_PREFIX@", "include", "ruby-#{RbConfig::CONFIG['ruby_version']}")
+-puts "Using rubyhdrdir=#{RbConfig::CONFIG['rubyhdrdir']}"
+-if not File.exist?(($hdrdir = RbConfig::CONFIG["rubyhdrdir"]) + "/ruby/ruby.h")
+-  abort "#{hdrdir}/ruby/ruby.h does not exist"
++$hdrdir = RbConfig::CONFIG["rubyhdrdir"]
++puts "Using rubyhdrdir=#{$hdrdir}"
++if not File.exist?($hdrdir + "/ruby/ruby.h")
++  abort "#{$hdrdir}/ruby/ruby.h does not exist"
+ end
