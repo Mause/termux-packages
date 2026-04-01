@@ -1,0 +1,21 @@
+From 498358e03800db0067b63618111457169249dfc5 Mon Sep 17 00:00:00 2001
+From: Elliana May <me@mause.me>
+Date: Wed, 1 Apr 2026 14:50:37 +0800
+Subject: [PATCH] override rubyhdrdir
+
+---
+ ext/nokogiri/extconf.rb | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/ext/nokogiri/extconf.rb b/ext/nokogiri/extconf.rb
+index 04ffc9fa..34e6ef00 100644
+--- a/ext/nokogiri/extconf.rb
++++ b/ext/nokogiri/extconf.rb
+@@ -3,6 +3,7 @@
+ # rubocop:disable Style/GlobalVars
+ 
+ ENV["RC_ARCHS"] = "" if RUBY_PLATFORM.include?("darwin")
++RbConfig::CONFIG["rubyhdrdir"] = File.join(ENV["TERMUX_PREFIX"], "include", "ruby-#{RbConfig::CONFIG['ruby_version']}")
+ 
+ require "mkmf"
+ require "rbconfig"
