@@ -15,7 +15,67 @@ index 04ffc9fa..34e6ef00 100644
  # rubocop:disable Style/GlobalVars
  
  ENV["RC_ARCHS"] = "" if RUBY_PLATFORM.include?("darwin")
++RbConfig::CONFIG["rubyhdrdir"] = File.join(ENV["TERMUX_PREFIX"], "include", "ruby-#{RbConfig::CONFIG['ruby_version']}")
+ 
+ require "mkmf"
+ require "rbconfig"
+
+From 2a0ed5e7e3762a43b475e8ab1fef2a3c9aa1189a Mon Sep 17 00:00:00 2001
+From: Elliana May <me@mause.me>
+Date: Wed, 1 Apr 2026 14:52:20 +0800
+Subject: [PATCH] use patch sed
+
+---
+ ext/nokogiri/extconf.rb | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/ext/nokogiri/extconf.rb b/ext/nokogiri/extconf.rb
+index 34e6ef00..2671b180 100644
+--- a/ext/nokogiri/extconf.rb
++++ b/ext/nokogiri/extconf.rb
+@@ -3,7 +3,7 @@
+ # rubocop:disable Style/GlobalVars
+ 
+ ENV["RC_ARCHS"] = "" if RUBY_PLATFORM.include?("darwin")
+-RbConfig::CONFIG["rubyhdrdir"] = File.join(ENV["TERMUX_PREFIX"], "include", "ruby-#{RbConfig::CONFIG['ruby_version']}")
 +RbConfig::CONFIG["rubyhdrdir"] = File.join("@TERMUX_PREFIX@", "include", "ruby-#{RbConfig::CONFIG['ruby_version']}")
  
  require "mkmf"
  require "rbconfig"
+
+From f19ca6f632f9f14692a9660c184c9b8c70ac8057 Mon Sep 17 00:00:00 2001
+From: Elliana May <me@mause.me>
+Date: Wed, 1 Apr 2026 15:40:59 +0800
+Subject: [PATCH] dump
+
+---
+ ext/nokogiri/extconf.rb | 16 ++++++++++++++++
+ 1 file changed, 16 insertions(+)
+
+diff --git a/ext/nokogiri/extconf.rb b/ext/nokogiri/extconf.rb
+index 2671b180..04de2810 100644
+--- a/ext/nokogiri/extconf.rb
++++ b/ext/nokogiri/extconf.rb
+@@ -1149,6 +1149,22 @@ unless config_system_libraries?
+   end
+ end
+ 
++puts "Configuration summary:"
++puts "  - using system libraries: #{config_system_libraries?}"
++puts "  - using static linking: #{static_p}"
++puts "  - using cross build: #{cross_build_p}"
++puts "  - other library versions: #{other_library_versions_string}"
++puts "  - cppflags: #{$CPPFLAGS}"
++puts "  - ldflags: #{$LDFLAGS}"
++puts "  - libs: #{$libs}"
++puts "  - incflags: #{$INCFLAGS}"
++puts "  - archflags: #{RbConfig::CONFIG["ARCH_FLAG"]}"
++puts "  - ruby version: #{RbConfig::CONFIG["ruby_version"]}"
++puts "  - ruby platform: #{RbConfig::CONFIG["ruby_platform"]}"
++puts "  - ruby host: #{RbConfig::CONFIG["host"]}"
++puts "  - ruby target: #{RbConfig::CONFIG["target"]}"
++puts "  - ruby config: #{RbConfig::CONFIG.inspect}"
++
+ create_makefile("nokogiri/nokogiri")
+ 
+ if config_clean?
