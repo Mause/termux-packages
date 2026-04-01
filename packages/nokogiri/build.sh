@@ -16,7 +16,7 @@ termux_step_make() {
 }
 
 termux_step_make_install() {
-	export GEM_HOME="${TERMUX_PREFIX}/lib/ruby/gems"
+	export GEM_HOME="${TERMUX_PREFIX}/lib/ruby/gems/3.4.0"
 	gem install bundler
 	gem install rake:13.2.1 rake-compiler rake-compiler-dock:1.11.1
 	BUNDLE=$GEM_HOME/bin/bundle
@@ -24,6 +24,7 @@ termux_step_make_install() {
 	ls rbconfig-patch.rb
 	ruby -r ./rbconfig-patch.rb $GEM_HOME/bin/rake compile --trace -- --use-system-libraries || echo failed
 	ls "$GEM_HOME/"
+	ls "$GEM_HOME/gems"
 	ls "$GEM_HOME/nokogiri-$TERMUX_PKG_VERSION"
 	cat "$GEM_HOME/nokogiri-$TERMUX_PKG_VERSION/ext/mkmf.log"
 	$BUNDLE config build.nokogiri --use-system-libraries
