@@ -17,7 +17,9 @@ termux_step_make() {
 
 termux_step_make_install() {
 	export GEM_HOME="${TERMUX_PREFIX}/lib/ruby/gems"
-	gem install bundler rake rake-compiler
+	gem install bundler
+	gem install rake -v 13.2.1
+	gem install rake-compiler
 	BUNDLE=$GEM_HOME/bin/bundle
 	$BUNDLE exec rake compile
 	$BUNDLE config build.nokogiri --use-system-libraries
