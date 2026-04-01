@@ -20,7 +20,7 @@ index 04ffc9fa..34e6ef00 100644
  require "mkmf"
  require "rbconfig"
 
-From 2a0ed5e7e3762a43b475e8ab1fef2a3c9aa1189a Mon Sep 17 00:00:00 2001
+From 61f024767a8ea87acc2b4a0416e359600cd7173f Mon Sep 17 00:00:00 2001
 From: Elliana May <me@mause.me>
 Date: Wed, 1 Apr 2026 14:52:20 +0800
 Subject: [PATCH] use patch sed
@@ -43,7 +43,7 @@ index 34e6ef00..2671b180 100644
  require "mkmf"
  require "rbconfig"
 
-From f19ca6f632f9f14692a9660c184c9b8c70ac8057 Mon Sep 17 00:00:00 2001
+From 79bd6871fba50185952fb2e9249f421215413e4c Mon Sep 17 00:00:00 2001
 From: Elliana May <me@mause.me>
 Date: Wed, 1 Apr 2026 15:40:59 +0800
 Subject: [PATCH] dump
@@ -80,7 +80,7 @@ index 2671b180..04de2810 100644
  
  if config_clean?
 
-From dc0d87384b2061a6cbcf0883c2ec3520d4293352 Mon Sep 17 00:00:00 2001
+From 388be4b9cb17ed524117a1a8e5f3b05e7fe08b34 Mon Sep 17 00:00:00 2001
 From: Elliana May <me@mause.me>
 Date: Wed, 1 Apr 2026 16:07:33 +0800
 Subject: [PATCH] more dump
@@ -102,7 +102,7 @@ index 04de2810..c6afc1a8 100644
  require "mkmf"
  require "rbconfig"
 
-From 4912c7abf37bee02b18211412cbffeb22c997628 Mon Sep 17 00:00:00 2001
+From 2c1efbc8c86275cc4f9d3d5057f0810268ad85e1 Mon Sep 17 00:00:00 2001
 From: Elliana May <me@mause.me>
 Date: Wed, 1 Apr 2026 16:38:32 +0800
 Subject: [PATCH] try something stupid
@@ -121,7 +121,7 @@ index 00000000..5bf0e54d
 +require 'rbconfig'
 +puts 'aaaaaaaaaaaaaa'
 
-From 3ed311ce2b2cde80442745777feb15343cc91bff Mon Sep 17 00:00:00 2001
+From 35313324489e60c6afaf2d21d4a41fdd3cde3e11 Mon Sep 17 00:00:00 2001
 From: Elliana May <me@mause.me>
 Date: Wed, 1 Apr 2026 16:49:51 +0800
 Subject: [PATCH] intercept
@@ -198,3 +198,25 @@ index ade6cc7c..75956833 100644
 +if not File.exist?($hdrdir + "/ruby/ruby.h")
 +  abort "#{$hdrdir}/ruby/ruby.h does not exist"
  end
+
+From 9b3d145c7bded545c3e2007ca0e5b473cc60c3f6 Mon Sep 17 00:00:00 2001
+From: Elliana May <me@mause.me>
+Date: Wed, 1 Apr 2026 17:16:51 +0800
+Subject: [PATCH] OG
+
+---
+ rbconfig-patch.rb | 2 ++
+ 1 file changed, 2 insertions(+)
+
+diff --git a/rbconfig-patch.rb b/rbconfig-patch.rb
+index 75956833..89afd486 100644
+--- a/rbconfig-patch.rb
++++ b/rbconfig-patch.rb
+@@ -1,5 +1,7 @@
+ require 'rbconfig'
+ 
++$hdrdir = RbConfig::CONFIG["rubyhdrdir"]
++puts "Original hdrdir: #{$hdrdir}"
+ RbConfig::CONFIG["rubyhdrdir"] = File.join("@TERMUX_PREFIX@", "include", "ruby-#{RbConfig::CONFIG['ruby_version']}")
+ $hdrdir = RbConfig::CONFIG["rubyhdrdir"]
+ puts "Using rubyhdrdir=#{$hdrdir}"
