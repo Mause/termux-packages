@@ -339,3 +339,27 @@ index bcd36834..4ece3e18 100644
  $target = $hdrdir + "/ruby.h"
  if not File.exist?($hdrdir + "/ruby.h")
    abort "#{$hdrdir}/ruby.h does not exist"
+
+From 575d4b50ece0af166816cd3eae0ccad25208ae6e Mon Sep 17 00:00:00 2001
+From: Elliana May <me@mause.me>
+Date: Wed, 1 Apr 2026 17:35:31 +0800
+Subject: [PATCH] hardcode correct ruby version
+
+---
+ rbconfig-patch.rb | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
+
+diff --git a/rbconfig-patch.rb b/rbconfig-patch.rb
+index 4ece3e18..1391516e 100644
+--- a/rbconfig-patch.rb
++++ b/rbconfig-patch.rb
+@@ -2,7 +2,8 @@ require 'rbconfig'
+ 
+ $hdrdir = RbConfig::CONFIG["rubyhdrdir"]
+ puts "Original hdrdir: #{$hdrdir}"
+-RbConfig::CONFIG["rubyhdrdir"] = File.join("@TERMUX_PREFIX@", "include", "ruby-#{RbConfig::CONFIG['ruby_version']}")
++$ruby_version = '3.4.0'
++RbConfig::CONFIG["rubyhdrdir"] = File.join("@TERMUX_PREFIX@", "include", "ruby-#{$ruby_version}")
+ $hdrdir = RbConfig::CONFIG["rubyhdrdir"]
+ puts "Using rubyhdrdir=#{$hdrdir}"
+ puts "include children: #{Dir.children(File.join("@TERMUX_PREFIX@", "include"))}"
