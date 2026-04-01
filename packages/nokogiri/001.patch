@@ -101,3 +101,22 @@ index 04de2810..c6afc1a8 100644
  
  require "mkmf"
  require "rbconfig"
+
+From 4912c7abf37bee02b18211412cbffeb22c997628 Mon Sep 17 00:00:00 2001
+From: Elliana May <me@mause.me>
+Date: Wed, 1 Apr 2026 16:38:32 +0800
+Subject: [PATCH] try something stupid
+
+---
+ rbconfig.rb | 2 ++
+ 1 file changed, 2 insertions(+)
+ create mode 100644 rbconfig.rb
+
+diff --git a/rbconfig.rb b/rbconfig.rb
+new file mode 100644
+index 00000000..5bf0e54d
+--- /dev/null
++++ b/rbconfig.rb
+@@ -0,0 +1,2 @@
++require 'rbconfig'
++puts 'aaaaaaaaaaaaaa'
