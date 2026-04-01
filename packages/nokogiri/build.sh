@@ -26,6 +26,6 @@ termux_step_make_install() {
 	ls
 	find . | grep mkmf.log
 	cat "tmp/x86_64-linux-gnu/nokogiri/3.2.3/mkmf.log"
-	$BUNDLE config build.nokogiri --use-system-libraries
+	$BUNDLE config set build.nokogiri --use-system-libraries
 	$BUNDLE install --jobs "${TERMUX_PKG_MAKE_PROCESSES}"
 }
