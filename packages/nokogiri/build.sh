@@ -9,6 +9,8 @@ TERMUX_PKG_AUTO_UPDATE=true
 TERMUX_PKG_SHA256='e6257d775758b880bacdec1f32876f3a0db4c20b340b9f99540472aab42748cb'
 TERMUX_PKG_DEPENDS='ruby, libxslt'
 
+set -o xtrace
+
 termux_step_make() {
 	gem install bundler
 	bundle config set deployment 'true'
