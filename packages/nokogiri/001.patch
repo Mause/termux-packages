@@ -363,3 +363,26 @@ index 4ece3e18..1391516e 100644
  $hdrdir = RbConfig::CONFIG["rubyhdrdir"]
  puts "Using rubyhdrdir=#{$hdrdir}"
  puts "include children: #{Dir.children(File.join("@TERMUX_PREFIX@", "include"))}"
+
+From 814bc6700a54d8b8175888e9a3fa207d73dc98a2 Mon Sep 17 00:00:00 2001
+From: Elliana May <me@mause.me>
+Date: Wed, 1 Apr 2026 17:39:15 +0800
+Subject: [PATCH] fix other patch
+
+---
+ ext/nokogiri/extconf.rb | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/ext/nokogiri/extconf.rb b/ext/nokogiri/extconf.rb
+index c6afc1a8..0b1e0ad3 100644
+--- a/ext/nokogiri/extconf.rb
++++ b/ext/nokogiri/extconf.rb
+@@ -3,7 +3,7 @@
+ # rubocop:disable Style/GlobalVars
+ 
+ ENV["RC_ARCHS"] = "" if RUBY_PLATFORM.include?("darwin")
+-RbConfig::CONFIG["rubyhdrdir"] = File.join("@TERMUX_PREFIX@", "include", "ruby-#{RbConfig::CONFIG['ruby_version']}")
++RbConfig::CONFIG["rubyhdrdir"] = File.join("@TERMUX_PREFIX@", "include", "ruby-3.4.0")
+ puts "Using rubyhdrdir=#{RbConfig::CONFIG['rubyhdrdir']}"
+ 
+ require "mkmf"
