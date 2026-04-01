@@ -314,3 +314,28 @@ index 1662a543..bcd36834 100644
  puts Dir.children($hdrdir)
  $target = $hdrdir + "/ruby.h"
  if not File.exist?($hdrdir + "/ruby.h")
+
+From b60fa85e7951622a5d1d535c7874e4252be723b9 Mon Sep 17 00:00:00 2001
+From: Elliana May <me@mause.me>
+Date: Wed, 1 Apr 2026 17:32:11 +0800
+Subject: [PATCH] labels
+
+---
+ rbconfig-patch.rb | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/rbconfig-patch.rb b/rbconfig-patch.rb
+index bcd36834..4ece3e18 100644
+--- a/rbconfig-patch.rb
++++ b/rbconfig-patch.rb
+@@ -5,8 +5,8 @@ puts "Original hdrdir: #{$hdrdir}"
+ RbConfig::CONFIG["rubyhdrdir"] = File.join("@TERMUX_PREFIX@", "include", "ruby-#{RbConfig::CONFIG['ruby_version']}")
+ $hdrdir = RbConfig::CONFIG["rubyhdrdir"]
+ puts "Using rubyhdrdir=#{$hdrdir}"
+-puts Dir.children(File.join("@TERMUX_PREFIX@", "include"))
+-puts Dir.children($hdrdir)
++puts "include children: #{Dir.children(File.join("@TERMUX_PREFIX@", "include"))}"
++puts "hdrdir children: #{Dir.children($hdrdir)}"
+ $target = $hdrdir + "/ruby.h"
+ if not File.exist?($hdrdir + "/ruby.h")
+   abort "#{$hdrdir}/ruby.h does not exist"
