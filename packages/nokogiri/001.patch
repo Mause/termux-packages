@@ -151,3 +151,24 @@ index 5bf0e54d..00000000
 @@ -1,2 +0,0 @@
 -require 'rbconfig'
 -puts 'aaaaaaaaaaaaaa'
+
+From f020fd1ac30905cc273c30e9b181e69d1c5f63f0 Mon Sep 17 00:00:00 2001
+From: Elliana May <me@mause.me>
+Date: Wed, 1 Apr 2026 17:01:05 +0800
+Subject: [PATCH] sanity
+
+---
+ rbconfig-patch.rb | 3 +++
+ 1 file changed, 3 insertions(+)
+
+diff --git a/rbconfig-patch.rb b/rbconfig-patch.rb
+index 0a4d372d..ade6cc7c 100644
+--- a/rbconfig-patch.rb
++++ b/rbconfig-patch.rb
+@@ -2,3 +2,6 @@ require 'rbconfig'
+ 
+ RbConfig::CONFIG["rubyhdrdir"] = File.join("@TERMUX_PREFIX@", "include", "ruby-#{RbConfig::CONFIG['ruby_version']}")
+ puts "Using rubyhdrdir=#{RbConfig::CONFIG['rubyhdrdir']}"
++if not File.exist?(($hdrdir = RbConfig::CONFIG["rubyhdrdir"]) + "/ruby/ruby.h")
++  abort "#{hdrdir}/ruby/ruby.h does not exist"
++end
