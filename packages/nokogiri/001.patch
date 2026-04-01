@@ -413,3 +413,25 @@ index c2e89a01..e731d1e2 100644
  RbConfig::CONFIG["rubyhdrdir"] = rubyhdrdir
  RbConfig::CONFIG["rubyarchhdrdir"] = File.join(rubyhdrdir, "aarch64-linux-android")
  puts "Using rubyhdrdir=#{$rubyhdrdir}"
+
+From 3a4643e3c68bf6294b782842f79055b3d1f695df Mon Sep 17 00:00:00 2001
+From: Elliana May <me@mause.me>
+Date: Thu, 2 Apr 2026 03:30:21 +0800
+Subject: [PATCH] set MKMF_VERBOSE=1
+
+---
+ ext/nokogiri/extconf.rb | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/ext/nokogiri/extconf.rb b/ext/nokogiri/extconf.rb
+index e731d1e2..84c4798c 100644
+--- a/ext/nokogiri/extconf.rb
++++ b/ext/nokogiri/extconf.rb
+@@ -7,6 +7,7 @@ rubyhdrdir = File.join("@TERMUX_PREFIX@", "include", "ruby-3.4.0")
+ RbConfig::CONFIG["rubyhdrdir"] = rubyhdrdir
+ RbConfig::CONFIG["rubyarchhdrdir"] = File.join(rubyhdrdir, "aarch64-linux-android")
+ puts "Using rubyhdrdir=#{$rubyhdrdir}"
++RbConfig::CONFIG['MKMF_VERBOSE'] = "1"
+ 
+ require "mkmf"
+ require "rbconfig"
