@@ -390,3 +390,26 @@ index c6afc1a8..c2e89a01 100644
  
  require "mkmf"
  require "rbconfig"
+
+From 5350006db4b67cb35058b5a4fbe48ab6e5ff01ea Mon Sep 17 00:00:00 2001
+From: Elliana May <me@mause.me>
+Date: Wed, 1 Apr 2026 19:47:28 +0800
+Subject: [PATCH] hardcode version
+
+---
+ ext/nokogiri/extconf.rb | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/ext/nokogiri/extconf.rb b/ext/nokogiri/extconf.rb
+index c2e89a01..e731d1e2 100644
+--- a/ext/nokogiri/extconf.rb
++++ b/ext/nokogiri/extconf.rb
+@@ -3,7 +3,7 @@
+ # rubocop:disable Style/GlobalVars
+ 
+ ENV["RC_ARCHS"] = "" if RUBY_PLATFORM.include?("darwin")
+-rubyhdrdir = File.join("@TERMUX_PREFIX@", "include", "ruby-#{RbConfig::CONFIG['ruby_version']}")
++rubyhdrdir = File.join("@TERMUX_PREFIX@", "include", "ruby-3.4.0")
+ RbConfig::CONFIG["rubyhdrdir"] = rubyhdrdir
+ RbConfig::CONFIG["rubyarchhdrdir"] = File.join(rubyhdrdir, "aarch64-linux-android")
+ puts "Using rubyhdrdir=#{$rubyhdrdir}"
