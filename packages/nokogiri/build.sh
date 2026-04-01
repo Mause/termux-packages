@@ -18,7 +18,8 @@ termux_step_make() {
 termux_step_make_install() {
 	RUBY_VERSION=3.4.0
 	export GEM_HOME="${TERMUX_PREFIX}/lib/ruby/gems/$RUBY_VERSION"
-	cat "$TERMUX_PREFIX/lib/ruby/$RUBY_VERSION/$TERMUX_ARCH-linux-android/rbconfig.rb" | grep flag -i
+	cat "/usr/lib/x86_64-linux-gnu/ruby/3.2.0/rbconfig.rb"
+	cat "$TERMUX_PREFIX/lib/ruby/$RUBY_VERSION/$TERMUX_ARCH-linux-android/rbconfig.rb"
 	gem install bundler
 	gem install rake:13.2.1 rake-compiler rake-compiler-dock:1.11.1
 	BUNDLE=$GEM_HOME/bin/bundle
