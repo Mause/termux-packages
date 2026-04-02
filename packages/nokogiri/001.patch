@@ -535,3 +535,29 @@ index 9c253a14..96d154ea 100644
    end
  end
  
+
+From 0327adf3c4e614dd976926c14839f0cbe5ebdd30 Mon Sep 17 00:00:00 2001
+From: Elliana May <me@mause.me>
+Date: Thu, 2 Apr 2026 15:44:46 +0800
+Subject: [PATCH] sub out cf-protection flag
+
+---
+ ext/nokogiri/extconf.rb | 5 ++---
+ 1 file changed, 2 insertions(+), 3 deletions(-)
+
+diff --git a/ext/nokogiri/extconf.rb b/ext/nokogiri/extconf.rb
+index 96d154ea..6967cc82 100644
+--- a/ext/nokogiri/extconf.rb
++++ b/ext/nokogiri/extconf.rb
+@@ -11,9 +11,8 @@ RbConfig::CONFIG['MKMF_VERBOSE'] = "1"
+ 
+ RbConfig::CONFIG.each do |key, value|
+   if value.include?("cf-protection")
+-    msg = "bad flag in RbConfig::CONFIG[#{key}]: #{value}"
+-    puts msg
+-    abort msg
++    msg = "bad flag in RbConfig::CONFIG[#{key}], will remove: #{value}"
++    RbConfig::CONFIG[key] = value.sub! " -cf-protection", ""
+   end
+ end
+ 
