@@ -583,3 +583,32 @@ index 6967cc82..14b6b56b 100644
      RbConfig::CONFIG[key] = value.sub! " -cf-protection", ""
    end
  end
+
+From de92bf36ecb8ca3c0739d85e52b29fa23ba597a7 Mon Sep 17 00:00:00 2001
+From: Elliana May <me@mause.me>
+Date: Thu, 2 Apr 2026 16:03:26 +0800
+Subject: [PATCH] correct flag name
+
+---
+ ext/nokogiri/extconf.rb | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
+
+diff --git a/ext/nokogiri/extconf.rb b/ext/nokogiri/extconf.rb
+index 14b6b56b..d56d511f 100644
+--- a/ext/nokogiri/extconf.rb
++++ b/ext/nokogiri/extconf.rb
+@@ -9,11 +9,12 @@ RbConfig::CONFIG["rubyarchhdrdir"] = File.join(rubyhdrdir, "aarch64-linux-androi
+ puts "Using rubyhdrdir=#{rubyhdrdir}"
+ RbConfig::CONFIG['MKMF_VERBOSE'] = "1"
+ 
++flag = '-fcf-protection'
+ RbConfig::CONFIG.each do |key, value|
+-  if value.include?("cf-protection")
++  if value.include? flag
+     msg = "bad flag in RbConfig::CONFIG[#{key}], will remove: #{value}"
+     puts msg
+-    RbConfig::CONFIG[key] = value.sub! " -cf-protection", ""
++    RbConfig::CONFIG[key] = value.sub! (" " + flag, "")
+   end
+ end
+ 
