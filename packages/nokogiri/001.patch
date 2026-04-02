@@ -476,7 +476,7 @@ index e3a9c620..4eac68ea 100644
  puts "Using rubyhdrdir=#{rubyhdrdir}"
  RbConfig::CONFIG['MKMF_VERBOSE'] = "1"
  
-+if RbConfig::CONFIG['CXXFLAGS'].includs? 'cf-protection'
++if RbConfig::CONFIG['CXXFLAGS'].include? 'cf-protection'
 +  abort 'bad flag detected'
 +end
 +
