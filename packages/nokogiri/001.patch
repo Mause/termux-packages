@@ -636,3 +636,26 @@ index d56d511f..aa9dd11b 100644
    end
  end
  
+
+From b61704c4494979395da38d6a1f51d0bd89ce7afa Mon Sep 17 00:00:00 2001
+From: Elliana May <me@mause.me>
+Date: Thu, 2 Apr 2026 16:23:03 +0800
+Subject: [PATCH] explicit toggle off
+
+---
+ ext/nokogiri/extconf.rb | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/ext/nokogiri/extconf.rb b/ext/nokogiri/extconf.rb
+index aa9dd11b..4453df76 100644
+--- a/ext/nokogiri/extconf.rb
++++ b/ext/nokogiri/extconf.rb
+@@ -14,7 +14,7 @@ RbConfig::CONFIG.each do |key, value|
+   if value.include? flag
+     msg = "bad flag in RbConfig::CONFIG[#{key}], will remove: #{value}"
+     puts msg
+-    RbConfig::CONFIG[key] = value.sub!(" " + flag, "")
++    RbConfig::CONFIG[key] = value.sub!(" " + flag, " -fcf-protection=none")
+   end
+ end
+ 
