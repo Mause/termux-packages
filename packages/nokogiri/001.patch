@@ -436,9 +436,9 @@ index e731d1e2..84c4798c 100644
  require "mkmf"
  require "rbconfig"
 
-From 2dde41b283e65260f8b7b68657ce17ef19c2bb6c Mon Sep 17 00:00:00 2001
+From 28ecd5b86bc89e6b04be12fe144f501c7cb75462 Mon Sep 17 00:00:00 2001
 From: Elliana May <me@mause.me>
-Date: Wed, 1 Apr 2026 19:55:18 +0800
+Date: Thu, 2 Apr 2026 12:49:16 +0800
 Subject: [PATCH] no dollar?
 
 ---
@@ -459,9 +459,9 @@ index 84c4798c..e3a9c620 100644
  
  require "mkmf"
 
-From d089c5d04e768fb79e76a5f98019e05fc691c3b7 Mon Sep 17 00:00:00 2001
+From d58a33355b90760dae67e3ab37fe5f9d06dbe38f Mon Sep 17 00:00:00 2001
 From: Elliana May <me@mause.me>
-Date: Thu, 2 Apr 2026 04:35:28 +0800
+Date: Thu, 2 Apr 2026 12:45:54 +0800
 Subject: [PATCH] detect bad flag maybe?
 
 ---
@@ -469,7 +469,7 @@ Subject: [PATCH] detect bad flag maybe?
  1 file changed, 4 insertions(+)
 
 diff --git a/ext/nokogiri/extconf.rb b/ext/nokogiri/extconf.rb
-index e3a9c620..4eac68ea 100644
+index e3a9c620..e9b0020d 100644
 --- a/ext/nokogiri/extconf.rb
 +++ b/ext/nokogiri/extconf.rb
 @@ -9,6 +9,10 @@ RbConfig::CONFIG["rubyarchhdrdir"] = File.join(rubyhdrdir, "aarch64-linux-androi
@@ -483,3 +483,30 @@ index e3a9c620..4eac68ea 100644
  require "mkmf"
  require "rbconfig"
  require "fileutils"
+
+From 3d63db7095e3203d743689f6f7ee1c0d9e904700 Mon Sep 17 00:00:00 2001
+From: Elliana May <me@mause.me>
+Date: Thu, 2 Apr 2026 12:47:58 +0800
+Subject: [PATCH] scan
+
+---
+ ext/nokogiri/extconf.rb | 6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
+
+diff --git a/ext/nokogiri/extconf.rb b/ext/nokogiri/extconf.rb
+index e9b0020d..9c253a14 100644
+--- a/ext/nokogiri/extconf.rb
++++ b/ext/nokogiri/extconf.rb
+@@ -9,8 +9,10 @@ RbConfig::CONFIG["rubyarchhdrdir"] = File.join(rubyhdrdir, "aarch64-linux-androi
+ puts "Using rubyhdrdir=#{rubyhdrdir}"
+ RbConfig::CONFIG['MKMF_VERBOSE'] = "1"
+ 
+-if RbConfig::CONFIG['CXXFLAGS'].include? 'cf-protection'
+-  abort 'bad flag detected'
++RbConfig::CONFIG.each do |key, value|
++  if value.include?("cf-protection")
++    abort "bad flag in RbConfig::CONFIG[#{key}]: #{value}"
++  end
+ end
+ 
+ require "mkmf"
