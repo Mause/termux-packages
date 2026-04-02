@@ -510,3 +510,28 @@ index e9b0020d..9c253a14 100644
  end
  
  require "mkmf"
+
+From 1cec33a44f8727d893eb4da9cb9866813ec59dd2 Mon Sep 17 00:00:00 2001
+From: Elliana May <me@mause.me>
+Date: Thu, 2 Apr 2026 15:13:24 +0800
+Subject: [PATCH] puts msg too
+
+---
+ ext/nokogiri/extconf.rb | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
+
+diff --git a/ext/nokogiri/extconf.rb b/ext/nokogiri/extconf.rb
+index 9c253a14..96d154ea 100644
+--- a/ext/nokogiri/extconf.rb
++++ b/ext/nokogiri/extconf.rb
+@@ -11,7 +11,9 @@ RbConfig::CONFIG['MKMF_VERBOSE'] = "1"
+ 
+ RbConfig::CONFIG.each do |key, value|
+   if value.include?("cf-protection")
+-    abort "bad flag in RbConfig::CONFIG[#{key}]: #{value}"
++    msg = "bad flag in RbConfig::CONFIG[#{key}]: #{value}"
++    puts msg
++    abort msg
+   end
+ end
+ 
