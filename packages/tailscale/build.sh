@@ -11,3 +11,8 @@ TERMUX_PKG_SHA256='57b70731af7ae0ed167519924905fd032ddd8559a65bc8a3329d9da495f0f
 termux_step_pre_configure() {
 	termux_setup_golang
 }
+
+termux_step_make() {
+	./build_dist.sh tailscale.com/cmd/tailscale
+	./build_dist.sh tailscale.com/cmd/tailscaled
+}
