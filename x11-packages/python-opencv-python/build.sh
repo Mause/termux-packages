@@ -3,7 +3,7 @@ TERMUX_PKG_DESCRIPTION="Python wrapper for Python bindings for OpenCV"
 TERMUX_PKG_LICENSE="Apache-2.0"
 TERMUX_PKG_MAINTAINER="@termux"
 TERMUX_PKG_VERSION="93"
-TERMUX_PKG_REVISION=1
+TERMUX_PKG_REVISION=2
 TERMUX_PKG_REPOLOGY_METADATA_VERSION="$(. "$TERMUX_SCRIPTDIR/x11-packages/opencv/build.sh"; echo "$TERMUX_PKG_VERSION").${TERMUX_PKG_VERSION}"
 TERMUX_PKG_SRCURL="https://github.com/opencv/opencv-python/archive/refs/tags/${TERMUX_PKG_VERSION}.tar.gz"
 TERMUX_PKG_SHA256=319712e131f336dd5d1e3d6131d20ec7c7e922b93038858ef015c58f634ab1ee
@@ -36,5 +36,5 @@ termux_step_post_make_install() {
 	# but some python projects might attempt to import either 'opencv-python' or 'opencv-contrib-python'.
 	# which have different names
 	export ENABLE_CONTRIB=1
-	pip install --no-deps . --prefix "$TERMUX_PREFIX"
+	pip wheel --no-deps . --wheel-dir "$TERMUX_PREFIX"
 }
