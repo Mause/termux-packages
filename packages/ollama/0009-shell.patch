@@ -18,7 +18,7 @@ index da390457..07270b0c 100644
  	}
  
 -	cmd := exec.Command(claudePath, c.args(model, args)...)
-+	cmd := exec.Command("sh", c.args(claudePath,model, args)...)
++	cmd := exec.Command("termux-exec", c.args(claudePath,model, args)...)
  	cmd.Stdin = os.Stdin
  	cmd.Stdout = os.Stdout
  	cmd.Stderr = os.Stderr
