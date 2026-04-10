@@ -1,0 +1,24 @@
+diff --git a/cmd/launch/claude.go b/cmd/launch/claude.go
+index da390457..07270b0c 100644
+--- a/cmd/launch/claude.go
++++ b/cmd/launch/claude.go
+@@ -16,8 +16,9 @@ type Claude struct{}
+ 
+ func (c *Claude) String() string { return "Claude Code" }
+ 
+-func (c *Claude) args(model string, extra []string) []string {
++func (c *Claude) args(exe string, model string, extra []string) []string {
+ 	var args []string
++	args = append(args, exe)
+ 	if model != "" {
+ 		args = append(args, "--model", model)
+ 	}
+@@ -50,7 +51,7 @@ func (c *Claude) Run(model string, args []string) error {
+ 		return fmt.Errorf("claude is not installed, install from https://code.claude.com/docs/en/quickstart")
+ 	}
+ 
+-	cmd := exec.Command(claudePath, c.args(model, args)...)
++	cmd := exec.Command("sh", c.args(claudePath,model, args)...)
+ 	cmd.Stdin = os.Stdin
+ 	cmd.Stdout = os.Stdout
+ 	cmd.Stderr = os.Stderr
