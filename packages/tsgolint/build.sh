@@ -11,3 +11,7 @@ TERMUX_PKG_SHA256='9dfb551e64b1e6e0fce7d7ba48f02b558be310b1b6a45904f9edc63607071
 termux_step_pre_configure() {
 	termux_setup_golang
 }
+
+termux_step_make() {
+	go build -o tsgolint ./cmd/tsgolint
+}
