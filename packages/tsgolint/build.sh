@@ -7,13 +7,15 @@ TERMUX_PKG_SRCURL=git+https://github.com/oxc-project/tsgolint
 TERMUX_PKG_BUILD_IN_SRC=true
 TERMUX_PKG_AUTO_UPDATE=true
 TERMUX_PKG_SHA256='9dfb551e64b1e6e0fce7d7ba48f02b558be310b1b6a45904f9edc63607071378'
-TERMUX_PKG_BUILD_DEPENDS="just"
+TERMUX_PKG_BUILD_DEPENDS="just, nodejs"
 
 termux_step_pre_configure() {
 	termux_setup_golang
+	termux_setup_nodejs
 }
 
 termux_step_post_get_source() {
+	corepack enable
 	$TERMUX_PREFIX/bin/just init
 }
 
