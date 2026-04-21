@@ -15,7 +15,7 @@ termux_step_pre_configure() {
 }
 
 termux_step_post_get_source() {
-	corepack enable
+	$TERMUX_PREFIX/bin/corepack enable
 	$TERMUX_PREFIX/bin/just init
 }
 
