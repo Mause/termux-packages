@@ -14,7 +14,7 @@ termux_step_pre_configure() {
 }
 
 termux_step_post_get_source() {
-	just init
+	$TERMUX_PREFIX/bin/just init
 }
 
 termux_step_make() {
