@@ -13,6 +13,7 @@ termux_step_pre_configure() {
 	termux_setup_golang
 	termux_setup_nodejs
 	file $TERMUX_PREFIX/bin/just
+	head $TERMUX_PREFIX/bin/just
 	file $TERMUX_PREFIX/bin/corepack
 	$TERMUX_PREFIX/bin/just init
 	$TERMUX_PREFIX/bin/corepack enable
