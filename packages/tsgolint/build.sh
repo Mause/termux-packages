@@ -15,10 +15,10 @@ termux_step_pre_configure() {
 
 	npm install -g corepack
 	corepack enable
-
+	
+	git config --global user.email "you@example.com"
+	git config --global user.name "Your Name"
 	git submodule update --init
-	git config user.name termux
-	git config user.email dummy@termux.org
 
 	pushd typescript-go
 	git am --3way --no-gpg-sign ../patches/*.patch
