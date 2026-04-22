@@ -9,14 +9,14 @@ TERMUX_PKG_AUTO_UPDATE=true
 TERMUX_PKG_SHA256='9dfb551e64b1e6e0fce7d7ba48f02b558be310b1b6a45904f9edc63607071378'
 TERMUX_PKG_BUILD_DEPENDS="just, nodejs"
 
+termux_step_post_get_source() {
+	$TERMUX_PREFIX/bin/just init
+}
+
 termux_step_pre_configure() {
 	termux_setup_golang
 	termux_setup_nodejs
-}
-
-termux_step_post_get_source() {
 	$TERMUX_PREFIX/bin/corepack enable
-	$TERMUX_PREFIX/bin/just init
 }
 
 termux_step_make() {
