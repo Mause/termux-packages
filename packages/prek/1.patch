@@ -1,72 +1,94 @@
-From dc9582e764a97e9e5b316892999e01ebf364fa11 Mon Sep 17 00:00:00 2001
-From: Elliana May <me@mause.me>
-Date: Sun, 19 Oct 2025 19:28:15 +0800
-Subject: [PATCH] apply
-
-# Conflicts:
-#	crates/prek/src/fs.rs
-
+diff --git a/Cargo.lock b/Cargo.lock
+index 026b987..71f9c58 100644
+--- a/Cargo.lock
++++ b/Cargo.lock
+@@ -907,6 +907,16 @@ dependencies = [
+  "tokio",
+ ]
+ 
++[[package]]
++name = "fs2"
++version = "0.4.3"
++source = "registry+https://github.com/rust-lang/crates.io-index"
++checksum = "9564fc758e15025b46aa6643b1b77d047d1a56a1aea6e01002ac0c7026876213"
++dependencies = [
++ "libc",
++ "winapi",
++]
++
+ [[package]]
+ name = "fs_extra"
+ version = "1.3.0"
+@@ -2131,6 +2141,7 @@ dependencies = [
+  "etcetera",
+  "fancy-regex",
+  "fs-err",
++ "fs2",
+  "futures",
+  "globset",
+  "hex",
+diff --git a/Cargo.toml b/Cargo.toml
+index 81f37e2..4b0b3a5 100644
+--- a/Cargo.toml
++++ b/Cargo.toml
+@@ -42,6 +42,7 @@ dunce = { version = "1.0.5" }
+ etcetera = { version = "0.11.0" }
+ fancy-regex = { version = "0.17.0" }
+ fs-err = { version = "3.3.0", features = ["tokio"] }
++fs2 = "0.4.3"
+ futures = { version = "0.3.31" }
+ hex = { version = "0.4.3" }
+ http = { version = "1.1.0" }
+diff --git a/crates/prek/Cargo.toml b/crates/prek/Cargo.toml
+index 8b1cc5b..98a7edd 100644
+--- a/crates/prek/Cargo.toml
++++ b/crates/prek/Cargo.toml
+@@ -43,6 +43,7 @@ dunce = { workspace = true }
+ etcetera = { workspace = true }
+ fancy-regex = { workspace = true }
+ fs-err = { workspace = true }
++fs2 = { workspace = true }
+ futures = { workspace = true }
+ hex = { workspace = true }
+ http = { workspace = true }
 diff --git a/crates/prek/src/fs.rs b/crates/prek/src/fs.rs
-index 8c7321f..6f6e703 100644
+index 8c7321f..fd7c968 100644
 --- a/crates/prek/src/fs.rs
 +++ b/crates/prek/src/fs.rs
-@@ -66,34 +66,32 @@ impl LockedFile {
-         resource: &str,
-     ) -> Result<fs_err::File, std::io::Error> {
-         trace!(
--            resource,
--            path = %file.path().display(),
--            "Checking lock",
-+            "Checking lock for `{resource}` at `{}`",
-+            file.path().user_display()
-         );
--        match file.try_lock() {
-+        match file.file().try_lock_exclusive() {
-             Ok(()) => {
--                debug!(resource, "Acquired lock");
-+                debug!("Acquired lock for `{resource}`");
-                 Ok(file)
-             }
-             Err(err) => {
--                // Log error code and enum kind to help debugging more exotic failures
--                if !matches!(err, std::fs::TryLockError::WouldBlock) {
--                    trace!(error = ?err, "Try lock error");
-+                // Log error code and enum kind to help debugging more exotic failures.
-+                if !is_known_already_locked_error(&err) {
-+                    debug!("Try lock error: {err:?}");
-                 }
-                 info!(
--                    resource,
--                    path = %file.path().display(),
--                    "Waiting to acquire lock",
-+                    "Waiting to acquire lock for `{resource}` at `{}`",
-+                    file.path().user_display(),
-                 );
--                file.lock().map_err(|err| {
--                    // Not a fs_err method, we need to build our own path context
-+                file.file().lock_exclusive().map_err(|err| {
-+                    // Not an fs_err method, we need to build our own path context
-                     std::io::Error::other(format!(
-                         "Could not acquire lock for `{resource}` at `{}`: {}",
--                        file.path().display(),
-+                        file.path().user_display(),
-                         err
-                     ))
-                 })?;
--                trace!(resource, "Acquired lock");
-+                debug!("Acquired lock for `{resource}`");
-                 Ok(file)
-             }
-         }
----
- crates/prek/src/fs.rs | 10 +++++-----
- 1 file changed, 5 insertions(+), 5 deletions(-)
-
-diff --git a/crates/prek/src/fs.rs b/crates/prek/src/fs.rs
-index 8c7321f..80b8197 100644
---- a/crates/prek/src/fs.rs
-+++ b/crates/prek/src/fs.rs
-@@ -70,14 +70,14 @@ impl LockedFile {
+@@ -29,7 +29,10 @@ use std::time::Duration;
+ use rustc_hash::FxHashMap;
+ #[cfg(test)]
+ use rustc_hash::FxHashSet;
+-use tracing::{debug, error, info, trace};
++use tracing::{debug, error, info, trace, warn};
++
++use fs2::FileExt;
++use tempfile::NamedTempFile;
+ 
+ use crate::cli::reporter;
+ 
+@@ -52,6 +55,20 @@ static LOCK_WARNING_PATHS: LazyLock<Mutex<FxHashSet<PathBuf>>> = LazyLock::new(D
+ static FORCE_CROSS_PROCESS_LOCK_WARNING_FOR: LazyLock<Mutex<FxHashSet<PathBuf>>> =
+     LazyLock::new(Default::default);
+ 
++/// Whether the error is due to a lock being held.
++fn is_known_already_locked_error(err: &std::io::Error) -> bool {
++    if matches!(err.kind(), std::io::ErrorKind::WouldBlock) {
++        return true;
++    }
++
++    // On Windows, we've seen: Os { code: 33, kind: Uncategorized, message: "The process cannot access the file because another process has locked a portion of the file." }
++    if cfg!(windows) && err.raw_os_error() == Some(33) {
++        return true;
++    }
++
++    false
++}
++
+ /// A file lock that is automatically released when dropped.
+ #[derive(Debug)]
+ pub struct LockedFile {
+@@ -70,14 +87,14 @@ impl LockedFile {
              path = %file.path().display(),
              "Checking lock",
          );
@@ -84,7 +106,7 @@ index 8c7321f..80b8197 100644
                      trace!(error = ?err, "Try lock error");
                  }
                  info!(
-@@ -85,8 +85,8 @@ impl LockedFile {
+@@ -85,8 +102,8 @@ impl LockedFile {
                      path = %file.path().display(),
                      "Waiting to acquire lock",
                  );
@@ -95,110 +117,7 @@ index 8c7321f..80b8197 100644
                      std::io::Error::other(format!(
                          "Could not acquire lock for `{resource}` at `{}`: {}",
                          file.path().display(),
-
-From d77799a635a8246175457579620c96c60c1c99b3 Mon Sep 17 00:00:00 2001
-From: Elliana May <me@mause.me>
-Date: Sun, 19 Oct 2025 19:41:38 +0800
-Subject: [PATCH] Refactor acquire function and add create helper
-
-diff --git a/crates/prek/src/fs.rs b/crates/prek/src/fs.rs
-index 6f6e703..dd7c689 100644
---- a/crates/prek/src/fs.rs
-+++ b/crates/prek/src/fs.rs
-@@ -98,14 +98,14 @@ impl LockedFile {
-     }
-
-     /// Acquire a cross-process lock for a resource using a file at the provided path.
-+    #[cfg(feature = "tokio")]
-     pub async fn acquire(
-         path: impl AsRef<Path>,
-         resource: impl Display,
-     ) -> Result<Self, std::io::Error> {
-         let path = path.as_ref().to_path_buf();
-
--        let file = fs_err::File::create(&path)?;
--
-+        let file = Self::create(&path)?;
-         let resource = resource.to_string();
-         let mut task =
-             tokio::task::spawn_blocking(move || Self::lock_file_blocking(file, &resource));
-@@ -170,6 +170,58 @@ impl LockedFile {
-
-         Ok(Self { file, path })
-     }
-+
-+        #[cfg(unix)]
-+    fn create(path: impl AsRef<Path>) -> Result<fs_err::File, std::io::Error> {
-+        use std::os::unix::fs::PermissionsExt;
-+
-+        // If path already exists, return it.
-+        if let Ok(file) = fs_err::OpenOptions::new()
-+            .read(true)
-+            .write(true)
-+            .open(path.as_ref())
-+        {
-+            return Ok(file);
-+        }
-+
-+        // Otherwise, create a temporary file with 777 permissions. We must set
-+        // permissions _after_ creating the file, to override the `umask`.
-+        let file = if let Some(parent) = path.as_ref().parent() {
-+            NamedTempFile::new_in(parent)?
-+        } else {
-+            NamedTempFile::new()?
-+        };
-+        if let Err(err) = file
-+            .as_file()
-+            .set_permissions(std::fs::Permissions::from_mode(0o777))
-+        {
-+            warn!("Failed to set permissions on temporary file: {err}");
-+        }
-+
-+        // Try to move the file to path, but if path exists now, just open path
-+        match file.persist_noclobber(path.as_ref()) {
-+            Ok(file) => Ok(fs_err::File::from_parts(file, path.as_ref())),
-+            Err(err) => {
-+                if err.error.kind() == std::io::ErrorKind::AlreadyExists {
-+                    fs_err::OpenOptions::new()
-+                        .read(true)
-+                        .write(true)
-+                        .open(path.as_ref())
-+                } else {
-+                    Err(err.error)
-+                }
-+            }
-+        }
-+    }
-+
-+    #[cfg(not(unix))]
-+    fn create(path: impl AsRef<Path>) -> std::io::Result<fs_err::File> {
-+        fs_err::OpenOptions::new()
-+            .read(true)
-+            .write(true)
-+            .create(true)
-+            .open(path.as_ref())
-+                }
- }
-
- impl Drop for LockedFile {
-
-fmt
----
- crates/prek/src/fs.rs | 56 +++++++++++++++++++++++++++++++++++++++++--
- 1 file changed, 54 insertions(+), 2 deletions(-)
-
-diff --git a/crates/prek/src/fs.rs b/crates/prek/src/fs.rs
-index 80b8197..8009459 100644
---- a/crates/prek/src/fs.rs
-+++ b/crates/prek/src/fs.rs
-@@ -100,14 +100,14 @@ impl LockedFile {
-     }
- 
-     /// Acquire a cross-process lock for a resource using a file at the provided path.
-+    #[cfg(feature = "tokio")]
-     pub async fn acquire(
-         path: impl AsRef<Path>,
-         resource: impl Display,
+@@ -106,8 +123,7 @@ impl LockedFile {
      ) -> Result<Self, std::io::Error> {
          let path = path.as_ref().to_path_buf();
  
@@ -208,7 +127,7 @@ index 80b8197..8009459 100644
          let resource = resource.to_string();
          let mut task =
              tokio::task::spawn_blocking(move || Self::lock_file_blocking(file, &resource));
-@@ -172,6 +172,58 @@ impl LockedFile {
+@@ -172,6 +188,58 @@ impl LockedFile {
  
          Ok(Self { file, path })
      }
@@ -267,219 +186,3 @@ index 80b8197..8009459 100644
  }
  
  impl Drop for LockedFile {
-
-From 495b4b699a571975e79e091cfd50371b7a443704 Mon Sep 17 00:00:00 2001
-From: Elliana May <me@mause.me>
-Date: Sun, 19 Oct 2025 19:45:34 +0800
-Subject: [PATCH] Remove conditional compilation for tokio feature
-
----
- crates/prek/src/fs.rs | 1 -
- 1 file changed, 1 deletion(-)
-
-diff --git a/crates/prek/src/fs.rs b/crates/prek/src/fs.rs
-index 8009459..566861f 100644
---- a/crates/prek/src/fs.rs
-+++ b/crates/prek/src/fs.rs
-@@ -100,7 +100,6 @@ impl LockedFile {
-     }
- 
-     /// Acquire a cross-process lock for a resource using a file at the provided path.
--    #[cfg(feature = "tokio")]
-     pub async fn acquire(
-         path: impl AsRef<Path>,
-         resource: impl Display,
-
-From f24e56dc75320ca22376573fb87ebae8ec9bc359 Mon Sep 17 00:00:00 2001
-From: Elliana May <me@mause.me>
-Date: Sun, 19 Oct 2025 19:50:58 +0800
-Subject: [PATCH] add function
-
----
- crates/prek/src/fs.rs | 14 ++++++++++++++
- 1 file changed, 14 insertions(+)
-
-diff --git a/crates/prek/src/fs.rs b/crates/prek/src/fs.rs
-index 566861f..298ed40 100644
---- a/crates/prek/src/fs.rs
-+++ b/crates/prek/src/fs.rs
-@@ -52,6 +52,20 @@ static LOCK_WARNING_PATHS: LazyLock<Mutex<FxHashSet<PathBuf>>> = LazyLock::new(D
- static FORCE_CROSS_PROCESS_LOCK_WARNING_FOR: LazyLock<Mutex<FxHashSet<PathBuf>>> =
-     LazyLock::new(Default::default);
- 
-+/// Whether the error is due to a lock being held.
-+fn is_known_already_locked_error(err: &std::io::Error) -> bool {
-+    if matches!(err.kind(), std::io::ErrorKind::WouldBlock) {
-+        return true;
-+    }
-+
-+    // On Windows, we've seen: Os { code: 33, kind: Uncategorized, message: "The process cannot access the file because another process has locked a portion of the file." }
-+    if cfg!(windows) && err.raw_os_error() == Some(33) {
-+        return true;
-+    }
-+
-+    false
-+}
-+
- /// A file lock that is automatically released when dropped.
- #[derive(Debug)]
- pub struct LockedFile {
-
-From 6baa28f144fecbd47ef8ae9c98369eea2761ee04 Mon Sep 17 00:00:00 2001
-From: Elliana May <me@mause.me>
-Date: Sun, 19 Oct 2025 20:05:03 +0800
-Subject: [PATCH] add missing imports
-
-diff --git a/Cargo.lock b/Cargo.lock
-index 026b987..b592a22 100644
---- a/Cargo.lock
-+++ b/Cargo.lock
-@@ -913,6 +913,16 @@ version = "1.3.0"
- source = "registry+https://github.com/rust-lang/crates.io-index"
- checksum = "42703706b716c37f96a77aea830392ad231f44c9e9a67872fa5548707e11b11c"
-
-+[[package]]
-+name = "fs2"
-+version = "0.4.3"
-+source = "registry+https://github.com/rust-lang/crates.io-index"
-+checksum = "9564fc758e15025b46aa6643b1b77d047d1a56a1aea6e01002ac0c7026876213"
-+dependencies = [
-+ "libc",
-+ "winapi",
-+]
-+
- [[package]]
- name = "futures"
- version = "0.3.32"
-@@ -2131,6 +2141,7 @@ dependencies = [
-  "etcetera",
-  "fancy-regex",
-  "fs-err",
-+ "fs2",
-  "futures",
-  "globset",
-  "hex",
-diff --git a/Cargo.toml b/Cargo.toml
-index 81f37e2..4b0b3a5 100644
---- a/Cargo.toml
-+++ b/Cargo.toml
-@@ -42,6 +42,7 @@ dunce = { version = "1.0.5" }
- etcetera = { version = "0.11.0" }
- fancy-regex = { version = "0.17.0" }
- fs-err = { version = "3.3.0", features = ["tokio"] }
-+fs2 = "0.4.3"
- futures = { version = "0.3.31" }
- hex = { version = "0.4.3" }
- http = { version = "1.1.0" }
-diff --git a/crates/prek/src/fs.rs b/crates/prek/src/fs.rs
-index e40ce25..e2d05b6 100644
---- a/crates/prek/src/fs.rs
-+++ b/crates/prek/src/fs.rs
-@@ -29,7 +29,10 @@ use std::time::Duration;
- use rustc_hash::FxHashMap;
- #[cfg(test)]
- use rustc_hash::FxHashSet;
--use tracing::{debug, error, info, trace};
-+use tracing::{debug, error, info, trace, warn};
-+
-+use fs2::FileExt;
-+use tempfile::NamedTempFile;
-
- use crate::cli::reporter;
----
- Cargo.lock            | 11 +++++++++++
- Cargo.toml            |  1 +
- crates/prek/src/fs.rs |  5 ++++-
- 3 files changed, 16 insertions(+), 1 deletion(-)
-
-diff --git a/Cargo.lock b/Cargo.lock
-index 026b987..71f9c58 100644
---- a/Cargo.lock
-+++ b/Cargo.lock
-@@ -907,6 +907,16 @@ dependencies = [
-  "tokio",
- ]
- 
-+[[package]]
-+name = "fs2"
-+version = "0.4.3"
-+source = "registry+https://github.com/rust-lang/crates.io-index"
-+checksum = "9564fc758e15025b46aa6643b1b77d047d1a56a1aea6e01002ac0c7026876213"
-+dependencies = [
-+ "libc",
-+ "winapi",
-+]
-+
- [[package]]
- name = "fs_extra"
- version = "1.3.0"
-@@ -2131,6 +2141,7 @@ dependencies = [
-  "etcetera",
-  "fancy-regex",
-  "fs-err",
-+ "fs2",
-  "futures",
-  "globset",
-  "hex",
-diff --git a/Cargo.toml b/Cargo.toml
-index 81f37e2..4b0b3a5 100644
---- a/Cargo.toml
-+++ b/Cargo.toml
-@@ -42,6 +42,7 @@ dunce = { version = "1.0.5" }
- etcetera = { version = "0.11.0" }
- fancy-regex = { version = "0.17.0" }
- fs-err = { version = "3.3.0", features = ["tokio"] }
-+fs2 = "0.4.3"
- futures = { version = "0.3.31" }
- hex = { version = "0.4.3" }
- http = { version = "1.1.0" }
-diff --git a/crates/prek/src/fs.rs b/crates/prek/src/fs.rs
-index 298ed40..fd7c968 100644
---- a/crates/prek/src/fs.rs
-+++ b/crates/prek/src/fs.rs
-@@ -29,7 +29,10 @@ use std::time::Duration;
- use rustc_hash::FxHashMap;
- #[cfg(test)]
- use rustc_hash::FxHashSet;
--use tracing::{debug, error, info, trace};
-+use tracing::{debug, error, info, trace, warn};
-+
-+use fs2::FileExt;
-+use tempfile::NamedTempFile;
- 
- use crate::cli::reporter;
- 
-
-From 856b5c51fe04ffa7b14b640d5ab8265b7221d664 Mon Sep 17 00:00:00 2001
-From: Elliana May <me@mause.me>
-Date: Mon, 5 Jan 2026 00:14:14 +0800
-Subject: [PATCH] add fs2 to workspace crate
-
-diff --git a/crates/prek/Cargo.toml b/crates/prek/Cargo.toml
-index 8b1cc5b..98a7edd 100644
---- a/crates/prek/Cargo.toml
-+++ b/crates/prek/Cargo.toml
-@@ -43,6 +43,7 @@ dunce = { workspace = true }
- etcetera = { workspace = true }
- fancy-regex = { workspace = true }
- fs-err = { workspace = true }
-+fs2 = { workspace = true }
- futures = { workspace = true }
- hex = { workspace = true }
- http = { workspace = true }
----
- crates/prek/Cargo.toml | 1 +
- 1 file changed, 1 insertion(+)
-
-diff --git a/crates/prek/Cargo.toml b/crates/prek/Cargo.toml
-index 8b1cc5b..98a7edd 100644
---- a/crates/prek/Cargo.toml
-+++ b/crates/prek/Cargo.toml
-@@ -43,6 +43,7 @@ dunce = { workspace = true }
- etcetera = { workspace = true }
- fancy-regex = { workspace = true }
- fs-err = { workspace = true }
-+fs2 = { workspace = true }
- futures = { workspace = true }
- hex = { workspace = true }
- http = { workspace = true }
