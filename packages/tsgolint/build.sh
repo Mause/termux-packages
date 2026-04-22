@@ -12,13 +12,19 @@ TERMUX_PKG_BUILD_DEPENDS="just, nodejs"
 termux_step_pre_configure() {
 	termux_setup_golang
 	termux_setup_nodejs
+	file $TERMUX_PREFIX/bin/corepack
+	$TERMUX_PREFIX/bin/corepack enable
+
 	git submodule update --init
-	pushd typescript-go && git am --3way --no-gpg-sign ../patches/*.patch && popd
+	git config user.name termux
+	git config user.email dummy@termux.org
+
+	pushd typescript-go
+	git am --3way --no-gpg-sign ../patches/*.patch
+	popd
 	mkdir -p internal/collections && find ./typescript-go/internal/collections -type f ! -name '*_test.go' -exec cp {} internal/collections/ \;
 	pnpm install
 	cd e2e && pnpm install && cd ..
-	file $TERMUX_PREFIX/bin/corepack
-	$TERMUX_PREFIX/bin/corepack enable
 }
 
 termux_step_make() {
