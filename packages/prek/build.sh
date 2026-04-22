@@ -22,6 +22,7 @@ termux_step_make_install() {
 }
 
 termux_step_create_debscripts() {
+	return
 	cat <<-EOF >./postinst
 		#!${TERMUX_PREFIX}/bin/sh
 
