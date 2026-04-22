@@ -12,8 +12,9 @@ TERMUX_PKG_BUILD_DEPENDS="just, nodejs"
 termux_step_pre_configure() {
 	termux_setup_golang
 	termux_setup_nodejs
-	file $TERMUX_PREFIX/bin/corepack
-	$TERMUX_PREFIX/bin/corepack enable
+
+	npm install -g corepack
+	corepack enable
 
 	git submodule update --init
 	git config user.name termux
