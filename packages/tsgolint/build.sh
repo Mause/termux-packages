@@ -29,5 +29,5 @@ termux_step_pre_configure() {
 }
 
 termux_step_make() {
-	go build -o tsgolint ./cmd/tsgolint
+	go build -o tsgolint ./cmd/tsgolint -ldflags "-X 'main.version=$TERMUX_PKG_VERSION'"
 }
