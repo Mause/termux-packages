@@ -33,6 +33,7 @@ termux_step_make() {
 }
 
 termux_step_make_install() {
-	rm "$TERMUX_PREFIX"/bin/yarn
+	corepack disable
+	npm uninstall -g corepack
 	install -Dm700 -t "$TERMUX_PREFIX"/bin tsgolint
 }
