@@ -31,3 +31,7 @@ termux_step_pre_configure() {
 termux_step_make() {
 	go build -o tsgolint ./cmd/tsgolint -ldflags "-X 'main.version=$TERMUX_PKG_VERSION'"
 }
+
+termux_step_make_install() {
+	install -Dm700 -t "$TERMUX_PREFIX"/bin tsgolint
+}
