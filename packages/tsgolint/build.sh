@@ -33,5 +33,6 @@ termux_step_make() {
 }
 
 termux_step_make_install() {
+	rm "$TERMUX_PREFIX"/bin/yarn
 	install -Dm700 -t "$TERMUX_PREFIX"/bin tsgolint
 }
