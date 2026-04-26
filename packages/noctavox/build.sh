@@ -13,4 +13,5 @@ TERMUX_PKG_BUILD_DEPENDS='cmake'
 termux_step_pre_configure() {
 	termux_setup_rust
 	termux_setup_cmake
+	termux_setup_ninja
 }
