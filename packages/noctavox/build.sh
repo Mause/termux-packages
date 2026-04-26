@@ -8,7 +8,9 @@ TERMUX_PKG_BUILD_IN_SRC=true
 TERMUX_PKG_AUTO_UPDATE=true
 TERMUX_PKG_SHA256='b59911bfc43b6b3c678c5341954413e5ce55068277df70707b0479ed9a6c8208'
 TERMUX_PKG_DEPENDS='dbus'
+TERMUX_PKG_BUILD_DEPENDS='cmake'
 
 termux_step_pre_configure() {
 	termux_setup_rust
+	termux_setup_cmake
 }
