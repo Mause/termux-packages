@@ -10,6 +10,8 @@ TERMUX_PKG_SHA256='b59911bfc43b6b3c678c5341954413e5ce55068277df70707b0479ed9a6c8
 TERMUX_PKG_DEPENDS='dbus, libopus'
 TERMUX_PKG_BUILD_DEPENDS='cmake, ninja'
 
+set -o xtrace
+
 termux_step_pre_configure() {
 	termux_setup_rust
 	termux_setup_cmake
@@ -22,4 +24,7 @@ termux_step_pre_configure() {
 	# Android: Neither the NDK or a standalone toolchain was found.
 	export TARGET_CMAKE_TOOLCHAIN_FILE="${TERMUX_PKG_BUILDDIR}/android.toolchain.cmake"
 	touch "${TERMUX_PKG_BUILDDIR}/android.toolchain.cmake"
+
+	cargo install patch-crate --locked
+	cargo patch-crate
 }
