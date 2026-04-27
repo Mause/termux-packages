@@ -56,3 +56,36 @@ index 0000000..39485f8
 + 
 + #[cfg(all(
 +     not(target_os = "linux"),
+
+From 91198667da1f4e9d9605af71bb41140b9bc65d99 Mon Sep 17 00:00:00 2001
+From: Elliana May <me@mause.me>
+Date: Mon, 27 Apr 2026 11:08:16 +0800
+Subject: [PATCH] automate patch
+
+---
+ Cargo.toml | 3 +++
+ build.rs   | 4 ++++
+ 2 files changed, 7 insertions(+)
+ create mode 100644 build.rs
+
+diff --git a/Cargo.toml b/Cargo.toml
+index c6e9ada..42fcb78 100644
+--- a/Cargo.toml
++++ b/Cargo.toml
+@@ -61,3 +61,6 @@ opt-level = 3
+ [profile.dist]
+ inherits = "release"
+ lto = "thin"
++
++[build-dependencies]
++patch-crate = "0.1.13"
+diff --git a/build.rs b/build.rs
+new file mode 100644
+index 0000000..d105d46
+--- /dev/null
++++ b/build.rs
+@@ -0,0 +1,4 @@
++fn main() {
++   println!("cargo:rerun-if-changed=Cargo.toml");
++   patch_crate::run().expect("Failed while patching");
++}
