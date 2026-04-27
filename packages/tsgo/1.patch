@@ -1,0 +1,101 @@
+From 716a8b1bae3fbb359b5839586a266bb28a9db48a Mon Sep 17 00:00:00 2001
+From: Elliana May <me@mause.me>
+Date: Mon, 3 Nov 2025 08:21:06 +0800
+Subject: [PATCH 1/4] build for android
+
+---
+ Herebyfile.mjs | 9 +--------
+ 1 file changed, 1 insertion(+), 8 deletions(-)
+
+diff --git a/Herebyfile.mjs b/Herebyfile.mjs
+index 59f42a7b9c..42c8700130 100644
+--- a/Herebyfile.mjs
++++ b/Herebyfile.mjs
+@@ -1357,14 +1357,7 @@ void 0;
+ const nativePreviewPlatforms = memoize(() => {
+     /** @type {[os: OS, arch: Arch, cert: Cert, alpine?: boolean][]} */
+     let supportedPlatforms = [
+-        ["win32", "x64", "Microsoft400"],
+-        ["win32", "arm64", "Microsoft400"],
+-        ["linux", "x64", "LinuxSign", true],
+-        ["linux", "arm", "LinuxSign"],
+-        ["linux", "arm64", "LinuxSign", true],
+-        ["darwin", "x64", "MacDeveloperHarden"],
+-        ["darwin", "arm64", "MacDeveloperHarden"],
+-        // Wasm?
++        ["android", "arm64", "LinuxSign"],
+     ];
+ 
+     if (!options.forRelease) {
+
+From f349c122c88d4e29cf831dc497c5866fa4c28461 Mon Sep 17 00:00:00 2001
+From: Elliana May <me@mause.me>
+Date: Mon, 3 Nov 2025 08:52:44 +0800
+Subject: [PATCH 2/4] remove dud assert
+
+---
+ Herebyfile.mjs | 5 -----
+ 1 file changed, 5 deletions(-)
+
+diff --git a/Herebyfile.mjs b/Herebyfile.mjs
+index 42c8700130..f79b5e7c1a 100644
+--- a/Herebyfile.mjs
++++ b/Herebyfile.mjs
+@@ -1360,11 +1360,6 @@ const nativePreviewPlatforms = memoize(() => {
+         ["android", "arm64", "LinuxSign"],
+     ];
+ 
+-    if (!options.forRelease) {
+-        supportedPlatforms = supportedPlatforms.filter(([os, arch]) => os === process.platform && arch === process.arch);
+-        assert.equal(supportedPlatforms.length, 1, "No supported platforms found");
+-    }
+-
+     return supportedPlatforms.map(([os, arch, cert, alpine]) => {
+         const npmDirName = `native-preview-${os}-${arch}`;
+         const npmDir = path.join(builtNpm, npmDirName);
+
+From 23a234b5842bfa54db4539b2a4510a334bd16ae6 Mon Sep 17 00:00:00 2001
+From: Elliana May <me@mause.me>
+Date: Mon, 3 Nov 2025 08:59:38 +0800
+Subject: [PATCH 3/4] add android to mapping
+
+---
+ Herebyfile.mjs | 2 ++
+ 1 file changed, 2 insertions(+)
+
+diff --git a/Herebyfile.mjs b/Herebyfile.mjs
+index f79b5e7c1a..531069393a 100644
+--- a/Herebyfile.mjs
++++ b/Herebyfile.mjs
+@@ -1412,6 +1412,8 @@ const nativePreviewPlatforms = memoize(() => {
+                 return "linux";
+             case "win32":
+                 return "windows";
++            case "android":
++                return "android";
+             default:
+                 throw new Error(`Unsupported OS: ${os}`);
+         }
+
+From affce633eb6ad6d9ee2b9136604efd889297bb1e Mon Sep 17 00:00:00 2001
+From: Elliana May <me@mause.me>
+Date: Mon, 3 Nov 2025 09:16:51 +0800
+Subject: [PATCH 4/4] remove specifiers
+
+---
+ Herebyfile.mjs | 2 --
+ 1 file changed, 2 deletions(-)
+
+diff --git a/Herebyfile.mjs b/Herebyfile.mjs
+index 531069393a..070bf4a90d 100644
+--- a/Herebyfile.mjs
++++ b/Herebyfile.mjs
+@@ -1481,8 +1481,6 @@ async function runBuildNativePreviewPackages() {
+             bin: undefined,
+             imports: undefined,
+             name: npmPackageName,
+-            os: [nodeOs],
+-            cpu: [nodeArch],
+             exports: {
+                 "./package.json": "./package.json",
+             },
