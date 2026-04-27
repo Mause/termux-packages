@@ -1,0 +1,237 @@
+From eb62372b895c5d4599b39b707784be724fdbd601 Mon Sep 17 00:00:00 2001
+From: Elliana May <me@mause.me>
+Date: Sun, 29 Mar 2026 17:55:30 +0800
+Subject: [PATCH] add android platform
+
+---
+ BUILD.bazel | 7 +++++++
+ 1 file changed, 7 insertions(+)
+
+diff --git a/BUILD.bazel b/BUILD.bazel
+index f9f8c1a37..a88b8c5de 100644
+--- a/BUILD.bazel
++++ b/BUILD.bazel
+@@ -63,6 +63,13 @@ platform(
+ )
+ 
+ # Used for cross-compilation
++platform(
++    name = "android_arm64",
++    constraint_values = [
++        "@platforms//os:android",
++        "@platforms//cpu:arm64",
++    ],
++)
+ platform(
+     name = "macOS_x86",
+     constraint_values = [
+
+From f9abe47733ae1c3b0d1b41c0c7a6ebc6246befd2 Mon Sep 17 00:00:00 2001
+From: Elliana May <me@mause.me>
+Date: Sun, 29 Mar 2026 18:19:49 +0800
+Subject: [PATCH] steal some config from ink
+
+---
+ BUILD.bazel  | 34 ++++++++++++++++++++++++++++++----
+ MODULE.bazel | 13 +++++++++++++
+ 2 files changed, 43 insertions(+), 4 deletions(-)
+
+diff --git a/BUILD.bazel b/BUILD.bazel
+index a88b8c5de..c5328ae84 100644
+--- a/BUILD.bazel
++++ b/BUILD.bazel
+@@ -64,17 +64,43 @@ platform(
+ 
+ # Used for cross-compilation
+ platform(
+-    name = "android_arm64",
++    name = "macOS_x86",
++    constraint_values = [
++        "@platforms//os:macos",
++        "@platforms//cpu:x86_64",
++    ],
++)
++
++# Android platforms for building with NDK.
++platform(
++    name = "android-arm",
+     constraint_values = [
++        "@platforms//cpu:armv7",
+         "@platforms//os:android",
+-        "@platforms//cpu:arm64",
+     ],
+ )
++
+ platform(
+-    name = "macOS_x86",
++    name = "android-aarch64",
++    constraint_values = [
++        "@platforms//cpu:aarch64",
++        "@platforms//os:android",
++    ],
++)
++
++platform(
++    name = "android-x86",
++    constraint_values = [
++        "@platforms//cpu:x86_32",
++        "@platforms//os:android",
++    ],
++)
++
++platform(
++    name = "android-x86_64",
+     constraint_values = [
+-        "@platforms//os:macos",
+         "@platforms//cpu:x86_64",
++        "@platforms//os:android",
+     ],
+ )
+ 
+diff --git a/MODULE.bazel b/MODULE.bazel
+index 396a7dc41..4e24b26e4 100644
+--- a/MODULE.bazel
++++ b/MODULE.bazel
+@@ -46,3 +46,16 @@ use_repo(compat, "cc_compatibility_proxy")
+ 
+ cc_configure = use_extension("@rules_cc//cc:extensions.bzl", "cc_configure_extension")
+ use_repo(cc_configure, "local_config_cc")
++
++# Configure the Android NDK toolchain for NDK builds. Don't register that here so it's not required
++# for builds that don't need it. Those configs can register those in --extra_toolchains.
++bazel_dep(name = "rules_android_ndk", version = "0.1.3")
++
++android_ndk_repository_extension = use_extension(
++    "@rules_android_ndk//:extension.bzl",
++    "android_ndk_repository_extension",
++)
++use_repo(android_ndk_repository_extension, "androidndk")
++
++bazel_dep(name = "rules_android", version = "0.6.0")
++bazel_dep(name = "rules_go", version = "0.60.0")
+
+From f181a7595a4d125464d69eec8d324bb35b3cd067 Mon Sep 17 00:00:00 2001
+From: Elliana May <me@mause.me>
+Date: Sun, 29 Mar 2026 22:18:32 +0800
+Subject: [PATCH] add android target triple
+
+---
+ build/deps/rust.MODULE.bazel | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/build/deps/rust.MODULE.bazel b/build/deps/rust.MODULE.bazel
+index 4e4506dad..2e1c23f48 100644
+--- a/build/deps/rust.MODULE.bazel
++++ b/build/deps/rust.MODULE.bazel
+@@ -8,6 +8,7 @@ RUST_TARGET_TRIPLES = [
+     "x86_64-apple-darwin",
+     # Add support for macOS rosetta
+     "aarch64-unknown-linux-gnu",
++    "aarch64-linux-android",
+ ]
+ 
+ # rules_rust
+
+From 4a4befe4d88fedaeedf1ac86412b41ba84974f38 Mon Sep 17 00:00:00 2001
+From: Elliana May <me@mause.me>
+Date: Mon, 30 Mar 2026 00:48:41 +0800
+Subject: [PATCH] Add config setting group for arm64 Android
+
+patches
+---
+ build/BUILD.zlib | 9 +++++++++
+ 1 file changed, 9 insertions(+)
+
+diff --git a/build/BUILD.zlib b/build/BUILD.zlib
+index 65b292eb7..77596d1d2 100644
+--- a/build/BUILD.zlib
++++ b/build/BUILD.zlib
+@@ -44,6 +44,14 @@ selects.config_setting_group(
+     ],
+ )
+ 
++selects.config_setting_group(
++    name = "arm64_android",
++    match_all = [
++        "@platforms//cpu:aarch64",
++        "@platforms//os:android",
++    ],
++)
++
+ selects.config_setting_group(
+     name = "arm64_macos",
+     match_all = [
+@@ -247,6 +255,7 @@ cc_library(
+         ":x86_macos": ["X86_NOT_WINDOWS"],
+         ":x86_windows": ["X86_WINDOWS"],
+         ":arm64_linux": ["ARMV8_OS_LINUX"],
++        "arm64_android": ["ARMV8_OS_ANDROID"],
+         "arm64_macos": ["ARMV8_OS_MACOS"],
+         "arm64_windows": ["ARMV8_OS_WINDOWS"],
+         "//conditions:default": [],
+
+From 2e828625dfcadae76f75ec5b211414064af65847 Mon Sep 17 00:00:00 2001
+From: Elliana May <me@mause.me>
+Date: Mon, 30 Mar 2026 01:20:33 +0800
+Subject: [PATCH] add another android case
+
+---
+ build/BUILD.zlib | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/build/BUILD.zlib b/build/BUILD.zlib
+index 77596d1d2..7f5be931e 100644
+--- a/build/BUILD.zlib
++++ b/build/BUILD.zlib
+@@ -126,6 +126,7 @@ cc_library(
+         "CRC32_ARMV8_CRC32",
+         "ZLIB_IMPLEMENTATION",
+     ] + select({
++        "@platforms//os:android": ["ARMV8_OS_ANDROID"],
+         "@platforms//os:linux": ["ARMV8_OS_LINUX"],
+         "@platforms//os:macos": ["ARMV8_OS_MACOS"],
+         "@platforms//os:windows": ["ARMV8_OS_WINDOWS"],
+
+From d7d35181cb148d40ac7f9460032c32d7f19dd5d9 Mon Sep 17 00:00:00 2001
+From: Elliana May <me@mause.me>
+Date: Mon, 30 Mar 2026 03:39:38 +0800
+Subject: [PATCH] bump rules_android
+
+---
+ MODULE.bazel | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/MODULE.bazel b/MODULE.bazel
+index 4e24b26e4..60dcf8f59 100644
+--- a/MODULE.bazel
++++ b/MODULE.bazel
+@@ -57,5 +57,5 @@ android_ndk_repository_extension = use_extension(
+ )
+ use_repo(android_ndk_repository_extension, "androidndk")
+ 
+-bazel_dep(name = "rules_android", version = "0.6.0")
++bazel_dep(name = "rules_android", version = "0.7.1")
+ bazel_dep(name = "rules_go", version = "0.60.0")
+
+From 9817efa6633443752ee159cbf056198b294dc745 Mon Sep 17 00:00:00 2001
+From: Elliana May <me@mause.me>
+Date: Mon, 30 Mar 2026 03:40:40 +0800
+Subject: [PATCH] bump rules_android_ndk
+
+---
+ MODULE.bazel | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/MODULE.bazel b/MODULE.bazel
+index 60dcf8f59..e77933ccd 100644
+--- a/MODULE.bazel
++++ b/MODULE.bazel
+@@ -49,7 +49,7 @@ use_repo(cc_configure, "local_config_cc")
+ 
+ # Configure the Android NDK toolchain for NDK builds. Don't register that here so it's not required
+ # for builds that don't need it. Those configs can register those in --extra_toolchains.
+-bazel_dep(name = "rules_android_ndk", version = "0.1.3")
++bazel_dep(name = "rules_android_ndk", version = "0.1.5")
+ 
+ android_ndk_repository_extension = use_extension(
+     "@rules_android_ndk//:extension.bzl",
