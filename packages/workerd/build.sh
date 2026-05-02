@@ -26,5 +26,5 @@ termux_step_make() {
 	./bazelisk-linux-amd64 build //src/workerd/server:workerd \
 		--platforms=//:android-$TERMUX_ARCH \
 		--extra_toolchains=@androidndk//:all \
-		--verbose_failures
+		--verbose_failures --sandbox_debug --subcommands
 }
