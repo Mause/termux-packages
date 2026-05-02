@@ -235,3 +235,26 @@ index 60dcf8f59..e77933ccd 100644
  
  android_ndk_repository_extension = use_extension(
      "@rules_android_ndk//:extension.bzl",
+
+From c8b0e95519cec467363b33e328ca11d23132f125 Mon Sep 17 00:00:00 2001
+From: Elliana May <me@mause.me>
+Date: Sat, 2 May 2026 17:08:20 +0800
+Subject: [PATCH] disable pic?
+
+---
+ .bazelrc | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/.bazelrc b/.bazelrc
+index 85a484c6c..de8538eb0 100644
+--- a/.bazelrc
++++ b/.bazelrc
+@@ -318,7 +318,7 @@ build:linux --host_linkopt='-l:libc++.a' --host_linkopt='-lm'
+ # On Linux, enable PIC. In macos pic is the default, and the objc_library rule does not work
+ # correctly if we use this flag since it will not find the object files to include
+ # https://github.com/bazelbuild/bazel/issues/12439#issuecomment-914449079
+-build:linux --force_pic
++build:linux
+ 
+ # On Linux, garbage collection sections and optimize binary size. These do not apply to the macOS
+ # toolchain.
