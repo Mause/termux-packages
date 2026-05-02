@@ -1,0 +1,26 @@
+TERMUX_PKG_HOMEPAGE='https://github.com/jonathanmagambo/otterlang'
+TERMUX_PKG_DESCRIPTION='Otterlang programming language 🦦'
+TERMUX_PKG_LICENSE='BSD 3-Clause'
+TERMUX_PKG_MAINTAINER='@termux'
+TERMUX_PKG_VERSION='0.0.1'
+TERMUX_PKG_GIT_BRANCH=main
+_COMMIT='ea61aa0a7869741edaa641c06831afca3bbd221a'
+TERMUX_PKG_SRCURL=git+https://github.com/jonathanmagambo/otterlang
+TERMUX_PKG_SHA256='b532a8b732e0a953116a44e98dc2d289053604bb5b6fff4ab2ab4694de510d07'
+TERMUX_PKG_BUILD_IN_SRC=true
+TERMUX_PKG_AUTO_UPDATE=true
+TERMUX_PKG_BUILD_DEPENDS="llvm, libllvm"
+
+set -x otrace
+
+termux_step_post_get_source() {
+	git fetch --unshallow
+	git checkout $_COMMIT
+}
+
+termux_step_make() {
+	termux_setup_rust
+	. $HOME/.cargo/env
+	rustup target add $CARGO_TARGET_NAME --toolchain nightly
+	cargo +nightly install --jobs 4 --path . --force --locked --no-track --target $CARGO_TARGET_NAME --root $TERMUX_PREFIX
+}
