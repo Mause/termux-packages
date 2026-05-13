@@ -13,5 +13,6 @@ termux_step_pre_configure() {
 }
 
 termux_step_post_get_source() {
-	rm pyproject.toml
+	rm pyproject.toml Makefile
+	export TERMUX_PKG_SRCDIR+=/crates/zizmor
 }
