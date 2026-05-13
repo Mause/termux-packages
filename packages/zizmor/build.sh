@@ -10,8 +10,6 @@ TERMUX_PKG_SHA256='4a037cd9ccdebdcf02e508f248c5ee8656ebf024d8f29d2c458498f16fe98
 
 termux_step_post_get_source() {
 	rm pyproject.toml Makefile
-	TERMUX_PKG_SRCDIR+=/crates/zizmor
-	TERMUX_PKG_BUILDDIR=$TERMUX_PKG_SRCDIR
 }
 
 termux_step_pre_configure() {
@@ -20,4 +18,7 @@ termux_step_pre_configure() {
 
 	cargo install patch-crate --locked
 	cargo patch-crate
+
+	TERMUX_PKG_SRCDIR+=/crates/zizmor
+	TERMUX_PKG_BUILDDIR=$TERMUX_PKG_SRCDIR
 }
