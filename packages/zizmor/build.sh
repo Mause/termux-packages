@@ -7,6 +7,7 @@ TERMUX_PKG_SRCURL=https://github.com/zizmorcore/zizmor/archive/refs/tags/v${TERM
 TERMUX_PKG_BUILD_IN_SRC=true
 TERMUX_PKG_AUTO_UPDATE=true
 TERMUX_PKG_SHA256='4a037cd9ccdebdcf02e508f248c5ee8656ebf024d8f29d2c458498f16fe9893b'
+TERMUX_PKG_DEPENDS="openssl"
 
 termux_step_post_get_source() {
 	rm pyproject.toml Makefile
