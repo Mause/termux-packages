@@ -3,15 +3,20 @@ TERMUX_PKG_HOMEPAGE='https://github.com/oven-sh/bun'
 TERMUX_PKG_DESCRIPTION='Incredibly fast JavaScript runtime, bundler, test runner, and package manager – all in one'
 TERMUX_PKG_LICENSE='NAUMEN'
 TERMUX_PKG_MAINTAINER='@termux'
-TERMUX_PKG_VERSION='1.3.14'
-TERMUX_PKG_SRCURL=https://github.com/oven-sh/bun/archive/refs/tags/bun-v${TERMUX_PKG_VERSION}.tar.gz
-TERMUX_PKG_SHA256='112a5915992807f04b183854d360c2bf87ac7c1587fb5da3c560bdbb75b8c92e'
+TERMUX_PKG_VERSION='0.0.1'
+TERMUX_PKG_SRCURL=git+https://github.com/oven-sh/bun
 TERMUX_PKG_BUILD_IN_SRC=true
 TERMUX_PKG_AUTO_UPDATE=true
 TERMUX_PKG_DEPENDS="llvm"
-TERMUX_ZIG_VERSION="0.15.2"
+_COMMIT='19d8ade2c6c1f0eeae50bd9d7f2a4bf4a2551557'
+TERMUX_PKG_GIT_BRANCH='main'
 
 set -o xtrace
+
+termux_step_post_get_source() {
+	git fetch --unshallow
+	git checkout $_COMMIT
+}
 
 termux_step_pre_configure() {
 	termux_setup_zig
