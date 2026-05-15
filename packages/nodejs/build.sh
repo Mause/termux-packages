@@ -162,6 +162,8 @@ termux_step_configure() {
 		--shared-sqlite \
 		--shared-zlib \
 		--with-intl=system-icu \
+		--experimental-ffi \
+		--allow-ffi \
 		--cross-compiling \
 		--ninja \
 		"${_DEBUG[@]}"
