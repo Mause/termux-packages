@@ -7,3 +7,7 @@ TERMUX_PKG_SRCURL=https://github.com/anomalyco/opentui/archive/refs/tags/v${TERM
 TERMUX_PKG_BUILD_IN_SRC=true
 TERMUX_PKG_AUTO_UPDATE=true
 TERMUX_PKG_SHA256='774cee9adc88a233ee035d035461eb96c50364ef7ee0b3350107b7b3b020043b'
+
+termux_step_pre_configure() {
+	termux_setup_zig
+}
