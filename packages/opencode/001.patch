@@ -8,19 +8,19 @@ Subject: [PATCH 1/2] add android abi to build.ts
  1 file changed, 6 insertions(+)
 
 diff --git a/packages/opencode/script/build.ts b/packages/opencode/script/build.ts
-index f51cb292411..7fe8311c9fb 100755
+index bbbe6bcfc..937dac9a3 100755
 --- a/packages/opencode/script/build.ts
 +++ b/packages/opencode/script/build.ts
-@@ -54,6 +54,12 @@ const allTargets: {
+@@ -115,6 +115,12 @@ const allTargets: {
      abi: "musl",
      avx2: false,
    },
-+  {
-+    os: "linux",
-+    arch: "arm64",
-+    abi: "android",
-+    avx2: true, // not really
-+  },
++    {
++      os: "android",
++      arch: "arm64",
++      abi: "glibc", // not really
++      avx2: false,
++    },
    {
      os: "darwin",
      arch: "arm64",
