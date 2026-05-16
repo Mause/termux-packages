@@ -19,5 +19,5 @@ termux_step_make() {
 
 	./packages/opencode/script/build.ts --single --baseline
 
-	# bun build --compile --target=bun-linux-arm64-musl --outdir=$TERMUX_PREFIX/bin
+	bun build --compile --target=bun-android-aarch64 --outdir=$TERMUX_PREFIX/bin
 }
