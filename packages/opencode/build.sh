@@ -17,7 +17,7 @@ termux_step_make() {
 
 	bun install
 
-	./packages/opencode/script/build.ts --single --baseline
+	./packages/opencode/script/build.ts --single --baseline --skip-embed-web-ui
 
-	bun build --compile --target=bun-android-aarch64 --outdir=$TERMUX_PREFIX/bin
+	# bun build --compile --target=bun-android-aarch64 --outdir=$TERMUX_PREFIX/bin
 }
