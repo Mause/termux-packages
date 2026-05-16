@@ -8,7 +8,7 @@ Subject: [PATCH 1/2] add android abi to build.ts
  1 file changed, 6 insertions(+)
 
 diff --git a/packages/opencode/script/build.ts b/packages/opencode/script/build.ts
-index bbbe6bcfc..937dac9a3 100755
+index bbbe6bcfc..85b63e98f 100755
 --- a/packages/opencode/script/build.ts
 +++ b/packages/opencode/script/build.ts
 @@ -115,6 +115,12 @@ const allTargets: {
@@ -43,7 +43,7 @@ index 7fe8311c9fb..f533082656e 100755
  const targets = singleFlag
    ? allTargets.filter((item) => {
 -      if (item.os !== process.platform || item.arch !== process.arch) {
-+      if (item.os !== process.platform) {
++    if (item.os !== "android") {
          return false
        }
  
