@@ -1,0 +1,25 @@
+diff --git a/packages/core/scripts/build.ts b/packages/core/scripts/build.ts
+index 2cd861fd..23bdf5b4 100644
+--- a/packages/core/scripts/build.ts
++++ b/packages/core/scripts/build.ts
+@@ -50,6 +50,7 @@ const variants: Variant[] = [
+   { platform: "linux", arch: "arm64" },
+   { platform: "win32", arch: "x64" },
+   { platform: "win32", arch: "arm64" },
++  { platform: "android", arch: "arm64" },
+ ]
+ 
+ const getHostVariant = (): Variant => {
+@@ -75,9 +76,9 @@ const getZigTarget = (platform: string, arch: string): string => {
+ const replaceLinks = (text: string): string => {
+   return packageJson.homepage
+     ? text.replace(
+-        /(\[.*?\]\()(\.\/.*?\))/g,
+-        (_, p1: string, p2: string) => `${p1}${packageJson.homepage}/blob/HEAD/${p2.replace("./", "")}`,
+-      )
++      /(\[.*?\]\()(\.\/.*?\))/g,
++      (_, p1: string, p2: string) => `${p1}${packageJson.homepage}/blob/HEAD/${p2.replace("./", "")}`,
++    )
+     : text
+ }
+ 
