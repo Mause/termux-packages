@@ -12,3 +12,8 @@ TERMUX_ZIG_VERSION='0.15.2'
 termux_step_pre_configure() {
 	termux_setup_zig
 }
+
+termux_step_make() {
+	curl -fsSL https://bun.com/install | bash
+	~/.bun/bin/bun install
+}
