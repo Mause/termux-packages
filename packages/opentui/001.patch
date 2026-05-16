@@ -1,5 +1,5 @@
 diff --git a/packages/core/scripts/build.ts b/packages/core/scripts/build.ts
-index 2cd861fd..1b24263f 100644
+index 2cd861fd..9feab68d 100644
 --- a/packages/core/scripts/build.ts
 +++ b/packages/core/scripts/build.ts
 @@ -44,12 +44,7 @@ const buildAll = args.includes("--all") // Build for all platforms
@@ -29,3 +29,14 @@ index 2cd861fd..1b24263f 100644
      : text
  }
  
+@@ -114,7 +109,9 @@ if (buildNative) {
+     process.exit(1)
+   }
+ 
+-  const variantsToPackage = buildAll ? variants : [getHostVariant()]
++  const variantsToPackage = [
++    { platform: "android", arch: "arm64" },
++  ];
+ 
+   for (const { platform, arch } of variantsToPackage) {
+     const nativeName = `${packageJson.name}-${platform}-${arch}`
