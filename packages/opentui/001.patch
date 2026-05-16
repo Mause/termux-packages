@@ -1,5 +1,5 @@
 diff --git a/packages/core/scripts/build.ts b/packages/core/scripts/build.ts
-index 2cd861fd..b382b7c4 100644
+index 2cd861fd..09f4029f 100644
 --- a/packages/core/scripts/build.ts
 +++ b/packages/core/scripts/build.ts
 @@ -44,12 +44,7 @@ const buildAll = args.includes("--all") // Build for all platforms
@@ -34,7 +34,7 @@ index 2cd861fd..b382b7c4 100644
    console.log(`Building native ${isDev ? "dev" : "prod"} binaries${buildAll ? " for all platforms" : ""}...`)
  
 -  const zigArgs = ["build", `-Doptimize=${isDev ? "Debug" : "ReleaseFast"}`]
-+  const zigArgs = ["build", `-Doptimize=${isDev ? "Debug" : "ReleaseFast"}`, '--target=' + getZigTarget(variantsToPackage[0].platform, variantsToPackage[0].arch)]
++  const zigArgs = ["build", `-Doptimize=${isDev ? "Debug" : "ReleaseFast"}`, '--target=' + getZigTarget(variants[0].platform, variants[0].arch)]
    if (buildAll) {
      zigArgs.push("-Dall")
    }
