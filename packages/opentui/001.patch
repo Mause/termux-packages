@@ -34,7 +34,7 @@ index 2cd861fd..5518a646 100644
    console.log(`Building native ${isDev ? "dev" : "prod"} binaries${buildAll ? " for all platforms" : ""}...`)
  
 -  const zigArgs = ["build", `-Doptimize=${isDev ? "Debug" : "ReleaseFast"}`]
-+  const zigArgs = ["build", `-Doptimize=${isDev ? "Debug" : "ReleaseFast"}`, '-Dtarget=aarch64-linux-android']
++  const zigArgs = ["build", `-Doptimize=${isDev ? "Debug" : "ReleaseFast"}`, '-Dtarget=aarch64-linux-android', '-no-pthread']
    if (buildAll) {
      zigArgs.push("-Dall")
    }
