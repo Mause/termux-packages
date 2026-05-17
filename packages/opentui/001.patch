@@ -34,7 +34,7 @@ index 2cd861fd..09f4029f 100644
    console.log(`Building native ${isDev ? "dev" : "prod"} binaries${buildAll ? " for all platforms" : ""}...`)
  
 -  const zigArgs = ["build", `-Doptimize=${isDev ? "Debug" : "ReleaseFast"}`]
-+  const zigArgs = ["build", `-Doptimize=${isDev ? "Debug" : "ReleaseFast"}`, '--target=' + getZigTarget(variants[0].platform, variants[0].arch)]
++  const zigArgs = ["build", `-Doptimize=${isDev ? "Debug" : "ReleaseFast"}`, '-target=' + getZigTarget(variants[0].platform, variants[0].arch)]
    if (buildAll) {
      zigArgs.push("-Dall")
    }
