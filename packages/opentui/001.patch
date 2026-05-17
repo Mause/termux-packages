@@ -1,5 +1,5 @@
 diff --git a/packages/core/scripts/build.ts b/packages/core/scripts/build.ts
-index 2cd861fd..5518a646 100644
+index 2cd861fd..43e40631 100644
 --- a/packages/core/scripts/build.ts
 +++ b/packages/core/scripts/build.ts
 @@ -44,12 +44,7 @@ const buildAll = args.includes("--all") // Build for all platforms
@@ -59,7 +59,7 @@ index 2cd861fd..5518a646 100644
    for (const { platform, arch } of variantsToPackage) {
      const nativeName = `${packageJson.name}-${platform}-${arch}`
 diff --git a/packages/core/src/zig/build.zig b/packages/core/src/zig/build.zig
-index 8b6a310f..57a246e2 100644
+index 8b6a310f..66a89b22 100644
 --- a/packages/core/src/zig/build.zig
 +++ b/packages/core/src/zig/build.zig
 @@ -25,6 +25,7 @@ const SUPPORTED_TARGETS = [_]SupportedTarget{
@@ -70,3 +70,25 @@ index 8b6a310f..57a246e2 100644
  };
  
  const DEFAULT_MACOS_SDK_PATH = "/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk";
+@@ -267,8 +268,8 @@ pub fn build(b: *std.Build) void {
+             }
+         },
+         .linux => {
+-            test_artifact.linkSystemLibrary("dl");
+-            test_artifact.linkSystemLibrary("pthread");
++            // test_artifact.linkSystemLibrary("dl");
++            // test_artifact.linkSystemLibrary("pthread");
+         },
+         else => {},
+     }
+@@ -443,8 +444,8 @@ fn buildTarget(
+             addMacOSSystemLibraries(b, lib, macos_sdk_path.?);
+         },
+         .linux => {
+-            lib.linkSystemLibrary("dl");
+-            lib.linkSystemLibrary("pthread");
++            // lib.linkSystemLibrary("dl");
++            // lib.linkSystemLibrary("pthread");
+         },
+         else => {},
+     }
