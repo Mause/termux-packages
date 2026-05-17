@@ -1,5 +1,5 @@
 diff --git a/packages/core/scripts/build.ts b/packages/core/scripts/build.ts
-index 2cd861fd..09f4029f 100644
+index 2cd861fd..5518a646 100644
 --- a/packages/core/scripts/build.ts
 +++ b/packages/core/scripts/build.ts
 @@ -44,12 +44,7 @@ const buildAll = args.includes("--all") // Build for all platforms
@@ -34,7 +34,7 @@ index 2cd861fd..09f4029f 100644
    console.log(`Building native ${isDev ? "dev" : "prod"} binaries${buildAll ? " for all platforms" : ""}...`)
  
 -  const zigArgs = ["build", `-Doptimize=${isDev ? "Debug" : "ReleaseFast"}`]
-+  const zigArgs = ["build", `-Doptimize=${isDev ? "Debug" : "ReleaseFast"}`, '-target=' + getZigTarget(variants[0].platform, variants[0].arch)]
++  const zigArgs = ["build", `-Doptimize=${isDev ? "Debug" : "ReleaseFast"}`, '-Dtarget=aarch64-linux-android']
    if (buildAll) {
      zigArgs.push("-Dall")
    }
@@ -58,3 +58,15 @@ index 2cd861fd..09f4029f 100644
  
    for (const { platform, arch } of variantsToPackage) {
      const nativeName = `${packageJson.name}-${platform}-${arch}`
+diff --git a/packages/core/src/zig/build.zig b/packages/core/src/zig/build.zig
+index 8b6a310f..57a246e2 100644
+--- a/packages/core/src/zig/build.zig
++++ b/packages/core/src/zig/build.zig
+@@ -25,6 +25,7 @@ const SUPPORTED_TARGETS = [_]SupportedTarget{
+     .{ .zig_target = "aarch64-macos", .output_name = "aarch64-macos", .description = "macOS aarch64 (Apple Silicon)" },
+     .{ .zig_target = "x86_64-windows-gnu", .output_name = "x86_64-windows", .description = "Windows x86_64" },
+     .{ .zig_target = "aarch64-windows-gnu", .output_name = "aarch64-windows", .description = "Windows aarch64" },
++    .{ .zig_target = "aarch64-linux-android", .output_name = "arm64-android", .description = "Android arm64" },
+ };
+ 
+ const DEFAULT_MACOS_SDK_PATH = "/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk";
