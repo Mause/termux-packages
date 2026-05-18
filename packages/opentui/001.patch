@@ -1,5 +1,5 @@
 diff --git a/packages/core/scripts/build.ts b/packages/core/scripts/build.ts
-index 2cd861fd..43e40631 100644
+index 2cd861fd..4fd0f709 100644
 --- a/packages/core/scripts/build.ts
 +++ b/packages/core/scripts/build.ts
 @@ -44,12 +44,7 @@ const buildAll = args.includes("--all") // Build for all platforms
@@ -45,7 +45,7 @@ index 2cd861fd..43e40631 100644
  
    const zigBuild: SpawnSyncReturns<Buffer> = spawnSync("zig", zigArgs, {
      cwd: join(rootDir, "src", "zig"),
-@@ -113,8 +109,11 @@ if (buildNative) {
+@@ -113,12 +109,16 @@ if (buildNative) {
      console.error("Error: Zig build failed")
      process.exit(1)
    }
@@ -53,13 +53,27 @@ index 2cd861fd..43e40631 100644
  
 -  const variantsToPackage = buildAll ? variants : [getHostVariant()]
 +  const variantsToPackage = [
-+    { platform: "android", arch: "arm64" },
++    { platform: "linux", arch: "arm64" },
 +  ];
  
    for (const { platform, arch } of variantsToPackage) {
      const nativeName = `${packageJson.name}-${platform}-${arch}`
+     const nativeDir = join(rootDir, "node_modules", nativeName)
++    console.log(readdirSync(join(rootDir, "src", "zig", "lib")))
+     const libDir = join(rootDir, "src", "zig", "lib", getZigTarget(platform, arch))
+ 
+     rmSync(nativeDir, { recursive: true, force: true })
+@@ -142,7 +142,7 @@ if (buildNative) {
+ 
+     if (copiedFiles === 0) {
+       // Skip platforms that weren't built
+-      console.log(`Skipping ${platform}-${arch}: no libraries found`)
++      throw new Error(`Skipping ${platform}-${arch}: no libraries found`)
+       rmSync(nativeDir, { recursive: true, force: true })
+       continue
+     }
 diff --git a/packages/core/src/zig/build.zig b/packages/core/src/zig/build.zig
-index 8b6a310f..66a89b22 100644
+index 8b6a310f..502a7c49 100644
 --- a/packages/core/src/zig/build.zig
 +++ b/packages/core/src/zig/build.zig
 @@ -25,6 +25,7 @@ const SUPPORTED_TARGETS = [_]SupportedTarget{
