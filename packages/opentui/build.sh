@@ -18,3 +18,7 @@ termux_step_make() {
 	export PATH="$HOME/.bun/bin:$PATH"
 	cd packages/core && bun run scripts/build.ts --native
 }
+
+termux_step_make_install() {
+	install -Dm600 -t "${TERMUX_PREFIX}/lib" "${TERMUX_PKG_BUILDDIR}/packages/core/src/zig/lib/aarch64-linux-musl/libopentui.so"
+}
