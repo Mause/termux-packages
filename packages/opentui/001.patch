@@ -1,5 +1,5 @@
 diff --git a/packages/core/scripts/build.ts b/packages/core/scripts/build.ts
-index 2cd861fd..4fd0f709 100644
+index 2cd861fd..306c4eff 100644
 --- a/packages/core/scripts/build.ts
 +++ b/packages/core/scripts/build.ts
 @@ -44,12 +44,7 @@ const buildAll = args.includes("--all") // Build for all platforms
@@ -45,7 +45,7 @@ index 2cd861fd..4fd0f709 100644
  
    const zigBuild: SpawnSyncReturns<Buffer> = spawnSync("zig", zigArgs, {
      cwd: join(rootDir, "src", "zig"),
-@@ -113,12 +109,16 @@ if (buildNative) {
+@@ -113,13 +109,17 @@ if (buildNative) {
      console.error("Error: Zig build failed")
      process.exit(1)
    }
@@ -59,10 +59,12 @@ index 2cd861fd..4fd0f709 100644
    for (const { platform, arch } of variantsToPackage) {
      const nativeName = `${packageJson.name}-${platform}-${arch}`
      const nativeDir = join(rootDir, "node_modules", nativeName)
+-    const libDir = join(rootDir, "src", "zig", "lib", getZigTarget(platform, arch))
 +    console.log(readdirSync(join(rootDir, "src", "zig", "lib")))
-     const libDir = join(rootDir, "src", "zig", "lib", getZigTarget(platform, arch))
++    const libDir = join(rootDir, "src", "zig", "lib", "aarch64-linux-musl"); // "getZigTarget(platform, arch))
  
      rmSync(nativeDir, { recursive: true, force: true })
+     mkdirSync(nativeDir, { recursive: true })
 @@ -142,7 +142,7 @@ if (buildNative) {
  
      if (copiedFiles === 0) {
