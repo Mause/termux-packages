@@ -14,8 +14,6 @@ termux_step_pre_configure() {
 }
 
 termux_step_make() {
-	echo '!<arch>' > "$TERMUX_PREFIX/lib/libpthread.a"
-	echo '!<arch>' > "$TERMUX_PREFIX/lib/libdl.a"
 	curl -fsSL https://bun.com/install | bash
 	export PATH="~/.bun/bin:$PATH"
 	cd packages/core && bun run scripts/build.ts --native
