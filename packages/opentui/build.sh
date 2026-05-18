@@ -15,6 +15,6 @@ termux_step_pre_configure() {
 
 termux_step_make() {
 	curl -fsSL https://bun.com/install | bash
-	export PATH="~/.bun/bin:$PATH"
+	export PATH="$HOME/.bun/bin:$PATH"
 	cd packages/core && bun run scripts/build.ts --native
 }
