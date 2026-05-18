@@ -75,7 +75,7 @@ index 2cd861fd..306c4eff 100644
        continue
      }
 diff --git a/packages/core/src/zig/build.zig b/packages/core/src/zig/build.zig
-index 8b6a310f..502a7c49 100644
+index 43aff8dc..3a0e349a 100644
 --- a/packages/core/src/zig/build.zig
 +++ b/packages/core/src/zig/build.zig
 @@ -25,6 +25,7 @@ const SUPPORTED_TARGETS = [_]SupportedTarget{
@@ -86,25 +86,14 @@ index 8b6a310f..502a7c49 100644
  };
  
  const DEFAULT_MACOS_SDK_PATH = "/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk";
-@@ -267,8 +268,8 @@ pub fn build(b: *std.Build) void {
-             }
-         },
+@@ -160,8 +161,8 @@ fn addNativeAudioDependencies(
+     switch (target.result.os.tag) {
+         .macos => addMacOSSystemLibraries(b, artifact, macos_sdk_path.?),
          .linux => {
--            test_artifact.linkSystemLibrary("dl");
--            test_artifact.linkSystemLibrary("pthread");
-+            // test_artifact.linkSystemLibrary("dl");
-+            // test_artifact.linkSystemLibrary("pthread");
-         },
-         else => {},
-     }
-@@ -443,8 +444,8 @@ fn buildTarget(
-             addMacOSSystemLibraries(b, lib, macos_sdk_path.?);
-         },
-         .linux => {
--            lib.linkSystemLibrary("dl");
--            lib.linkSystemLibrary("pthread");
-+            // lib.linkSystemLibrary("dl");
-+            // lib.linkSystemLibrary("pthread");
+-            artifact.linkSystemLibrary("dl");
+-            artifact.linkSystemLibrary("pthread");
++            // artifact.linkSystemLibrary("dl");
++            // artifact.linkSystemLibrary("pthread");
          },
          else => {},
      }
