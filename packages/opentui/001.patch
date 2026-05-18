@@ -34,7 +34,7 @@ index 2cd861fd..43e40631 100644
    console.log(`Building native ${isDev ? "dev" : "prod"} binaries${buildAll ? " for all platforms" : ""}...`)
  
 -  const zigArgs = ["build", `-Doptimize=${isDev ? "Debug" : "ReleaseFast"}`]
-+  const zigArgs = ["build", `-Doptimize=${isDev ? "Debug" : "ReleaseFast"}`, '-Dtarget=aarch64-linux-android.29']
++  const zigArgs = ["build", `-Doptimize=${isDev ? "Debug" : "ReleaseFast"}`, '-Dtarget=aarch64-linux.3.7.0-musl']
    if (buildAll) {
      zigArgs.push("-Dall")
    }
@@ -66,7 +66,7 @@ index 8b6a310f..66a89b22 100644
      .{ .zig_target = "aarch64-macos", .output_name = "aarch64-macos", .description = "macOS aarch64 (Apple Silicon)" },
      .{ .zig_target = "x86_64-windows-gnu", .output_name = "x86_64-windows", .description = "Windows x86_64" },
      .{ .zig_target = "aarch64-windows-gnu", .output_name = "aarch64-windows", .description = "Windows aarch64" },
-+    .{ .zig_target = "aarch64-linux-android.29", .output_name = "arm64-android", .description = "Android arm64" },
++    .{ .zig_target = "aarch64-linux.3.7.0-musl", .output_name = "aarch64-linux-musl", .description = "Linux aarch64 MUSL" },
  };
  
  const DEFAULT_MACOS_SDK_PATH = "/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk";
