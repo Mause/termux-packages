@@ -11,6 +11,7 @@ TERMUX_ZIG_VERSION='0.15.2'
 
 termux_step_pre_configure() {
 	termux_setup_zig
+	termux_setup_nodejs
 }
 
 termux_step_make() {
@@ -24,4 +25,5 @@ termux_step_make() {
 
 termux_step_make_install() {
 	install -Dm600 -t "${TERMUX_PREFIX}/lib" "${TERMUX_PKG_BUILDDIR}/packages/core/src/zig/lib/aarch64-linux-musl/libopentui.so"
+	npm install -g ./packages/core/opentui-core-$TERMUX_PKG_VERSION.tgz
 }
