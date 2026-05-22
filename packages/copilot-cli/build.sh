@@ -1,0 +1,9 @@
+TERMUX_PKG_HOMEPAGE='https://github.com/github/copilot-cli'
+TERMUX_PKG_DESCRIPTION='GitHub Copilot CLI brings the power of Copilot coding agent directly to your terminal. '
+TERMUX_PKG_LICENSE='Go'
+TERMUX_PKG_MAINTAINER='@termux'
+TERMUX_PKG_VERSION='1.0.52-1'
+TERMUX_PKG_SRCURL=https://github.com/github/copilot-cli/archive/refs/tags/v${TERMUX_PKG_VERSION}.tar.gz
+TERMUX_PKG_BUILD_IN_SRC=true
+TERMUX_PKG_AUTO_UPDATE=true
+TERMUX_PKG_SHA256='c073708859577c2d875d5b037eb793bbe64ab885f33560c38e40fbee04f02c5b'
