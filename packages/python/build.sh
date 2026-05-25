@@ -12,7 +12,7 @@ TERMUX_PKG_SRCURL=(
 	https://salsa.debian.org/cpython-team/python3-defaults/-/archive/${_DEBPYTHON_COMMIT}/python3-defaults-${_DEBPYTHON_COMMIT}.tar.gz
 )
 TERMUX_PKG_SHA256=(
-	2ab91ff401783ccca64f75d10c882e957bdfd60e2bf5a72f8421793729b78a71
+	7e32597b99e5d9a39abed35de4693fa169df3e5850d4c334337ffd6a19a36db6
 	3b7a76c144d39f5c4a2c7789fd4beb3266980c2e667ad36167e1e7a357c684b0
 )
 TERMUX_PKG_AUTO_UPDATE=false
