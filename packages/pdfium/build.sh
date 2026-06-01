@@ -1,0 +1,9 @@
+TERMUX_PKG_HOMEPAGE='https://github.com/bblanchon/pdfium-binaries'
+TERMUX_PKG_DESCRIPTION='📰 Binary distribution of PDFium'
+TERMUX_PKG_LICENSE='MIT'
+TERMUX_PKG_MAINTAINER='@termux'
+TERMUX_PKG_VERSION='7857'
+TERMUX_PKG_SRCURL=https://github.com/bblanchon/pdfium-binaries/archive/refs/tags/chromium/${TERMUX_PKG_VERSION}.tar.gz
+TERMUX_PKG_BUILD_IN_SRC=true
+TERMUX_PKG_AUTO_UPDATE=true
+TERMUX_PKG_SHA256='053556efb7df9b73f1ce43f2b3bb4146eca68e35ca1274d0644930ee60f65269'
