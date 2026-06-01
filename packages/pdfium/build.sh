@@ -7,3 +7,14 @@ TERMUX_PKG_SRCURL=https://github.com/bblanchon/pdfium-binaries/archive/refs/tags
 TERMUX_PKG_BUILD_IN_SRC=true
 TERMUX_PKG_AUTO_UPDATE=true
 TERMUX_PKG_SHA256='053556efb7df9b73f1ce43f2b3bb4146eca68e35ca1274d0644930ee60f65269'
+
+termux_step_make() {
+	termux_setup_cmake
+
+	ARCH=$TERMUX_ARCH
+	if [ "$ARCH" = "aarch64" ]; then
+		ARCH=arm64
+	fi
+
+	./build.sh android $ARCH
+}
