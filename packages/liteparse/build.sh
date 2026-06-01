@@ -10,4 +10,6 @@ TERMUX_PKG_SHA256='33c65f535b68a41fd1512511b1ddebed17c194eaf08df5c207e4edb1d6b83
 
 termux_step_pre_configure() {
 	termux_setup_rust
+	TERMUX_PKG_SRCDIR+="/crates/liteparse"
+	TERMUX_PKG_BUILDDIR="$TERMUX_PKG_SRCDIR"
 }
