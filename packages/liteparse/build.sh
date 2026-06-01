@@ -20,4 +20,5 @@ termux_step_pre_configure() {
 	tar -vxzf pdfium-android-arm64.tgz
 	PDFIUM_LIB_PATH="$(find . -name "libpdfium.so")"
 	export OPENSSL_NO_VENDOR=1
+	export PKG_CONFIG_LIBDIR=$TERMUX_PREFIX/lib/pkgconfig
 }
