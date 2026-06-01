@@ -7,7 +7,7 @@ TERMUX_PKG_SRCURL=https://github.com/run-llama/liteparse/archive/refs/tags/crate
 TERMUX_PKG_BUILD_IN_SRC=true
 TERMUX_PKG_AUTO_UPDATE=true
 TERMUX_PKG_SHA256='33c65f535b68a41fd1512511b1ddebed17c194eaf08df5c207e4edb1d6b83fe9'
-TERMUX_PKG_DEPENDS='openssl'
+TERMUX_PKG_DEPENDS='openssl, leptonica-dev, tesseract-dev'
 
 set -o xtrace
 
