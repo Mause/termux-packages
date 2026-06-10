@@ -13,3 +13,9 @@ termux_step_post_get_source() {
         git fetch --unshallow
         git checkout $_COMMIT
 }
+
+termux_step_pre_configure() {
+	termux_setup_rust
+	TERMUX_PKG_SRCDIR+="/compiler"
+	TERMUX_PKG_BUILDDIR=$TERMUX_PKG_SRCDIR
+}
