@@ -2,8 +2,14 @@ TERMUX_PKG_HOMEPAGE='https://react.dev/'
 TERMUX_PKG_DESCRIPTION='The library for web and native user interfaces.'
 TERMUX_PKG_LICENSE='MIT'
 TERMUX_PKG_MAINTAINER='@termux'
-TERMUX_PKG_VERSION='19.2.7'
-TERMUX_PKG_SRCURL=https://github.com/react/react/archive/refs/tags/v${TERMUX_PKG_VERSION}.tar.gz
+TERMUX_PKG_VERSION='19.2.7-dev'
+TERMUX_PKG_SRCURL=git+https://github.com/react/react
 TERMUX_PKG_BUILD_IN_SRC=true
 TERMUX_PKG_AUTO_UPDATE=true
-TERMUX_PKG_SHA256='de68f026bea63c82c62042674aa265c2a1c6708a4e4db88bca1f0efc3fb39a66'
+_COMMIT='34b78a2897cc208260a88e6b62ecaf9ca2a9dfe4'
+TERMUX_PKG_GIT_BRANCH='main'
+
+termux_step_post_get_source() {
+        git fetch --unshallow
+        git checkout $_COMMIT
+}
