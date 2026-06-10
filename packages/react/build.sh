@@ -1,0 +1,9 @@
+TERMUX_PKG_HOMEPAGE='https://react.dev/'
+TERMUX_PKG_DESCRIPTION='The library for web and native user interfaces.'
+TERMUX_PKG_LICENSE='MIT'
+TERMUX_PKG_MAINTAINER='@termux'
+TERMUX_PKG_VERSION='19.2.7'
+TERMUX_PKG_SRCURL=https://github.com/react/react/archive/refs/tags/v${TERMUX_PKG_VERSION}.tar.gz
+TERMUX_PKG_BUILD_IN_SRC=true
+TERMUX_PKG_AUTO_UPDATE=true
+TERMUX_PKG_SHA256='de68f026bea63c82c62042674aa265c2a1c6708a4e4db88bca1f0efc3fb39a66'
