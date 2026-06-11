@@ -22,7 +22,7 @@ termux_step_pre_configure() {
 	TERMUX_PKG_BUILDDIR=$TERMUX_PKG_SRCDIR
 }
 
-termux_step_post_make_install() {
-	ls "${TERMUX_PKG_SRCDIR}/target/$CARGO_TARGET_NAME/release"
-	install -Dm755 "${TERMUX_PKG_SRCDIR}/target/$CARGO_TARGET_NAME/release/react_compiler_e2e_cli" -t "$TERMUX_PREFIX/bin"
-}
+# termux_step_post_make_install() {
+# 	ls "${TERMUX_PKG_SRCDIR}/target/$CARGO_TARGET_NAME/release"
+# 	install -Dm755 "${TERMUX_PKG_SRCDIR}/target/$CARGO_TARGET_NAME/release/react_compiler_e2e_cli" -t "$TERMUX_PREFIX/bin"
+# }
