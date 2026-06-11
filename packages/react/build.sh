@@ -1,6 +1,7 @@
 TERMUX_PKG_HOMEPAGE='https://react.dev/'
 TERMUX_PKG_DESCRIPTION='The library for web and native user interfaces.'
 TERMUX_PKG_LICENSE='MIT'
+TERMUX_PKG_LICENSE_FILE="../../../LICENSE"
 TERMUX_PKG_MAINTAINER='@termux'
 TERMUX_PKG_VERSION='19.2.7-dev'
 TERMUX_PKG_SRCURL=git+https://github.com/react/react
