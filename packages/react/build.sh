@@ -16,6 +16,6 @@ termux_step_post_get_source() {
 
 termux_step_pre_configure() {
 	termux_setup_rust
-	TERMUX_PKG_SRCDIR+="/compiler/packages/babel-plugin-react-compiler-rust/native"
+	TERMUX_PKG_SRCDIR+="/compiler/crates/react_compiler_e2e_cli"
 	TERMUX_PKG_BUILDDIR=$TERMUX_PKG_SRCDIR
 }
