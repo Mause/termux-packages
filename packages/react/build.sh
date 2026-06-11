@@ -9,6 +9,8 @@ TERMUX_PKG_AUTO_UPDATE=true
 _COMMIT='34b78a2897cc208260a88e6b62ecaf9ca2a9dfe4'
 TERMUX_PKG_GIT_BRANCH='main'
 
+set -o xtrace
+
 termux_step_post_get_source() {
 	git fetch --unshallow
 	git checkout $_COMMIT
