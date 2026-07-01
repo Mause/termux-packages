@@ -48,3 +48,29 @@ index 39f9310b7..c3c908831 100644
              exports: {
                  "./package.json": "./package.json",
              },
+
+From 3ba2e60e564b30ef9f53f3142398d7a80ad706ff Mon Sep 17 00:00:00 2001
+From: Elliana May <me@mause.me>
+Date: Wed, 1 Jul 2026 14:32:49 +0800
+Subject: [PATCH] rm dud assertion
+
+---
+ Herebyfile.mjs | 5 -----
+ 1 file changed, 5 deletions(-)
+
+diff --git a/Herebyfile.mjs b/Herebyfile.mjs
+index c3c908831..b02b2f687 100644
+--- a/Herebyfile.mjs
++++ b/Herebyfile.mjs
+@@ -1555,11 +1555,6 @@ const getPlatforms = memoize(() => {
+ 		{ os: "android", arch: "arm64", cert: "LinuxSign" },
+ 	];
+ 
+-    if (!options.forRelease) {
+-        supportedPlatforms = supportedPlatforms.filter(({ os, arch }) => os === process.platform && arch === process.arch);
+-        assert.equal(supportedPlatforms.length, 1, "No supported platforms found");
+-    }
+-
+     return supportedPlatforms.map(({ os, arch, cert = "LinuxSign", vsix, alpine }) => {
+         const packageBaseName = publishAsTypescript ? "typescript" : "native-preview";
+         const npmDirName = `${packageBaseName}-${os}-${arch}`;
