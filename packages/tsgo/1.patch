@@ -74,3 +74,33 @@ index c3c908831..b02b2f687 100644
      return supportedPlatforms.map(({ os, arch, cert = "LinuxSign", vsix, alpine }) => {
          const packageBaseName = publishAsTypescript ? "typescript" : "native-preview";
          const npmDirName = `${packageBaseName}-${os}-${arch}`;
+
+From 23e41ec6965b8d4dfa86bfa417b3b58e72b9b3b7 Mon Sep 17 00:00:00 2001
+From: Elliana May <me@mause.me>
+Date: Sat, 4 Jul 2026 12:09:52 +0800
+Subject: [PATCH] disable fanotify_linux
+
+---
+ internal/fswatch/fanotify_linux.go | 3 +++
+ 1 file changed, 3 insertions(+)
+
+diff --git a/internal/fswatch/fanotify_linux.go b/internal/fswatch/fanotify_linux.go
+index 82fe3eb80..1f6206e63 100644
+--- a/internal/fswatch/fanotify_linux.go
++++ b/internal/fswatch/fanotify_linux.go
+@@ -187,12 +187,15 @@ func init() {
+ // fanotifyAvailable probes whether fanotify_init succeeds with the flags
+ // this backend needs.
+ func fanotifyAvailable() bool {
++	return false
++	/*
+ 	fd, err := unix.FanotifyInit(fanotifyInitFlags, unix.O_RDONLY|unix.O_CLOEXEC)
+ 	if err != nil {
+ 		return false
+ 	}
+ 	_ = unix.Close(fd)
+ 	return true
++	*/
+ }
+ 
+ // newFanotifyBackend creates a fanotify backend. If noRename is true, the
