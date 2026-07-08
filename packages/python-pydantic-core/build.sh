@@ -1,10 +1,10 @@
-TERMUX_PKG_HOMEPAGE='https://github.com/pydantic/pydantic-core'
+TERMUX_PKG_HOMEPAGE='https://github.com/pydantic/pydantic'
 TERMUX_PKG_DESCRIPTION='Core validation logic for pydantic written in rust'
 TERMUX_PKG_LICENSE="MIT"
 TERMUX_PKG_MAINTAINER="@termux"
-TERMUX_PKG_VERSION="2.41.5"
-TERMUX_PKG_SRCURL=https://github.com/pydantic/pydantic-core/archive/refs/tags/v${TERMUX_PKG_VERSION}.tar.gz
-TERMUX_PKG_SHA256=872f700f7e42723e17cec5291d00677d790c14768030f4f37e7de72c2935d731
+TERMUX_PKG_VERSION="2.42.0"
+TERMUX_PKG_SRCURL=https://github.com/pydantic/pydantic/archive/refs/tags/core-v${TERMUX_PKG_VERSION}.tar.gz
+TERMUX_PKG_SHA256=ca1afd5eb19b8caf805c366cdc7bc9b87032d35ca6ca45c29d245e0190ee8ce5
 TERMUX_PKG_AUTO_UPDATE=true
 TERMUX_PKG_DEPENDS="python, python-pip"
 TERMUX_PKG_BUILD_IN_SRC=true
@@ -22,7 +22,7 @@ termux_step_make() {
 	export LD_LIBRARY_PATH="${TERMUX_PREFIX}/lib/"
 	export ANDROID_API_LEVEL=$TERMUX_PKG_API_LEVEL
 	echo "Building with CARGO_TARGET_NAME=${CARGO_TARGET_NAME} LD_LIBRARY_PATH=$LD_LIBRARY_PATH"
-	maturin build --release --target ${CARGO_TARGET_NAME} --skip-auditwheel -vv
+	maturin build --release --target ${CARGO_TARGET_NAME} --skip-auditwheel -vv pydantic-core
 }
 
 termux_step_make_install() {
