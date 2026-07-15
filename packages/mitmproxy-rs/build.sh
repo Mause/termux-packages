@@ -1,7 +1,7 @@
 TERMUX_PKG_HOMEPAGE='https://github.com/mitmproxy/mitmproxy_rs'
 TERMUX_PKG_DESCRIPTION='The Rust bits in mitmproxy. 🦀'
 TERMUX_PKG_LICENSE='MIT'
-TERMUX_PKG_LICENSE_FILES='../LICENSE'
+TERMUX_PKG_LICENSE_FILE='../LICENSE'
 TERMUX_PKG_MAINTAINER='@termux'
 TERMUX_PKG_VERSION='0.12.9'
 TERMUX_PKG_SRCURL=https://github.com/mitmproxy/mitmproxy_rs/archive/refs/tags/v${TERMUX_PKG_VERSION}.tar.gz
