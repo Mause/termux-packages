@@ -10,6 +10,6 @@ TERMUX_PKG_SHA256='fc20e6f576ab6e5726754555dc96f7753e3580de233f4f911cfbf224bf6dd
 
 termux_step_pre_configure() {
 	termux_setup_rust
-	TERMUX_PKG_SRCDIR+="/mitmproxy_rs"
-	TERMUX_PKG_BUILDDIR+="/mitmproxy_rs"
+	TERMUX_PKG_SRCDIR+="/mitmproxy-rs"
+	TERMUX_PKG_BUILDDIR+="/mitmproxy-rs"
 }
