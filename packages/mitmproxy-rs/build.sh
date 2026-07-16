@@ -14,3 +14,13 @@ termux_step_pre_configure() {
 	TERMUX_PKG_SRCDIR+="/mitmproxy-rs"
 	TERMUX_PKG_BUILDDIR+="/mitmproxy-rs"
 }
+
+termux_step_make() {
+	# --skip-auditwheel workaround for Maturin error
+	# 'Cannot repair wheel, because required library libdl.so could not be located.'
+	# found here in Termux-specific upstream discussion: https://github.com/PyO3/pyo3/issues/2324
+	export CARGO_BUILD_TARGET="${CARGO_TARGET_NAME}"
+	export PYO3_CROSS_LIB_DIR="${TERMUX_PREFIX}/lib"
+	export ANDROID_API_LEVEL="${TERMUX_PKG_API_LEVEL}"
+	maturin build --locked --skip-auditwheel --release --all-features --strip
+}
