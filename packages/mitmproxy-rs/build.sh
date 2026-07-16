@@ -8,6 +8,7 @@ TERMUX_PKG_SRCURL=https://github.com/mitmproxy/mitmproxy_rs/archive/refs/tags/v$
 TERMUX_PKG_BUILD_IN_SRC=true
 TERMUX_PKG_AUTO_UPDATE=true
 TERMUX_PKG_SHA256='fc20e6f576ab6e5726754555dc96f7753e3580de233f4f911cfbf224bf6dd790'
+TERMUX_PKG_DEPENDS="python"
 TERMUX_PKG_PYTHON_COMMON_BUILD_DEPS="wheel"
 
 termux_step_pre_configure() {
