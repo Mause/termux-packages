@@ -9,6 +9,7 @@ TERMUX_PKG_SHA256=ff895fff1c218fcad67b5b7de829df6d868e677ff34a39d3d0c49a9754247d
 TERMUX_PKG_DEPENDS="zstd"
 TERMUX_PKG_BUILD_IN_SRC=true
 TERMUX_PKG_AUTO_UPDATE=true
+TERMUX_PKG_REVISION=1
 
 termux_step_pre_configure() {
 	termux_setup_cmake
