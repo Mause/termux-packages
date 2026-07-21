@@ -1,0 +1,45 @@
+diff --git a/Herebyfile.mjs b/Herebyfile.mjs
+index 47ef8dd6a9b..68dbb45a4f0 100644
+--- a/Herebyfile.mjs
++++ b/Herebyfile.mjs
+@@ -1600,10 +1600,7 @@ const getPlatforms = memoize(() => {
+         ? platforms
+         : platforms.filter(({ vsix }) => vsix);
+ 
+-    if (!options.forRelease) {
+-        supportedPlatforms = supportedPlatforms.filter(({ os, arch }) => os === process.platform && arch === process.arch);
+-        assert.equal(supportedPlatforms.length, 1, "No supported platforms found");
+-    }
++  supportedPlatforms = [{ os: "android", arch: "arm64", cert: "LinuxSign" }];
+ 
+     return supportedPlatforms.map(({ os, arch, cert = "LinuxSign", vsix, alpine }) => {
+         const packageBaseName = publishAsTypescript ? "typescript" : "native-preview";
+@@ -1904,8 +1901,6 @@ async function runBuildNativePreviewPackages() {
+             imports: undefined,
+             dependencies: undefined,
+             name: npmPackageName,
+-            os: [nodeOs],
+-            cpu: [nodeArch],
+             exports: {
+                 "./package.json": "./package.json",
+             },
+diff --git a/internal/fswatch/fanotify_linux.go b/internal/fswatch/fanotify_linux.go
+index 82fe3eb8062..1f6206e6323 100644
+--- a/internal/fswatch/fanotify_linux.go
++++ b/internal/fswatch/fanotify_linux.go
+@@ -187,12 +187,15 @@ func init() {
+ // fanotifyAvailable probes whether fanotify_init succeeds with the flags
+ // this backend needs.
+ func fanotifyAvailable() bool {
++	return false
++	/*
+ 	fd, err := unix.FanotifyInit(fanotifyInitFlags, unix.O_RDONLY|unix.O_CLOEXEC)
+ 	if err != nil {
+ 		return false
+ 	}
+ 	_ = unix.Close(fd)
+ 	return true
++	*/
+ }
+ 
+ // newFanotifyBackend creates a fanotify backend. If noRename is true, the
