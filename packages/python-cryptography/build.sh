@@ -35,13 +35,13 @@ termux_step_make_install() {
 	cross-pip wheel --no-build-isolation --no-deps . --wheel-dir $TERMUX_PREFIX
 }
 
-termux_step_post_make_install() {
-	# maturin doesn't honor python-config, so it doesn't link the built module against libpython
-	# Due to differences in between the Android linker and on Linux, linking against libpython is needed
-	# Looking at https://github.com/PyO3/pyo3/issues/1082, it seems like maturin does try to link against libpython
-	# but looking at the source, it seems to do only for binary targets, not library.
-	# Anyways, do it ourselves not worth the effort to ask upstream for a single package we have
-	patchelf \
-		--add-needed libpython${TERMUX_PYTHON_VERSION}.so \
-		"${TERMUX_PREFIX}/lib/python${TERMUX_PYTHON_VERSION}/site-packages/cryptography/hazmat/bindings/_rust.abi3.so"
-}
+# termux_step_post_make_install() {
+# 	# maturin doesn't honor python-config, so it doesn't link the built module against libpython
+# 	# Due to differences in between the Android linker and on Linux, linking against libpython is needed
+# 	# Looking at https://github.com/PyO3/pyo3/issues/1082, it seems like maturin does try to link against libpython
+# 	# but looking at the source, it seems to do only for binary targets, not library.
+# 	# Anyways, do it ourselves not worth the effort to ask upstream for a single package we have
+# 	patchelf \
+# 		--add-needed libpython${TERMUX_PYTHON_VERSION}.so \
+# 		"${TERMUX_PREFIX}/lib/python${TERMUX_PYTHON_VERSION}/site-packages/cryptography/hazmat/bindings/_rust.abi3.so"
+# }
