@@ -1,0 +1,19 @@
+commit 0cc1893e4f1f5982274372e5af3737f88d942881
+Author: Elliana May <me@mause.me>
+Date:   Sun Feb 15 15:00:52 2026 +0800
+
+    include path
+
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index cf80e37b..14a9240b 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -453,7 +453,7 @@ if (WITH_ACCELERATE)
+ endif()
+ 
+ if (WITH_OPENBLAS)
+-  find_path(OPENBLAS_INCLUDE_DIR NAMES cblas.h)
++  find_path(OPENBLAS_INCLUDE_DIR NAMES cblas.h PATHS /data/data/com.termux/files/usr/include/openblas)
+   if(OPENBLAS_INCLUDE_DIR)
+     message(STATUS "Found OpenBLAS include directory: ${OPENBLAS_INCLUDE_DIR}")
+   else()

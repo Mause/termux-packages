@@ -1,0 +1,22 @@
+commit 45157c7d1b67cb4910d338b3382bb031aa50d6eb
+Author: Elliana May <me@mause.me>
+Date:   Sun Feb 15 14:34:09 2026 +0800
+
+    replace pthread_setaffinity_np with sched_setaffinity
+
+diff --git a/src/thread_pool.cc b/src/thread_pool.cc
+index d0aad775..27204b75 100644
+--- a/src/thread_pool.cc
++++ b/src/thread_pool.cc
+@@ -86,9 +86,9 @@ namespace ctranslate2 {
+     cpu_set_t cpuset;
+     CPU_ZERO(&cpuset);
+     CPU_SET(index, &cpuset);
+-    const int status = pthread_setaffinity_np(thread.native_handle(), sizeof (cpu_set_t), &cpuset);
++    const int status = sched_setaffinity(thread.native_handle(), sizeof(cpu_set_t), &cpuset);
+     if (status != 0) {
+-      throw std::runtime_error("Error calling pthread_setaffinity_np: "
++      throw std::runtime_error("Error calling sched_setaffinity: "
+                                + std::to_string(status));
+     }
+ #endif
