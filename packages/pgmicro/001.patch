@@ -1,0 +1,21 @@
+From 870484cfee76bf63c03598fd9477099357071935 Mon Sep 17 00:00:00 2001
+From: Elliana May <me@mause.me>
+Date: Sun, 29 Mar 2026 12:17:01 +0800
+Subject: [PATCH] rm python
+
+---
+ Cargo.toml | 1 -
+ 1 file changed, 1 deletion(-)
+
+diff --git a/Cargo.toml b/Cargo.toml
+index 6e1480252..d4228e8ce 100644
+--- a/Cargo.toml
++++ b/Cargo.toml
+@@ -6,7 +6,6 @@ members = [
+     "bindings/java",
+     "bindings/javascript",
+     "bindings/javascript/sync",
+-    "bindings/python",
+     "bindings/dotnet",
+     "bindings/rust",
+     "cli",
