@@ -1,0 +1,9 @@
+TERMUX_PKG_HOMEPAGE='https://codeberg.org/jpt/jellyfish'
+TERMUX_PKG_DESCRIPTION='🪼 a python library for doing approximate and phonetic matching of strings.'
+TERMUX_PKG_LICENSE='MIT'
+TERMUX_PKG_MAINTAINER='@termux'
+TERMUX_PKG_VERSION='1.2.1'
+TERMUX_PKG_SRCURL=https://codeberg.org/jpt/jellyfish/archive/v${TERMUX_PKG_VERSION}.tar.gz
+TERMUX_PKG_BUILD_IN_SRC=true
+TERMUX_PKG_AUTO_UPDATE=true
+TERMUX_PKG_SHA256='77c42fd157719587509c5921ca81c7e1531f0e2771b1c9e7cebc470c2abd5c6d'
