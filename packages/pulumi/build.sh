@@ -8,6 +8,8 @@ TERMUX_PKG_BUILD_IN_SRC=true
 TERMUX_PKG_AUTO_UPDATE=true
 TERMUX_PKG_SHA256='43887337b91f4d61cb81d917947193337d4718dfe3ad21497857b431b279d886'
 
+set -o xtrace
+
 termux_step_pre_configure() {
 	termux_setup_golang
 	curl -sSfL https://golangci-lint.run/install.sh | sh -s -- -b ~/.local/bin v2.12.2
