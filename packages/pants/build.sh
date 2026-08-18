@@ -16,5 +16,5 @@ termux_step_pre_configure() {
 }
 
 termux_step_make() {
-	pants
+	/home/builder/.local/bin/pants
 }
