@@ -13,6 +13,7 @@ termux_step_pre_configure() {
 	termux_setup_python_pip
 	termux_setup_rust
 	curl --proto '=https' --tlsv1.2 -fsSL https://static.pantsbuild.org/setup/get-pants.sh | bash
+	python -m ensurepip --upgrade
 }
 
 termux_step_make() {
