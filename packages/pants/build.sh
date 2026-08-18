@@ -11,4 +11,5 @@ TERMUX_PKG_SHA256='b669fcf7bd63a375bd1c98d13d76b20214856397a11f247349e560fa65b32
 
 termux_step_pre_configure() {
 	termux_setup_python_pip
+	termux_setup_rust
 }
