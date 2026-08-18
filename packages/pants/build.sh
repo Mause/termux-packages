@@ -9,11 +9,12 @@ TERMUX_PKG_AUTO_UPDATE=true
 TERMUX_PKG_DEPENDS='python'
 TERMUX_PKG_SHA256='b669fcf7bd63a375bd1c98d13d76b20214856397a11f247349e560fa65b328a9'
 
-termux_step_post_get_source() {
-	rm pyproject.toml
-}
-
 termux_step_pre_configure() {
 	termux_setup_python_pip
 	termux_setup_rust
+	curl --proto '=https' --tlsv1.2 -fsSL https://static.pantsbuild.org/setup/get-pants.sh | bash
+}
+
+termux_step_make() {
+	pants
 }
