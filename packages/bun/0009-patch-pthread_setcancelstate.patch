@@ -1,0 +1,47 @@
+From bf4447c9b7387cccd06a5dfdf66f8a2204e9f2e8 Mon Sep 17 00:00:00 2001
+From: Elliana May <me@mause.me>
+Date: Sat, 3 Jan 2026 14:54:17 +0800
+Subject: [PATCH] patch pthread_setcancelstate
+
+---
+ src/bun.js/bindings/bun-spawn.cpp | 18 ++++++++++++++++++
+ 1 file changed, 18 insertions(+)
+
+diff --git a/src/bun.js/bindings/bun-spawn.cpp b/src/bun.js/bindings/bun-spawn.cpp
+index 4a81d79850..f2f4b81f5e 100644
+--- a/src/bun.js/bindings/bun-spawn.cpp
++++ b/src/bun.js/bindings/bun-spawn.cpp
+@@ -59,7 +59,16 @@ extern "C" ssize_t posix_spawn_bun(
+     int res = 0, cs = 0;
+     sigfillset(&blockall);
+     sigprocmask(SIG_SETMASK, &blockall, &oldmask);
++#ifndef __ANDROID__
+     pthread_setcancelstate(PTHREAD_CANCEL_DISABLE, &cs);
++#else
++    {
++        sigset_t pthread_cancel_block;
++        sigemptyset(&pthread_cancel_block);
++        sigaddset(&pthread_cancel_block, SIGUSR2);
++        sigprocmask(SIG_BLOCK, &pthread_cancel_block, NULL);
++    }
++#endif
+     pid_t child = vfork();
+ 
+     const auto childFailed = [&]() -> ssize_t {
+@@ -196,7 +205,16 @@ extern "C" ssize_t posix_spawn_bun(
+     }
+ 
+     sigprocmask(SIG_SETMASK, &oldmask, 0);
++#ifndef __ANDROID__
+     pthread_setcancelstate(cs, 0);
++#else
++    {
++        sigset_t pthread_cancel_block;
++        sigemptyset(&pthread_cancel_block);
++        sigaddset(&pthread_cancel_block, SIGUSR2);
++        sigprocmask(SIG_UNBLOCK, &pthread_cancel_block, NULL);
++    }
++#endif
+ 
+     return res;
+ }

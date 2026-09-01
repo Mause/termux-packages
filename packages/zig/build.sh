@@ -14,6 +14,8 @@ TERMUX_PKG_AUTO_UPDATE=true
 # termux-elf-cleaner causes zig Segmentation Fault
 TERMUX_PKG_NO_ELF_CLEANER=true
 
+set -o xtrace
+
 termux_step_post_get_source() {
 	local p
 	for p in "${TERMUX_PKG_BUILDER_DIR}/${TERMUX_PKG_VERSION}"/*.diff; do
