@@ -13,3 +13,7 @@ set -o xtrace
 termux_step_pre_configure() {
 	termux_setup_golang
 }
+
+termux_step_post_get_source() {
+	rm Makefile
+}
