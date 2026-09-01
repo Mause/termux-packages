@@ -6,7 +6,6 @@ TERMUX_PKG_VERSION='0.4.0'
 TERMUX_PKG_SRCURL=https://github.com/tailscale/tailcat/archive/refs/tags/v${TERMUX_PKG_VERSION}.tar.gz
 TERMUX_PKG_BUILD_IN_SRC=true
 TERMUX_PKG_AUTO_UPDATE=true
-TERMUX_PKG_DEPENDS=''
 TERMUX_PKG_SHA256='f3e87753aa45f8be249a2708a4220748fd8613f9ea0d0435a48ffedf8d724247'
 
 termux_step_pre_configure() {
