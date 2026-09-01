@@ -14,6 +14,14 @@ termux_step_pre_configure() {
 	termux_setup_golang
 }
 
-termux_step_post_get_source() {
-	rm Makefile
+termux_step_make() {
+	go build \
+		-trimpath \
+		-ldflags="-s -w" \
+		-o tailcat \
+		./cmd/tailcat
+}
+
+termux_step_make_install() {
+	install -Dm755 task "$TERMUX_PREFIX/bin/tailcat"
 }
