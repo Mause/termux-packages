@@ -23,5 +23,5 @@ termux_step_make() {
 }
 
 termux_step_make_install() {
-	install -Dm755 task "$TERMUX_PREFIX/bin/tailcat"
+	install -Dm755 tailcat "$TERMUX_PREFIX/bin/tailcat"
 }
