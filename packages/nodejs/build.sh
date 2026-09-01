@@ -20,6 +20,7 @@ TERMUX_PKG_SUGGESTS="clang, make, pkg-config, python"
 TERMUX_PKG_RM_AFTER_INSTALL="lib/node_modules/npm/html lib/node_modules/npm/make.bat share/systemtap lib/dtrace"
 TERMUX_PKG_BUILD_IN_SRC=true
 TERMUX_PKG_HOSTBUILD=true
+TERMUX_PKG_REVISION=1
 
 termux_step_post_get_source() {
 	# Prevent caching of host build:
@@ -186,6 +187,8 @@ termux_step_configure() {
 		--shared-sqlite \
 		--shared-zlib \
 		--with-intl=system-icu \
+		--experimental-ffi \
+		--allow-ffi \
 		--cross-compiling \
 		--use-prefix-to-find-headers \
 		--ninja \
