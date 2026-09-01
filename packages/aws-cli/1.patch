@@ -1,0 +1,32 @@
+diff --git a/backends/build_system/awscli_venv.py b/backends/build_system/awscli_venv.py
+index be995bf81..a1da4c37c 100644
+--- a/backends/build_system/awscli_venv.py
++++ b/backends/build_system/awscli_venv.py
+@@ -45,7 +45,8 @@ class AwsCliVenv:
+         self._utils = utils
+ 
+     def create(self):
+-        self._utils.create_venv(self._venv_dir, with_pip=True)
++        pass
++        # self._utils.create_venv(self._venv_dir, with_pip=True)
+ 
+     def bootstrap(
+         self, artifact_type: ArtifactType, download_deps: bool = False
+@@ -113,13 +114,13 @@ class AwsCliVenv:
+             distribution_source=DISTRIBUTION_SOURCE_SANDBOX,
+         )
+ 
+-    @property
+-    def bin_dir(self):
+-        return os.path.join(self._venv_dir, BIN_DIRNAME)
++    # @property
++    # def bin_dir(self):
++    #     return os.path.join(self._venv_dir, BIN_DIRNAME)
+ 
+     @property
+     def python_exe(self):
+-        return os.path.join(self.bin_dir, PYTHON_EXE_NAME)
++        return 'python3'  # os.path.join(self.bin_dir, PYTHON_EXE_NAME)
+ 
+     def _pip_install(self, args, cwd=None):
+         args = [self.python_exe, "-m", "pip", "install"] + args
