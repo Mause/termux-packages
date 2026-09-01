@@ -8,6 +8,8 @@ TERMUX_PKG_BUILD_IN_SRC=true
 TERMUX_PKG_AUTO_UPDATE=true
 TERMUX_PKG_SHA256='f3e87753aa45f8be249a2708a4220748fd8613f9ea0d0435a48ffedf8d724247'
 
+set -o xtrace
+
 termux_step_pre_configure() {
 	termux_setup_golang
 }
