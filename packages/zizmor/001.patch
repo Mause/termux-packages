@@ -1,0 +1,79 @@
+From 78ccfcf68c5bb6fd3a238e2fb383cfcf2f8c5867 Mon Sep 17 00:00:00 2001
+From: Elliana May <me@mause.me>
+Date: Thu, 14 May 2026 00:32:36 +0800
+Subject: [PATCH] define
+
+---
+ Cargo.toml                      |  6 +++++
+ patches/aws-lc-sys+0.36.0.patch | 45 +++++++++++++++++++++++++++++++++
+ 2 files changed, 51 insertions(+)
+ create mode 100644 patches/aws-lc-sys+0.36.0.patch
+
+diff --git a/Cargo.toml b/Cargo.toml
+index 6306bbe..5dfd9ec 100644
+--- a/Cargo.toml
++++ b/Cargo.toml
+@@ -93,6 +93,12 @@ print_stderr = "warn"
+ print_stdout = "warn"
+ unwrap_used = "warn"
+ 
++[workspace.metadata.patch]
++crates = ["aws-lc-sys"]
++
++[patch.crates-io]
++aws-lc-sys = { path = "./target/patch/aws-lc-sys-0.36.0" }
++
+ [profile.dev.package]
+ insta.opt-level = 3
+ 
+diff --git a/patches/aws-lc-sys+0.36.0.patch b/patches/aws-lc-sys+0.36.0.patch
+new file mode 100644
+index 0000000..c1d0163
+--- /dev/null
++++ b/patches/aws-lc-sys+0.36.0.patch
+@@ -0,0 +1,45 @@
++diff --git a/aws-lc/crypto/rand_extra/internal.h b/aws-lc/crypto/rand_extra/internal.h
++index 8a6af5f..e9fadee 100644
++--- a/aws-lc/crypto/rand_extra/internal.h
+++++ b/aws-lc/crypto/rand_extra/internal.h
++@@ -10,10 +10,12 @@
++ #define OPENSSL_RAND_DETERMINISTIC
++ #elif defined(OPENSSL_WINDOWS)
++ #define OPENSSL_RAND_WINDOWS
++-#elif defined(OPENSSL_MACOS) || defined(OPENSSL_OPENBSD) || \
++-    defined(OPENSSL_FREEBSD)  || defined(OPENSSL_NETBSD) || \
++-    defined(OPENSSL_SOLARIS) || \
++-    (defined(OPENSSL_LINUX) && !defined(HAVE_LINUX_RANDOM_H))
+++#elif defined(OPENSSL_MACOS) || defined(OPENSSL_OPENBSD) ||                    \
+++    defined(OPENSSL_FREEBSD) || defined(OPENSSL_NETBSD) ||                     \
+++    defined(OPENSSL_SOLARIS) ||                                                \
+++    (defined(OPENSSL_LINUX) && !defined(HAVE_LINUX_RANDOM_H) &&                \
+++         !defined(__ANDROID__) ||                                              \
+++     __ANDROID_API__ >= 28)
++ #define OPENSSL_RAND_GETENTROPY
++ #elif defined(OPENSSL_IOS)
++ #define OPENSSL_RAND_CCRANDOMGENERATEBYTES
++@@ -46,7 +48,7 @@ OPENSSL_INLINE int CRYPTO_sysrand_if_available(uint8_t *buf, size_t len) {
++   CRYPTO_sysrand(buf, len);
++   return 1;
++ }
++-#endif  // defined(OPENSSL_RAND_URANDOM)
+++#endif // defined(OPENSSL_RAND_URANDOM)
++ 
++ // Don't retry forever. There is no science in picking this number and can be
++ // adjusted in the future if need be. We do not backoff forever, because we
++@@ -54,11 +56,10 @@ OPENSSL_INLINE int CRYPTO_sysrand_if_available(uint8_t *buf, size_t len) {
++ // spinning loops.
++ #define MAX_BACKOFF_RETRIES 9
++ 
++-OPENSSL_EXPORT int vm_ube_fallback_get_seed(
++-    uint8_t seed[CTR_DRBG_ENTROPY_LEN]);
+++OPENSSL_EXPORT int vm_ube_fallback_get_seed(uint8_t seed[CTR_DRBG_ENTROPY_LEN]);
++ 
++ #if defined(__cplusplus)
++-}  // extern C
+++} // extern C
++ #endif
++ 
++-#endif  // AWSLC_HEADER_CRYPTO_RAND_EXTRA_RAND_INTERNAL_H
+++#endif // AWSLC_HEADER_CRYPTO_RAND_EXTRA_RAND_INTERNAL_H
