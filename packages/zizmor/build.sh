@@ -2,11 +2,11 @@ TERMUX_PKG_HOMEPAGE='https://github.com/zizmorcore/zizmor'
 TERMUX_PKG_DESCRIPTION='Static analysis for GitHub Actions'
 TERMUX_PKG_LICENSE='MIT'
 TERMUX_PKG_MAINTAINER='@termux'
-TERMUX_PKG_VERSION='1.24.1'
+TERMUX_PKG_VERSION='1.30.1'
 TERMUX_PKG_SRCURL=https://github.com/zizmorcore/zizmor/archive/refs/tags/v${TERMUX_PKG_VERSION}.tar.gz
 TERMUX_PKG_BUILD_IN_SRC=true
 TERMUX_PKG_AUTO_UPDATE=true
-TERMUX_PKG_SHA256='4a037cd9ccdebdcf02e508f248c5ee8656ebf024d8f29d2c458498f16fe9893b'
+TERMUX_PKG_SHA256='3224fd5b49b77b2ec1a8a0809587824e3bc346a7583e8272d8ad66f95d0e8cc2'
 TERMUX_PKG_DEPENDS="openssl"
 
 termux_step_post_get_source() {
