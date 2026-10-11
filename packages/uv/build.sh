@@ -8,6 +8,7 @@ TERMUX_PKG_SRCURL=https://github.com/astral-sh/uv/archive/refs/tags/${TERMUX_PKG
 TERMUX_PKG_SHA256=7f0163a2d651347cc8500e15d1a006d02ed7bdbd6fb31438f7fd3e9383a34129
 TERMUX_PKG_BUILD_IN_SRC=true
 TERMUX_PKG_AUTO_UPDATE=true
+TERMUX_PKG_REVISION=1
 
 termux_step_pre_configure() {
 	termux_setup_cmake
