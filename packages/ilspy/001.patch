@@ -1,0 +1,23 @@
+commit 042878a2c9463393a0739e9894d1ef54fe1eaeb7
+Author: Elliana May <me@mause.me>
+Date:   Thu Mar 19 15:38:04 2026 +0800
+
+    target
+
+diff --git a/ICSharpCode.ILSpyCmd/ICSharpCode.ILSpyCmd.csproj b/ICSharpCode.ILSpyCmd/ICSharpCode.ILSpyCmd.csproj
+index aba229ad0..f4db547b5 100644
+--- a/ICSharpCode.ILSpyCmd/ICSharpCode.ILSpyCmd.csproj
++++ b/ICSharpCode.ILSpyCmd/ICSharpCode.ILSpyCmd.csproj
+@@ -64,4 +64,12 @@
+     </ReadLinesFromFile>
+   </Target>
+ 
++  <Target Name="_RemoveLinuxFrameworkReferences"
++      AfterTargets="ProcessFrameworkReferences">
++    <ItemGroup>
++      <_ProblematicRIDs Include="linux-bionic-arm;linux-bionic-arm64;linux-bionic-x86;linux-bionic-arm64" />
++      <PackageDownload Remove="Microsoft.NETCore.App.Runtime.%(_ProblematicRIDs.Identity)" />
++    </ItemGroup>
++  </Target>
++
+ </Project>
