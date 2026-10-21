@@ -1,0 +1,661 @@
+From d0f794a8b775e11f6c8cf4f5c3a2a859247f38ff Mon Sep 17 00:00:00 2001
+From: Elliana May <me@mause.me>
+Date: Wed, 1 Apr 2026 14:50:37 +0800
+Subject: [PATCH] override rubyhdrdir
+
+---
+ ext/nokogiri/extconf.rb | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/ext/nokogiri/extconf.rb b/ext/nokogiri/extconf.rb
+index 04ffc9fa..34e6ef00 100644
+--- a/ext/nokogiri/extconf.rb
++++ b/ext/nokogiri/extconf.rb
+@@ -3,6 +3,7 @@
+ # rubocop:disable Style/GlobalVars
+ 
+ ENV["RC_ARCHS"] = "" if RUBY_PLATFORM.include?("darwin")
++RbConfig::CONFIG["rubyhdrdir"] = File.join(ENV["TERMUX_PREFIX"], "include", "ruby-#{RbConfig::CONFIG['ruby_version']}")
+ 
+ require "mkmf"
+ require "rbconfig"
+
+From 784bd612e806733aca4fce360253aa17d86bd53b Mon Sep 17 00:00:00 2001
+From: Elliana May <me@mause.me>
+Date: Wed, 1 Apr 2026 14:52:20 +0800
+Subject: [PATCH] use patch sed
+
+---
+ ext/nokogiri/extconf.rb | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/ext/nokogiri/extconf.rb b/ext/nokogiri/extconf.rb
+index 34e6ef00..2671b180 100644
+--- a/ext/nokogiri/extconf.rb
++++ b/ext/nokogiri/extconf.rb
+@@ -3,7 +3,7 @@
+ # rubocop:disable Style/GlobalVars
+ 
+ ENV["RC_ARCHS"] = "" if RUBY_PLATFORM.include?("darwin")
+-RbConfig::CONFIG["rubyhdrdir"] = File.join(ENV["TERMUX_PREFIX"], "include", "ruby-#{RbConfig::CONFIG['ruby_version']}")
++RbConfig::CONFIG["rubyhdrdir"] = File.join("@TERMUX_PREFIX@", "include", "ruby-#{RbConfig::CONFIG['ruby_version']}")
+ 
+ require "mkmf"
+ require "rbconfig"
+
+From 6cbf7463103567d58c864423172194956d6d3bef Mon Sep 17 00:00:00 2001
+From: Elliana May <me@mause.me>
+Date: Wed, 1 Apr 2026 15:40:59 +0800
+Subject: [PATCH] dump
+
+---
+ ext/nokogiri/extconf.rb | 16 ++++++++++++++++
+ 1 file changed, 16 insertions(+)
+
+diff --git a/ext/nokogiri/extconf.rb b/ext/nokogiri/extconf.rb
+index 2671b180..04de2810 100644
+--- a/ext/nokogiri/extconf.rb
++++ b/ext/nokogiri/extconf.rb
+@@ -1149,6 +1149,22 @@ unless config_system_libraries?
+   end
+ end
+ 
++puts "Configuration summary:"
++puts "  - using system libraries: #{config_system_libraries?}"
++puts "  - using static linking: #{static_p}"
++puts "  - using cross build: #{cross_build_p}"
++puts "  - other library versions: #{other_library_versions_string}"
++puts "  - cppflags: #{$CPPFLAGS}"
++puts "  - ldflags: #{$LDFLAGS}"
++puts "  - libs: #{$libs}"
++puts "  - incflags: #{$INCFLAGS}"
++puts "  - archflags: #{RbConfig::CONFIG["ARCH_FLAG"]}"
++puts "  - ruby version: #{RbConfig::CONFIG["ruby_version"]}"
++puts "  - ruby platform: #{RbConfig::CONFIG["ruby_platform"]}"
++puts "  - ruby host: #{RbConfig::CONFIG["host"]}"
++puts "  - ruby target: #{RbConfig::CONFIG["target"]}"
++puts "  - ruby config: #{RbConfig::CONFIG.inspect}"
++
+ create_makefile("nokogiri/nokogiri")
+ 
+ if config_clean?
+
+From 1609cc5db124542043d72fca692c950875d15d3f Mon Sep 17 00:00:00 2001
+From: Elliana May <me@mause.me>
+Date: Wed, 1 Apr 2026 16:07:33 +0800
+Subject: [PATCH] more dump
+
+---
+ ext/nokogiri/extconf.rb | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/ext/nokogiri/extconf.rb b/ext/nokogiri/extconf.rb
+index 04de2810..c6afc1a8 100644
+--- a/ext/nokogiri/extconf.rb
++++ b/ext/nokogiri/extconf.rb
+@@ -4,6 +4,7 @@
+ 
+ ENV["RC_ARCHS"] = "" if RUBY_PLATFORM.include?("darwin")
+ RbConfig::CONFIG["rubyhdrdir"] = File.join("@TERMUX_PREFIX@", "include", "ruby-#{RbConfig::CONFIG['ruby_version']}")
++puts "Using rubyhdrdir=#{RbConfig::CONFIG['rubyhdrdir']}"
+ 
+ require "mkmf"
+ require "rbconfig"
+
+From 38af8411ed3ff7a454634e6ce3ff5abacd00d0dd Mon Sep 17 00:00:00 2001
+From: Elliana May <me@mause.me>
+Date: Wed, 1 Apr 2026 16:38:32 +0800
+Subject: [PATCH] try something stupid
+
+---
+ rbconfig.rb | 2 ++
+ 1 file changed, 2 insertions(+)
+ create mode 100644 rbconfig.rb
+
+diff --git a/rbconfig.rb b/rbconfig.rb
+new file mode 100644
+index 00000000..5bf0e54d
+--- /dev/null
++++ b/rbconfig.rb
+@@ -0,0 +1,2 @@
++require 'rbconfig'
++puts 'aaaaaaaaaaaaaa'
+
+From adee408a4cf0d053acfb903f8324561c9e337a93 Mon Sep 17 00:00:00 2001
+From: Elliana May <me@mause.me>
+Date: Wed, 1 Apr 2026 16:49:51 +0800
+Subject: [PATCH] intercept
+
+---
+ rbconfig-patch.rb | 4 ++++
+ rbconfig.rb       | 2 --
+ 2 files changed, 4 insertions(+), 2 deletions(-)
+ create mode 100644 rbconfig-patch.rb
+ delete mode 100644 rbconfig.rb
+
+diff --git a/rbconfig-patch.rb b/rbconfig-patch.rb
+new file mode 100644
+index 00000000..0a4d372d
+--- /dev/null
++++ b/rbconfig-patch.rb
+@@ -0,0 +1,4 @@
++require 'rbconfig'
++
++RbConfig::CONFIG["rubyhdrdir"] = File.join("@TERMUX_PREFIX@", "include", "ruby-#{RbConfig::CONFIG['ruby_version']}")
++puts "Using rubyhdrdir=#{RbConfig::CONFIG['rubyhdrdir']}"
+diff --git a/rbconfig.rb b/rbconfig.rb
+deleted file mode 100644
+index 5bf0e54d..00000000
+--- a/rbconfig.rb
++++ /dev/null
+@@ -1,2 +0,0 @@
+-require 'rbconfig'
+-puts 'aaaaaaaaaaaaaa'
+
+From f2d6a85c77b18546330aca237d12a144a5432e20 Mon Sep 17 00:00:00 2001
+From: Elliana May <me@mause.me>
+Date: Wed, 1 Apr 2026 17:01:05 +0800
+Subject: [PATCH] sanity
+
+---
+ rbconfig-patch.rb | 3 +++
+ 1 file changed, 3 insertions(+)
+
+diff --git a/rbconfig-patch.rb b/rbconfig-patch.rb
+index 0a4d372d..ade6cc7c 100644
+--- a/rbconfig-patch.rb
++++ b/rbconfig-patch.rb
+@@ -2,3 +2,6 @@ require 'rbconfig'
+ 
+ RbConfig::CONFIG["rubyhdrdir"] = File.join("@TERMUX_PREFIX@", "include", "ruby-#{RbConfig::CONFIG['ruby_version']}")
+ puts "Using rubyhdrdir=#{RbConfig::CONFIG['rubyhdrdir']}"
++if not File.exist?(($hdrdir = RbConfig::CONFIG["rubyhdrdir"]) + "/ruby/ruby.h")
++  abort "#{hdrdir}/ruby/ruby.h does not exist"
++end
+
+From a497845d8ea2658a2933a64d727625d3e793dd6e Mon Sep 17 00:00:00 2001
+From: Elliana May <me@mause.me>
+Date: Wed, 1 Apr 2026 17:10:37 +0800
+Subject: [PATCH] fix var ref
+
+---
+ rbconfig-patch.rb | 7 ++++---
+ 1 file changed, 4 insertions(+), 3 deletions(-)
+
+diff --git a/rbconfig-patch.rb b/rbconfig-patch.rb
+index ade6cc7c..75956833 100644
+--- a/rbconfig-patch.rb
++++ b/rbconfig-patch.rb
+@@ -1,7 +1,8 @@
+ require 'rbconfig'
+ 
+ RbConfig::CONFIG["rubyhdrdir"] = File.join("@TERMUX_PREFIX@", "include", "ruby-#{RbConfig::CONFIG['ruby_version']}")
+-puts "Using rubyhdrdir=#{RbConfig::CONFIG['rubyhdrdir']}"
+-if not File.exist?(($hdrdir = RbConfig::CONFIG["rubyhdrdir"]) + "/ruby/ruby.h")
+-  abort "#{hdrdir}/ruby/ruby.h does not exist"
++$hdrdir = RbConfig::CONFIG["rubyhdrdir"]
++puts "Using rubyhdrdir=#{$hdrdir}"
++if not File.exist?($hdrdir + "/ruby/ruby.h")
++  abort "#{$hdrdir}/ruby/ruby.h does not exist"
+ end
+
+From a6d1be608755875e227b1f86b9f6e75d836cb54f Mon Sep 17 00:00:00 2001
+From: Elliana May <me@mause.me>
+Date: Wed, 1 Apr 2026 17:16:51 +0800
+Subject: [PATCH] OG
+
+---
+ rbconfig-patch.rb | 2 ++
+ 1 file changed, 2 insertions(+)
+
+diff --git a/rbconfig-patch.rb b/rbconfig-patch.rb
+index 75956833..89afd486 100644
+--- a/rbconfig-patch.rb
++++ b/rbconfig-patch.rb
+@@ -1,5 +1,7 @@
+ require 'rbconfig'
+ 
++$hdrdir = RbConfig::CONFIG["rubyhdrdir"]
++puts "Original hdrdir: #{$hdrdir}"
+ RbConfig::CONFIG["rubyhdrdir"] = File.join("@TERMUX_PREFIX@", "include", "ruby-#{RbConfig::CONFIG['ruby_version']}")
+ $hdrdir = RbConfig::CONFIG["rubyhdrdir"]
+ puts "Using rubyhdrdir=#{$hdrdir}"
+
+From 0b53134eedcb1276733e87b3e6e3af63cf024683 Mon Sep 17 00:00:00 2001
+From: Elliana May <me@mause.me>
+Date: Wed, 1 Apr 2026 17:23:43 +0800
+Subject: [PATCH] retarget
+
+---
+ rbconfig-patch.rb | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
+
+diff --git a/rbconfig-patch.rb b/rbconfig-patch.rb
+index 89afd486..ec94694d 100644
+--- a/rbconfig-patch.rb
++++ b/rbconfig-patch.rb
+@@ -5,6 +5,7 @@ puts "Original hdrdir: #{$hdrdir}"
+ RbConfig::CONFIG["rubyhdrdir"] = File.join("@TERMUX_PREFIX@", "include", "ruby-#{RbConfig::CONFIG['ruby_version']}")
+ $hdrdir = RbConfig::CONFIG["rubyhdrdir"]
+ puts "Using rubyhdrdir=#{$hdrdir}"
+-if not File.exist?($hdrdir + "/ruby/ruby.h")
+-  abort "#{$hdrdir}/ruby/ruby.h does not exist"
++$target = $hdrdir + "/ruby.h"
++if not File.exist?($hdrdir + "/ruby.h")
++  abort "#{$hdrdir}/ruby.h does not exist"
+ end
+
+From 54a1955ccff999e87ff4fb17c27e9cc97defce9a Mon Sep 17 00:00:00 2001
+From: Elliana May <me@mause.me>
+Date: Wed, 1 Apr 2026 17:23:52 +0800
+Subject: [PATCH] ls children
+
+---
+ rbconfig-patch.rb | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/rbconfig-patch.rb b/rbconfig-patch.rb
+index ec94694d..93623f0c 100644
+--- a/rbconfig-patch.rb
++++ b/rbconfig-patch.rb
+@@ -2,6 +2,7 @@ require 'rbconfig'
+ 
+ $hdrdir = RbConfig::CONFIG["rubyhdrdir"]
+ puts "Original hdrdir: #{$hdrdir}"
++puts Dir.children("@TERMUX_PREFIX@")
+ RbConfig::CONFIG["rubyhdrdir"] = File.join("@TERMUX_PREFIX@", "include", "ruby-#{RbConfig::CONFIG['ruby_version']}")
+ $hdrdir = RbConfig::CONFIG["rubyhdrdir"]
+ puts "Using rubyhdrdir=#{$hdrdir}"
+
+From 07db9e3465cd47f5c6c43f2d175f1a6998be54f1 Mon Sep 17 00:00:00 2001
+From: Elliana May <me@mause.me>
+Date: Wed, 1 Apr 2026 17:27:12 +0800
+Subject: [PATCH] dir hdrdir
+
+---
+ rbconfig-patch.rb | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/rbconfig-patch.rb b/rbconfig-patch.rb
+index 93623f0c..1662a543 100644
+--- a/rbconfig-patch.rb
++++ b/rbconfig-patch.rb
+@@ -2,10 +2,10 @@ require 'rbconfig'
+ 
+ $hdrdir = RbConfig::CONFIG["rubyhdrdir"]
+ puts "Original hdrdir: #{$hdrdir}"
+-puts Dir.children("@TERMUX_PREFIX@")
+ RbConfig::CONFIG["rubyhdrdir"] = File.join("@TERMUX_PREFIX@", "include", "ruby-#{RbConfig::CONFIG['ruby_version']}")
+ $hdrdir = RbConfig::CONFIG["rubyhdrdir"]
+ puts "Using rubyhdrdir=#{$hdrdir}"
++puts Dir.children($hdrdir)
+ $target = $hdrdir + "/ruby.h"
+ if not File.exist?($hdrdir + "/ruby.h")
+   abort "#{$hdrdir}/ruby.h does not exist"
+
+From 6fc7a64891d51836733846475e1e313845cb9ace Mon Sep 17 00:00:00 2001
+From: Elliana May <me@mause.me>
+Date: Wed, 1 Apr 2026 17:30:16 +0800
+Subject: [PATCH] dir include
+
+---
+ rbconfig-patch.rb | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/rbconfig-patch.rb b/rbconfig-patch.rb
+index 1662a543..bcd36834 100644
+--- a/rbconfig-patch.rb
++++ b/rbconfig-patch.rb
+@@ -5,6 +5,7 @@ puts "Original hdrdir: #{$hdrdir}"
+ RbConfig::CONFIG["rubyhdrdir"] = File.join("@TERMUX_PREFIX@", "include", "ruby-#{RbConfig::CONFIG['ruby_version']}")
+ $hdrdir = RbConfig::CONFIG["rubyhdrdir"]
+ puts "Using rubyhdrdir=#{$hdrdir}"
++puts Dir.children(File.join("@TERMUX_PREFIX@", "include"))
+ puts Dir.children($hdrdir)
+ $target = $hdrdir + "/ruby.h"
+ if not File.exist?($hdrdir + "/ruby.h")
+
+From 7f9cc7afabae7bcdbac255a53f670994c1d6a3b0 Mon Sep 17 00:00:00 2001
+From: Elliana May <me@mause.me>
+Date: Wed, 1 Apr 2026 17:32:11 +0800
+Subject: [PATCH] labels
+
+---
+ rbconfig-patch.rb | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/rbconfig-patch.rb b/rbconfig-patch.rb
+index bcd36834..4ece3e18 100644
+--- a/rbconfig-patch.rb
++++ b/rbconfig-patch.rb
+@@ -5,8 +5,8 @@ puts "Original hdrdir: #{$hdrdir}"
+ RbConfig::CONFIG["rubyhdrdir"] = File.join("@TERMUX_PREFIX@", "include", "ruby-#{RbConfig::CONFIG['ruby_version']}")
+ $hdrdir = RbConfig::CONFIG["rubyhdrdir"]
+ puts "Using rubyhdrdir=#{$hdrdir}"
+-puts Dir.children(File.join("@TERMUX_PREFIX@", "include"))
+-puts Dir.children($hdrdir)
++puts "include children: #{Dir.children(File.join("@TERMUX_PREFIX@", "include"))}"
++puts "hdrdir children: #{Dir.children($hdrdir)}"
+ $target = $hdrdir + "/ruby.h"
+ if not File.exist?($hdrdir + "/ruby.h")
+   abort "#{$hdrdir}/ruby.h does not exist"
+
+From 5b1ddc67459835436b819d1119f2e37bc1f3389e Mon Sep 17 00:00:00 2001
+From: Elliana May <me@mause.me>
+Date: Wed, 1 Apr 2026 17:35:31 +0800
+Subject: [PATCH] hardcode correct ruby version
+
+---
+ rbconfig-patch.rb | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
+
+diff --git a/rbconfig-patch.rb b/rbconfig-patch.rb
+index 4ece3e18..1391516e 100644
+--- a/rbconfig-patch.rb
++++ b/rbconfig-patch.rb
+@@ -2,7 +2,8 @@ require 'rbconfig'
+ 
+ $hdrdir = RbConfig::CONFIG["rubyhdrdir"]
+ puts "Original hdrdir: #{$hdrdir}"
+-RbConfig::CONFIG["rubyhdrdir"] = File.join("@TERMUX_PREFIX@", "include", "ruby-#{RbConfig::CONFIG['ruby_version']}")
++$ruby_version = '3.4.0'
++RbConfig::CONFIG["rubyhdrdir"] = File.join("@TERMUX_PREFIX@", "include", "ruby-#{$ruby_version}")
+ $hdrdir = RbConfig::CONFIG["rubyhdrdir"]
+ puts "Using rubyhdrdir=#{$hdrdir}"
+ puts "include children: #{Dir.children(File.join("@TERMUX_PREFIX@", "include"))}"
+
+From 6d1081200a5abca31202a573a5275836f6755a94 Mon Sep 17 00:00:00 2001
+From: Elliana May <me@mause.me>
+Date: Wed, 1 Apr 2026 19:11:52 +0800
+Subject: [PATCH] set rubyarchhdrdir
+
+---
+ ext/nokogiri/extconf.rb | 6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
+
+diff --git a/ext/nokogiri/extconf.rb b/ext/nokogiri/extconf.rb
+index c6afc1a8..c2e89a01 100644
+--- a/ext/nokogiri/extconf.rb
++++ b/ext/nokogiri/extconf.rb
+@@ -3,8 +3,10 @@
+ # rubocop:disable Style/GlobalVars
+ 
+ ENV["RC_ARCHS"] = "" if RUBY_PLATFORM.include?("darwin")
+-RbConfig::CONFIG["rubyhdrdir"] = File.join("@TERMUX_PREFIX@", "include", "ruby-#{RbConfig::CONFIG['ruby_version']}")
+-puts "Using rubyhdrdir=#{RbConfig::CONFIG['rubyhdrdir']}"
++rubyhdrdir = File.join("@TERMUX_PREFIX@", "include", "ruby-#{RbConfig::CONFIG['ruby_version']}")
++RbConfig::CONFIG["rubyhdrdir"] = rubyhdrdir
++RbConfig::CONFIG["rubyarchhdrdir"] = File.join(rubyhdrdir, "aarch64-linux-android")
++puts "Using rubyhdrdir=#{$rubyhdrdir}"
+ 
+ require "mkmf"
+ require "rbconfig"
+
+From 2fc23d6ff3b2f478b23ce5b37cdf759fadf82452 Mon Sep 17 00:00:00 2001
+From: Elliana May <me@mause.me>
+Date: Wed, 1 Apr 2026 19:47:28 +0800
+Subject: [PATCH] hardcode version
+
+---
+ ext/nokogiri/extconf.rb | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/ext/nokogiri/extconf.rb b/ext/nokogiri/extconf.rb
+index c2e89a01..e731d1e2 100644
+--- a/ext/nokogiri/extconf.rb
++++ b/ext/nokogiri/extconf.rb
+@@ -3,7 +3,7 @@
+ # rubocop:disable Style/GlobalVars
+ 
+ ENV["RC_ARCHS"] = "" if RUBY_PLATFORM.include?("darwin")
+-rubyhdrdir = File.join("@TERMUX_PREFIX@", "include", "ruby-#{RbConfig::CONFIG['ruby_version']}")
++rubyhdrdir = File.join("@TERMUX_PREFIX@", "include", "ruby-3.4.0")
+ RbConfig::CONFIG["rubyhdrdir"] = rubyhdrdir
+ RbConfig::CONFIG["rubyarchhdrdir"] = File.join(rubyhdrdir, "aarch64-linux-android")
+ puts "Using rubyhdrdir=#{$rubyhdrdir}"
+
+From 3a4643e3c68bf6294b782842f79055b3d1f695df Mon Sep 17 00:00:00 2001
+From: Elliana May <me@mause.me>
+Date: Thu, 2 Apr 2026 03:30:21 +0800
+Subject: [PATCH] set MKMF_VERBOSE=1
+
+---
+ ext/nokogiri/extconf.rb | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/ext/nokogiri/extconf.rb b/ext/nokogiri/extconf.rb
+index e731d1e2..84c4798c 100644
+--- a/ext/nokogiri/extconf.rb
++++ b/ext/nokogiri/extconf.rb
+@@ -7,6 +7,7 @@ rubyhdrdir = File.join("@TERMUX_PREFIX@", "include", "ruby-3.4.0")
+ RbConfig::CONFIG["rubyhdrdir"] = rubyhdrdir
+ RbConfig::CONFIG["rubyarchhdrdir"] = File.join(rubyhdrdir, "aarch64-linux-android")
+ puts "Using rubyhdrdir=#{$rubyhdrdir}"
++RbConfig::CONFIG['MKMF_VERBOSE'] = "1"
+ 
+ require "mkmf"
+ require "rbconfig"
+
+From 28ecd5b86bc89e6b04be12fe144f501c7cb75462 Mon Sep 17 00:00:00 2001
+From: Elliana May <me@mause.me>
+Date: Thu, 2 Apr 2026 12:49:16 +0800
+Subject: [PATCH] no dollar?
+
+---
+ ext/nokogiri/extconf.rb | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/ext/nokogiri/extconf.rb b/ext/nokogiri/extconf.rb
+index 84c4798c..e3a9c620 100644
+--- a/ext/nokogiri/extconf.rb
++++ b/ext/nokogiri/extconf.rb
+@@ -6,7 +6,7 @@ ENV["RC_ARCHS"] = "" if RUBY_PLATFORM.include?("darwin")
+ rubyhdrdir = File.join("@TERMUX_PREFIX@", "include", "ruby-3.4.0")
+ RbConfig::CONFIG["rubyhdrdir"] = rubyhdrdir
+ RbConfig::CONFIG["rubyarchhdrdir"] = File.join(rubyhdrdir, "aarch64-linux-android")
+-puts "Using rubyhdrdir=#{$rubyhdrdir}"
++puts "Using rubyhdrdir=#{rubyhdrdir}"
+ RbConfig::CONFIG['MKMF_VERBOSE'] = "1"
+ 
+ require "mkmf"
+
+From d58a33355b90760dae67e3ab37fe5f9d06dbe38f Mon Sep 17 00:00:00 2001
+From: Elliana May <me@mause.me>
+Date: Thu, 2 Apr 2026 12:45:54 +0800
+Subject: [PATCH] detect bad flag maybe?
+
+---
+ ext/nokogiri/extconf.rb | 4 ++++
+ 1 file changed, 4 insertions(+)
+
+diff --git a/ext/nokogiri/extconf.rb b/ext/nokogiri/extconf.rb
+index e3a9c620..e9b0020d 100644
+--- a/ext/nokogiri/extconf.rb
++++ b/ext/nokogiri/extconf.rb
+@@ -9,6 +9,10 @@ RbConfig::CONFIG["rubyarchhdrdir"] = File.join(rubyhdrdir, "aarch64-linux-androi
+ puts "Using rubyhdrdir=#{rubyhdrdir}"
+ RbConfig::CONFIG['MKMF_VERBOSE'] = "1"
+ 
++if RbConfig::CONFIG['CXXFLAGS'].include? 'cf-protection'
++  abort 'bad flag detected'
++end
++
+ require "mkmf"
+ require "rbconfig"
+ require "fileutils"
+
+From 3d63db7095e3203d743689f6f7ee1c0d9e904700 Mon Sep 17 00:00:00 2001
+From: Elliana May <me@mause.me>
+Date: Thu, 2 Apr 2026 12:47:58 +0800
+Subject: [PATCH] scan
+
+---
+ ext/nokogiri/extconf.rb | 6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
+
+diff --git a/ext/nokogiri/extconf.rb b/ext/nokogiri/extconf.rb
+index e9b0020d..9c253a14 100644
+--- a/ext/nokogiri/extconf.rb
++++ b/ext/nokogiri/extconf.rb
+@@ -9,8 +9,10 @@ RbConfig::CONFIG["rubyarchhdrdir"] = File.join(rubyhdrdir, "aarch64-linux-androi
+ puts "Using rubyhdrdir=#{rubyhdrdir}"
+ RbConfig::CONFIG['MKMF_VERBOSE'] = "1"
+ 
+-if RbConfig::CONFIG['CXXFLAGS'].include? 'cf-protection'
+-  abort 'bad flag detected'
++RbConfig::CONFIG.each do |key, value|
++  if value.include?("cf-protection")
++    abort "bad flag in RbConfig::CONFIG[#{key}]: #{value}"
++  end
+ end
+ 
+ require "mkmf"
+
+From 1cec33a44f8727d893eb4da9cb9866813ec59dd2 Mon Sep 17 00:00:00 2001
+From: Elliana May <me@mause.me>
+Date: Thu, 2 Apr 2026 15:13:24 +0800
+Subject: [PATCH] puts msg too
+
+---
+ ext/nokogiri/extconf.rb | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
+
+diff --git a/ext/nokogiri/extconf.rb b/ext/nokogiri/extconf.rb
+index 9c253a14..96d154ea 100644
+--- a/ext/nokogiri/extconf.rb
++++ b/ext/nokogiri/extconf.rb
+@@ -11,7 +11,9 @@ RbConfig::CONFIG['MKMF_VERBOSE'] = "1"
+ 
+ RbConfig::CONFIG.each do |key, value|
+   if value.include?("cf-protection")
+-    abort "bad flag in RbConfig::CONFIG[#{key}]: #{value}"
++    msg = "bad flag in RbConfig::CONFIG[#{key}]: #{value}"
++    puts msg
++    abort msg
+   end
+ end
+ 
+
+From 0327adf3c4e614dd976926c14839f0cbe5ebdd30 Mon Sep 17 00:00:00 2001
+From: Elliana May <me@mause.me>
+Date: Thu, 2 Apr 2026 15:44:46 +0800
+Subject: [PATCH] sub out cf-protection flag
+
+---
+ ext/nokogiri/extconf.rb | 5 ++---
+ 1 file changed, 2 insertions(+), 3 deletions(-)
+
+diff --git a/ext/nokogiri/extconf.rb b/ext/nokogiri/extconf.rb
+index 96d154ea..6967cc82 100644
+--- a/ext/nokogiri/extconf.rb
++++ b/ext/nokogiri/extconf.rb
+@@ -11,9 +11,8 @@ RbConfig::CONFIG['MKMF_VERBOSE'] = "1"
+ 
+ RbConfig::CONFIG.each do |key, value|
+   if value.include?("cf-protection")
+-    msg = "bad flag in RbConfig::CONFIG[#{key}]: #{value}"
+-    puts msg
+-    abort msg
++    msg = "bad flag in RbConfig::CONFIG[#{key}], will remove: #{value}"
++    RbConfig::CONFIG[key] = value.sub! " -cf-protection", ""
+   end
+ end
+ 
+
+From 0b8f8c3ba10ffe5798aef84c9c45bb2a1217ee5e Mon Sep 17 00:00:00 2001
+From: Elliana May <me@mause.me>
+Date: Thu, 2 Apr 2026 15:55:47 +0800
+Subject: [PATCH] restore puts
+
+---
+ ext/nokogiri/extconf.rb | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/ext/nokogiri/extconf.rb b/ext/nokogiri/extconf.rb
+index 6967cc82..14b6b56b 100644
+--- a/ext/nokogiri/extconf.rb
++++ b/ext/nokogiri/extconf.rb
+@@ -12,6 +12,7 @@ RbConfig::CONFIG['MKMF_VERBOSE'] = "1"
+ RbConfig::CONFIG.each do |key, value|
+   if value.include?("cf-protection")
+     msg = "bad flag in RbConfig::CONFIG[#{key}], will remove: #{value}"
++    puts msg
+     RbConfig::CONFIG[key] = value.sub! " -cf-protection", ""
+   end
+ end
+
+From de92bf36ecb8ca3c0739d85e52b29fa23ba597a7 Mon Sep 17 00:00:00 2001
+From: Elliana May <me@mause.me>
+Date: Thu, 2 Apr 2026 16:03:26 +0800
+Subject: [PATCH] correct flag name
+
+---
+ ext/nokogiri/extconf.rb | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
+
+diff --git a/ext/nokogiri/extconf.rb b/ext/nokogiri/extconf.rb
+index 14b6b56b..d56d511f 100644
+--- a/ext/nokogiri/extconf.rb
++++ b/ext/nokogiri/extconf.rb
+@@ -9,11 +9,12 @@ RbConfig::CONFIG["rubyarchhdrdir"] = File.join(rubyhdrdir, "aarch64-linux-androi
+ puts "Using rubyhdrdir=#{rubyhdrdir}"
+ RbConfig::CONFIG['MKMF_VERBOSE'] = "1"
+ 
++flag = '-fcf-protection'
+ RbConfig::CONFIG.each do |key, value|
+-  if value.include?("cf-protection")
++  if value.include? flag
+     msg = "bad flag in RbConfig::CONFIG[#{key}], will remove: #{value}"
+     puts msg
+-    RbConfig::CONFIG[key] = value.sub! " -cf-protection", ""
++    RbConfig::CONFIG[key] = value.sub! (" " + flag, "")
+   end
+ end
+ 
+
+From dcba2fcf43fcfc804138ed57d0c1695725f03ae0 Mon Sep 17 00:00:00 2001
+From: Elliana May <me@mause.me>
+Date: Thu, 2 Apr 2026 16:09:53 +0800
+Subject: [PATCH] fix syntax
+
+wtaf
+---
+ ext/nokogiri/extconf.rb | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/ext/nokogiri/extconf.rb b/ext/nokogiri/extconf.rb
+index d56d511f..aa9dd11b 100644
+--- a/ext/nokogiri/extconf.rb
++++ b/ext/nokogiri/extconf.rb
+@@ -14,7 +14,7 @@ RbConfig::CONFIG.each do |key, value|
+   if value.include? flag
+     msg = "bad flag in RbConfig::CONFIG[#{key}], will remove: #{value}"
+     puts msg
+-    RbConfig::CONFIG[key] = value.sub! (" " + flag, "")
++    RbConfig::CONFIG[key] = value.sub!(" " + flag, "")
+   end
+ end
+ 
+
+From b61704c4494979395da38d6a1f51d0bd89ce7afa Mon Sep 17 00:00:00 2001
+From: Elliana May <me@mause.me>
+Date: Thu, 2 Apr 2026 16:23:03 +0800
+Subject: [PATCH] explicit toggle off
+
+---
+ ext/nokogiri/extconf.rb | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/ext/nokogiri/extconf.rb b/ext/nokogiri/extconf.rb
+index aa9dd11b..4453df76 100644
+--- a/ext/nokogiri/extconf.rb
++++ b/ext/nokogiri/extconf.rb
+@@ -14,7 +14,7 @@ RbConfig::CONFIG.each do |key, value|
+   if value.include? flag
+     msg = "bad flag in RbConfig::CONFIG[#{key}], will remove: #{value}"
+     puts msg
+-    RbConfig::CONFIG[key] = value.sub!(" " + flag, "")
++    RbConfig::CONFIG[key] = value.sub!(" " + flag, " -fcf-protection=none")
+   end
+ end
+ 
