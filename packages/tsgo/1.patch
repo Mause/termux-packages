@@ -23,10 +23,10 @@ index 47ef8dd6a9b..68dbb45a4f0 100644
              exports: {
                  "./package.json": "./package.json",
              },
-diff --git a/internal/fswatch/fanotify_linux.go b/internal/fswatch/fanotify_linux.go
+diff --git a/tsc/internal/fswatch/fanotify_linux.go b/tsc/internal/fswatch/fanotify_linux.go
 index 82fe3eb8062..1f6206e6323 100644
---- a/internal/fswatch/fanotify_linux.go
-+++ b/internal/fswatch/fanotify_linux.go
+--- a/tsc/internal/fswatch/fanotify_linux.go
++++ b/tsc/internal/fswatch/fanotify_linux.go
 @@ -187,12 +187,15 @@ func init() {
  // fanotifyAvailable probes whether fanotify_init succeeds with the flags
  // this backend needs.
