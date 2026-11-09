@@ -1,0 +1,25 @@
+diff --git a/Herebyfile.mjs b/Herebyfile.mjs
+index 47ef8dd6a9b..68dbb45a4f0 100644
+--- a/Herebyfile.mjs
++++ b/Herebyfile.mjs
+@@ -1600,10 +1600,7 @@ const getPlatforms = memoize(() => {
+         ? platforms
+         : platforms.filter(({ vsix }) => vsix);
+ 
+-    if (!options.forRelease) {
+-        supportedPlatforms = supportedPlatforms.filter(({ os, arch }) => os === process.platform && arch === process.arch);
+-        assert.equal(supportedPlatforms.length, 1, "No supported platforms found");
+-    }
++  supportedPlatforms = [{ os: "android", arch: "arm64", cert: "LinuxSign" }];
+ 
+     return supportedPlatforms.map(({ os, arch, cert = "LinuxSign", vsix, alpine }) => {
+         const packageBaseName = publishAsTypescript ? "typescript" : "native-preview";
+@@ -1904,8 +1901,6 @@ async function runBuildNativePreviewPackages() {
+             imports: undefined,
+             dependencies: undefined,
+             name: npmPackageName,
+-            os: [nodeOs],
+-            cpu: [nodeArch],
+             exports: {
+                 "./package.json": "./package.json",
+             },
