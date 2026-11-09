@@ -1,0 +1,91 @@
+From f1338cea25a0186d5ec23f3b233357a3347f80c0 Mon Sep 17 00:00:00 2001
+From: Elliana May <me@mause.me>
+Date: Mon, 27 Apr 2026 03:30:31 +0800
+Subject: [PATCH] ikne
+
+---
+ Cargo.toml                   |  6 ++++++
+ patches/souvlaki+0.7.3.patch | 17 +++++++++++++++++
+ 2 files changed, 23 insertions(+)
+ create mode 100644 patches/souvlaki+0.7.3.patch
+
+diff --git a/Cargo.toml b/Cargo.toml
+index 420a839..c6e9ada 100644
+--- a/Cargo.toml
++++ b/Cargo.toml
+@@ -10,6 +10,9 @@ keywords = ["tui", "music", "audio", "player", "terminal"]
+ categories = ["multimedia::audio", "command-line-utilities"]
+ readme = "README.md"
+ 
++[package.metadata.patch]
++crates = ["souvlaki"]
++
+ [dependencies]
+ anyhow = "1.0.102"
+ crossbeam = { version = "0.8.4", default-features = false, features = ["crossbeam-channel", "crossbeam-queue"] }
+@@ -46,6 +49,9 @@ windows-sys = { version = "0.61", features = [
+ name = "vox"
+ path = "src/main.rs"
+ 
++[patch.crates-io]
++souvlaki = { path = "./target/patch/souvlaki" }
++
+ [profile.release]
+ lto = "thin"
+ strip = true
+diff --git a/patches/souvlaki+0.7.3.patch b/patches/souvlaki+0.7.3.patch
+new file mode 100644
+index 0000000..39485f8
+--- /dev/null
++++ b/patches/souvlaki+0.7.3.patch
+@@ -0,0 +1,17 @@
++diff --git a/src/platform/mod.rs b/src/platform/mod.rs
++index 1800e7e..62e63b2 100644
++--- a/src/platform/mod.rs
+++++ b/src/platform/mod.rs
++@@ -8,9 +8,9 @@ mod platform;
++ #[path = "macos/mod.rs"]
++ mod platform;
++ 
++-#[cfg(all(unix, not(target_os = "macos")))]
++-#[path = "mpris/mod.rs"]
++-mod platform;
+++// #[cfg(all(unix, not(target_os = "macos")))]
+++// #[path = "mpris/mod.rs"]
+++// mod platform;
++ 
++ #[cfg(all(
++     not(target_os = "linux"),
+
+From 91198667da1f4e9d9605af71bb41140b9bc65d99 Mon Sep 17 00:00:00 2001
+From: Elliana May <me@mause.me>
+Date: Mon, 27 Apr 2026 11:08:16 +0800
+Subject: [PATCH] automate patch
+
+---
+ Cargo.toml | 3 +++
+ build.rs   | 4 ++++
+ 2 files changed, 7 insertions(+)
+ create mode 100644 build.rs
+
+diff --git a/Cargo.toml b/Cargo.toml
+index c6e9ada..42fcb78 100644
+--- a/Cargo.toml
++++ b/Cargo.toml
+@@ -61,3 +61,6 @@ opt-level = 3
+ [profile.dist]
+ inherits = "release"
+ lto = "thin"
++
++[build-dependencies]
++patch-crate = "0.1.13"
+diff --git a/build.rs b/build.rs
+new file mode 100644
+index 0000000..d105d46
+--- /dev/null
++++ b/build.rs
+@@ -0,0 +1,4 @@
++fn main() {
++   println!("cargo:rerun-if-changed=Cargo.toml");
++   patch_crate::run().expect("Failed while patching");
++}
