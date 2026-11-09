@@ -1,0 +1,87 @@
+From 63ba14af53f3b66a6ad8a49d1da5695440bde86f Mon Sep 17 00:00:00 2001
+From: Elliana May <me@mause.me>
+Date: Tue, 24 Mar 2026 00:46:14 +0800
+Subject: [PATCH] cut out clipboard
+
+---
+ clipboard/clipboard_supported_platforms.go | 3 ---
+ go.mod                                     | 2 --
+ 2 files changed, 5 deletions(-)
+
+diff --git a/clipboard/clipboard_supported_platforms.go b/clipboard/clipboard_supported_platforms.go
+index 7b2468f..ea81ae5 100644
+--- a/clipboard/clipboard_supported_platforms.go
++++ b/clipboard/clipboard_supported_platforms.go
+@@ -8,7 +8,6 @@ import (
+ 	"os"
+ 
+ 	"github.com/juju/errors"
+-	"golang.design/x/clipboard"
+ )
+ 
+ var InitErr error = nil
+@@ -23,12 +22,10 @@ func init() {
+ 		return
+ 	}
+ 
+-	InitErr = errors.Trace(clipboard.Init())
+ }
+ 
+ // WriteText is a wrapper around clipboard.Write with FmtText; it exists so
+ // that we can avoid compiling it on unsupported platforms (e.g. FreeBSD) and
+ // still have nerdlog working (without clipboard support).
+ func WriteText(value []byte) {
+-	clipboard.Write(clipboard.FmtText, value)
+ }
+diff --git a/go.mod b/go.mod
+index 1ad5a6e..9bfbb75 100644
+--- a/go.mod
++++ b/go.mod
+@@ -13,7 +13,6 @@ require (
+ 	github.com/rivo/uniseg v0.4.3
+ 	github.com/spf13/pflag v1.0.5
+ 	github.com/stretchr/testify v1.7.1
+-	golang.design/x/clipboard v0.7.0
+ 	golang.org/x/crypto v0.0.0-20220321153916-2c7772ba3064
+ 	gopkg.in/yaml.v2 v2.4.0
+ )
+@@ -25,7 +24,6 @@ require (
+ 	github.com/pmezard/go-difflib v1.0.0 // indirect
+ 	golang.org/x/exp v0.0.0-20190731235908-ec7cb31e5a56 // indirect
+ 	golang.org/x/image v0.6.0 // indirect
+-	golang.org/x/mobile v0.0.0-20230301163155-e0f57694e12c // indirect
+ 	golang.org/x/sys v0.5.0 // indirect
+ 	golang.org/x/term v0.5.0 // indirect
+ 	golang.org/x/text v0.8.0 // indirect
+
+From 661cc49992b3f2d24bec9bba1bc3435cc427d5b5 Mon Sep 17 00:00:00 2001
+From: Elliana May <me@mause.me>
+Date: Tue, 24 Mar 2026 02:50:46 +0800
+Subject: [PATCH] fix temp
+
+---
+ core/lstream_client.go | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/core/lstream_client.go b/core/lstream_client.go
+index 4ac9fe5..e9c1003 100644
+--- a/core/lstream_client.go
++++ b/core/lstream_client.go
+@@ -1204,7 +1204,7 @@ func roundUpToNextSecond(t time.Time) time.Time {
+ // for the particular log stream.
+ func (lsc *LStreamClient) getLStreamNerdlogAgentPath() string {
+ 	return fmt.Sprintf(
+-		"/tmp/nerdlog_agent_%s_%s.sh",
++		"@TERMUX_PREFIX@/tmp/nerdlog_agent_%s_%s.sh",
+ 		lsc.params.ClientID,
+ 		filepathToId(lsc.params.LogStream.LogFileLast()),
+ 	)
+@@ -1214,7 +1214,7 @@ func (lsc *LStreamClient) getLStreamNerdlogAgentPath() string {
+ // the particular log stream.
+ func (lsc *LStreamClient) getLStreamIndexFilePath() string {
+ 	return fmt.Sprintf(
+-		"/tmp/nerdlog_agent_index_%s_%s",
++		"@TERMUX_PREFIX@/tmp/nerdlog_agent_index_%s_%s",
+ 		lsc.params.ClientID,
+ 		filepathToId(lsc.params.LogStream.LogFileLast()),
+ 	)
