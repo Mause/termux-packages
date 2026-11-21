@@ -1,0 +1,99 @@
+diff --git a/packages/core/scripts/build.ts b/packages/core/scripts/build.ts
+index 2cd861fd..306c4eff 100644
+--- a/packages/core/scripts/build.ts
++++ b/packages/core/scripts/build.ts
+@@ -44,12 +44,7 @@ const buildAll = args.includes("--all") // Build for all platforms
+ const gpaSafeStats = args.includes("--gpa-safe-stats")
+ 
+ const variants: Variant[] = [
+-  { platform: "darwin", arch: "x64" },
+-  { platform: "darwin", arch: "arm64" },
+-  { platform: "linux", arch: "x64" },
+-  { platform: "linux", arch: "arm64" },
+-  { platform: "win32", arch: "x64" },
+-  { platform: "win32", arch: "arm64" },
++  { platform: "android", arch: "arm64" },
+ ]
+ 
+ const getHostVariant = (): Variant => {
+@@ -75,9 +70,9 @@ const getZigTarget = (platform: string, arch: string): string => {
+ const replaceLinks = (text: string): string => {
+   return packageJson.homepage
+     ? text.replace(
+-        /(\[.*?\]\()(\.\/.*?\))/g,
+-        (_, p1: string, p2: string) => `${p1}${packageJson.homepage}/blob/HEAD/${p2.replace("./", "")}`,
+-      )
++      /(\[.*?\]\()(\.\/.*?\))/g,
++      (_, p1: string, p2: string) => `${p1}${packageJson.homepage}/blob/HEAD/${p2.replace("./", "")}`,
++    )
+     : text
+ }
+ 
+@@ -91,13 +86,14 @@ if (missingRequired.length > 0) {
+ if (buildNative) {
+   console.log(`Building native ${isDev ? "dev" : "prod"} binaries${buildAll ? " for all platforms" : ""}...`)
+ 
+-  const zigArgs = ["build", `-Doptimize=${isDev ? "Debug" : "ReleaseFast"}`]
++  const zigArgs = ["build", `-Doptimize=${isDev ? "Debug" : "ReleaseFast"}`, '-Dtarget=aarch64-linux.3.7.0-musl']
+   if (buildAll) {
+     zigArgs.push("-Dall")
+   }
+   if (gpaSafeStats) {
+     zigArgs.push("-Dgpa-safe-stats=true")
+   }
++  console.log("Running Zig build with args:", zigArgs.join(" "))
+ 
+   const zigBuild: SpawnSyncReturns<Buffer> = spawnSync("zig", zigArgs, {
+     cwd: join(rootDir, "src", "zig"),
+@@ -113,13 +109,17 @@ if (buildNative) {
+     console.error("Error: Zig build failed")
+     process.exit(1)
+   }
++  console.log("Zig build completed successfully")
+ 
+-  const variantsToPackage = buildAll ? variants : [getHostVariant()]
++  const variantsToPackage = [
++    { platform: "linux", arch: "arm64" },
++  ];
+ 
+   for (const { platform, arch } of variantsToPackage) {
+     const nativeName = `${packageJson.name}-${platform}-${arch}`
+     const nativeDir = join(rootDir, "node_modules", nativeName)
+-    const libDir = join(rootDir, "src", "zig", "lib", getZigTarget(platform, arch))
++    console.log(readdirSync(join(rootDir, "src", "zig", "lib")))
++    const libDir = join(rootDir, "src", "zig", "lib", "aarch64-linux-musl"); // "getZigTarget(platform, arch))
+ 
+     rmSync(nativeDir, { recursive: true, force: true })
+     mkdirSync(nativeDir, { recursive: true })
+@@ -142,7 +142,7 @@ if (buildNative) {
+ 
+     if (copiedFiles === 0) {
+       // Skip platforms that weren't built
+-      console.log(`Skipping ${platform}-${arch}: no libraries found`)
++      throw new Error(`Skipping ${platform}-${arch}: no libraries found`)
+       rmSync(nativeDir, { recursive: true, force: true })
+       continue
+     }
+diff --git a/packages/core/src/zig/build.zig b/packages/core/src/zig/build.zig
+index 43aff8dc..3a0e349a 100644
+--- a/packages/core/src/zig/build.zig
++++ b/packages/core/src/zig/build.zig
+@@ -25,6 +25,7 @@ const SUPPORTED_TARGETS = [_]SupportedTarget{
+     .{ .zig_target = "aarch64-macos", .output_name = "aarch64-macos", .description = "macOS aarch64 (Apple Silicon)" },
+     .{ .zig_target = "x86_64-windows-gnu", .output_name = "x86_64-windows", .description = "Windows x86_64" },
+     .{ .zig_target = "aarch64-windows-gnu", .output_name = "aarch64-windows", .description = "Windows aarch64" },
++    .{ .zig_target = "aarch64-linux.3.7.0-musl", .output_name = "aarch64-linux-musl", .description = "Linux aarch64 MUSL" },
+ };
+ 
+ const DEFAULT_MACOS_SDK_PATH = "/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk";
+@@ -160,8 +161,8 @@ fn addNativeAudioDependencies(
+     switch (target.result.os.tag) {
+         .macos => addMacOSSystemLibraries(b, artifact, macos_sdk_path.?),
+         .linux => {
+-            artifact.linkSystemLibrary("dl");
+-            artifact.linkSystemLibrary("pthread");
++            // artifact.linkSystemLibrary("dl");
++            // artifact.linkSystemLibrary("pthread");
+         },
+         else => {},
+     }
