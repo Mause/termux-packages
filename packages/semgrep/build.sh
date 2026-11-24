@@ -10,5 +10,5 @@ TERMUX_PKG_BUILD_IN_SRC=true
 TERMUX_PKG_AUTO_UPDATE=true
 
 termux_step_pre_configure() {
-        termux_setup_python_pip
+	termux_setup_python_pip
 }
