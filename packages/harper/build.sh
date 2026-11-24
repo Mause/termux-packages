@@ -29,8 +29,10 @@ termux_step_pre_configure() {
 
 termux_step_make() {
 	cargo build --release --manifest-path $TERMUX_PKG_BUILDDIR/harper-ls/Cargo.toml --target "${CARGO_TARGET_NAME}"
+	cargo build --release --manifest-path $TERMUX_PKG_BUILDDIR/harper-cli/Cargo.toml --target "${CARGO_TARGET_NAME}"
 }
 
 termux_step_make_install() {
 	install -Dm700 target/"${CARGO_TARGET_NAME}"/release/harper-ls "${TERMUX_PREFIX}"/bin/harper-ls
+	install -Dm700 target/"${CARGO_TARGET_NAME}"/release/harper-cli "${TERMUX_PREFIX}"/bin/harper-cli
 }
